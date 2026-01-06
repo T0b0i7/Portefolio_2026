@@ -1,73 +1,122 @@
-# Welcome to your Lovable project
+# Eucher ABATTI - Portfolio 2026
 
-## Project info
+Bienvenue sur mon portfolio professionnel ! Je suis **Développeur Full-Stack** passionné spécialisé dans la création de solutions web modernes et performantes.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## 👨‍💻 À propos
 
-## How can I edit this code?
+Développeur Full-Stack basé à **Porto-Novo, Bénin**, avec expertise dans :
+- **Développement Web** : React, Next.js, Vue.js, Svelte
+- **Backend** : Node.js, NestJS, PHP, Laravel, Python
+- **Design & UI/UX** : Figma, Adobe Suite, Canva
+- **Outils & Automatisation** : Docker, Zapier, Make
+- **IA & Technologies** : ChatGPT, Claude, DeepSeek, Midjourney
 
-There are several ways of editing your application.
+## 🚀 Projets Récents
 
-**Use Lovable**
+### Stagiaire Développeur Full-Stack @ INNOVTECH
+**Nov 2025 - Fév 2026** | Cotonou, Bénin
+- Développement front-end et participation back-end des applications internes
+- Création d'interfaces et intégration de fonctionnalités
+- Optimisation des outils internes et automatisation des processus
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+### Freelance / Prestataire
+**2024 - Présent** | Porto-Novo, Bénin
+- Création de sites web pour particuliers et entreprises
+- Réalisation d'affiches et supports visuels pour la communication digitale
+- Maintenance et accompagnement technique de projets clients
 
-Changes made via Lovable will be committed automatically to this repo.
+## 📚 Formation
 
-**Use your preferred IDE**
+**Licence Professionnelle en Système Informatique Logiciel (SIL)**
+- HECM - Haute École de Commerce et de Management
+- Spécialisation en développement logiciel et systèmes d'information
+- Statut : Terminé ✓
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+**Baccalauréat Série D (scientifique)**
+- Collège Catholique Notre-Dame de Lourdes, Porto-Novo
+- 2021 - 2022
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## 🛠 Technologie du Portfolio
 
-Follow these steps:
+Ce portfolio est construit avec les technologies modernes suivantes :
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+- **Vite** - Build tool ultra-rapide
+- **React** - Bibliothèque UI avec hooks
+- **TypeScript** - Typage statique pour la robustesse
+- **Tailwind CSS** - Styling utilitaire
+- **shadcn-ui** - Composants réutilisables
+- **Lucide Icons** - Icônes élégantes
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## 📦 Installation & Développement
 
-# Step 3: Install the necessary dependencies.
-npm i
+### Prérequis
+- Node.js (v16+)
+- npm ou yarn
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+### Installation
+
+```bash
+# Cloner le repository
+git clone https://github.com/T0b0i7/New_Portefolio_2026.git
+
+# Naviguer au dossier du projet
+cd New_Portefolio_2026
+
+# Installer les dépendances
+npm install
+
+# Démarrer le serveur de développement
 npm run dev
+
+# Ouvrir dans le navigateur
+# Visitez http://localhost:8080
 ```
 
-**Edit a file directly in GitHub**
+### Commandes disponibles
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```bash
+# Développement avec hot reload
+npm run dev
 
-**Use GitHub Codespaces**
+# Construire pour la production
+npm run build
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+# Build en mode développement
+npm run build:dev
 
-## What technologies are used for this project?
+# Vérifier la build en production
+npm run preview
 
-This project is built with:
+# Linter le code
+npm run lint
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 🌐 Déploiement
 
-## How can I deploy this project?
+Ce portfolio peut être déployé sur :
+- **Vercel** (recommandé pour Next.js)
+- **Netlify** (parfait pour les sites statiques)
+- **GitHub Pages**
+- **Votre serveur personnel**
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+### Déploiement sur Vercel
+```bash
+npm install -g vercel
+vercel
+```
 
-## Can I connect a custom domain to my Lovable project?
+## 📞 Contact
 
-Yes, you can!
+- **Email** : abattieucher@gmail.com
+- **Téléphone** : +229 0157002427
+- **LinkedIn** : [Eucher ABATTI](https://www.linkedin.com/in/eucher-abatti-7a9472283)
+- **GitHub** : [T0b0i7](https://github.com/T0b0i7/)
+- **Facebook** : [Eucher ABATTI](https://www.facebook.com/bi.to.77235)
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## 📄 Licence
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Ce projet est open source. Libre d'utilisation et de modification.
+
+---
+
+**Dernière mise à jour** : 6 janvier 2026 | **Portfolio 2026** | Made with ❤️ by Eucher ABATTI
