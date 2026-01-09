@@ -25,7 +25,13 @@ const skills = [
   { name: "PHP", category: "language", level: 80 },
   { name: "Python", category: "language", level: 75 },
   { name: "HTML/CSS", category: "language", level: 95 },
-
+  { name: "C", category: "language", level: 70 },
+  { name: "C++", category: "language", level: 70 },
+  { name: "Prolog", category: "language", level: 40 },
+  { name: "Mercury", category: "language", level: 15 },
+  { name: "Solidity", category: "language", level: 55 },
+  { name: "Vyper", category: "language", level: 10},
+  { name: "Rust (Solana)", category: "language", level: 10 },
   // Bases de données
   { name: "PostgreSQL", category: "database", level: 75 },
   { name: "MySQL", category: "database", level: 80 },

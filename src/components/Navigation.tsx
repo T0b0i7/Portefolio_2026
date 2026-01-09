@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Home, Briefcase, Folder, Wrench, Mail, User } from "lucide-react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -55,6 +56,26 @@ export function Navigation() {
       onMouseLeave={() => setIsExpanded(false)}
     >
       <div className="p-3 space-y-2">
+        {/* Profile Avatar */}
+        <button
+          onClick={() => scrollToSection("hero")}
+          className={cn(
+            "flex items-center justify-center w-full p-2 rounded-xl transition-all duration-300 mb-2",
+            activeSection === "hero"
+              ? "bg-primary/20 glow-cyan"
+              : "hover:bg-muted/50"
+          )}
+        >
+          <Avatar className="w-8 h-8 border-2 border-primary/50">
+            <AvatarImage src="/profil.png" alt="Eucher ABATTI" className="object-cover" />
+            <AvatarFallback className="text-xs font-bold bg-primary/20 text-primary">
+              EA
+            </AvatarFallback>
+          </Avatar>
+        </button>
+
+        <div className="h-px bg-border/30" />
+
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeSection === item.id;

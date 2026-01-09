@@ -39,7 +39,7 @@ export function HeroSection() {
           {/* Profile Image */}
           <div className="relative inline-block mb-8 animate-fade-in group">
             <Avatar className="w-32 h-32 md:w-40 md:h-40 border-4 border-primary/50 glow-cyan">
-              <AvatarImage src={profileImage || ""} alt="Eucher ABATTI" className="object-cover" />
+              <AvatarImage src={profileImage || "/profil.png"} alt="Eucher ABATTI" className="object-cover" />
               <AvatarFallback className="bg-background text-4xl md:text-5xl font-display font-bold gradient-text">
                 EA
               </AvatarFallback>

@@ -9,7 +9,6 @@ import {
   Facebook,
   Clock,
   CheckCircle,
-  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -75,21 +74,24 @@ export function ContactSection() {
     budget: "",
     message: "",
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    // Create mailto link with form data
+    const mailto = `mailto:abattieucher@gmail.com?subject=${encodeURIComponent(
+      `${formData.subject} - Budget: ${formData.budget}`
+    )}&body=${encodeURIComponent(
+      `Nom: ${formData.name}\nEmail: ${formData.email}\nBudget: ${formData.budget}\n\nMessage:\n${formData.message}`
+    )}`;
 
-    toast.success("Message envoyé avec succès!", {
-      description: "Je vous répondrai dans les plus brefs délais.",
+    window.location.href = mailto;
+
+    toast.success("Email ouvert!", {
+      description: "Complétez et envoyez l'email à partir de votre client email.",
     });
 
     setFormData({ name: "", email: "", subject: "", budget: "", message: "" });
-    setIsSubmitting(false);
   };
 
   const handleChange = (
@@ -293,20 +295,11 @@ export function ContactSection() {
               <Button
                 type="submit"
                 size="lg"
-                disabled={isSubmitting}
+                disabled={!formData.name || !formData.email || !formData.subject || !formData.message}
                 className="w-full bg-primary hover:bg-primary/90 text-primary-foreground glow-cyan"
               >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                    Envoi en cours...
-                  </>
-                ) : (
-                  <>
-                    <Send className="w-5 h-5 mr-2" />
-                    Envoyer le message
-                  </>
-                )}
+                <Send className="w-5 h-5 mr-2" />
+                Envoyer le message
               </Button>
             </form>
           </div>
