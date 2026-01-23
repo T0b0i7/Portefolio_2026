@@ -429,6 +429,122 @@ npm install -g vercel
 vercel
 ```
 
+---
+
+## 🌐 🎮 CYBER-MATRIX v2.0 — Page Animation Interactive
+
+### 🌟 Toutes les fonctionnalités implémentées :
+
+#### 🎮 **INTERACTIVITÉ AVANCÉE**
+- ✅ **Mini-jeu de câblage réseau** — Connectez les fils colorés pour établir les connexions
+- ✅ **Jeu de cryptage** — Décodez les messages Base64 avec la bonne réponse
+- ✅ **Terminal interactif avancé** — Commandes réelles (whoami, uname, free, df, ss, ps, ping, ls, cd, etc.)
+- ✅ **Chat IA intégré** — Dialogue avec assistant IA contextuel et réactif
+- ✅ **Exécution de commandes personnalisées** — Tapez vos propres commandes
+
+#### 🌌 **EFFETS VISUELS PRO**
+- ✅ **Three.js 3D** — Environnement Matrix avec 10,000 particules fluides animées
+- ✅ **Shader effets avancés** — Animations fluides, lumières néon, gradients cyberpunk
+- ✅ **Design cyberpunk immersif** — Interface complète avec effet scanlines
+- ✅ **Animations CSS avancées** — Glitch, pulse, rotations, transitions fluides
+- ✅ **Profondeur et perspective** — Box-shadows, gradients, transforms 3D
+- ✅ **Palette cyberpunk** — Vert fluorescent (#0f0), Cyan (#0ff), Noir (#000)
+
+#### 🎵 **AUDIO IMMERSIF**
+- ✅ **Système audio complet** — 15+ effets sonores contextuels
+- ✅ **Tone.js intégré** — Synthétiseur musical pour les interactions
+- ✅ **Howler.js** — Gestion avancée des sons et des pistes audio
+- ✅ **Feedback audio contextuel** — Sons pour chaque action utilisateur
+- ✅ **Contrôle audio** — Activer/désactiver les sons à tout moment
+
+#### 🧠 **INTELLIGENCE ARTIFICIELLE**
+- ✅ **Chatbot IA conversationnel** — Réponses contextuelles et intelligentes
+- ✅ **Commandes intelligentes** — Reconnaissance naturelle des commandes
+- ✅ **Système d'aide adaptatif** — Documentation intégrée et assistance
+- ✅ **Apprentissage contextuel** — L'IA mémorise les commandes précédentes
+
+#### 📊 **SYSTÈME COMPLET**
+- ✅ **Statistiques temps réel** — CPU (0-100%), mémoire (0-16GB), réseau (0-20 Gb/s)
+- ✅ **Graphiques Chart.js** — Visualisations dynamiques et mises à jour en temps réel
+- ✅ **Mission et progression** — Système de niveaux avec objectifs
+- ✅ **Alertes de sécurité** — Surveillance en temps réel des menaces
+- ✅ **Outils cryptographiques** — Base64 Encode/Decode, Chiffre César, SHA256
+- ✅ **Horloge système** — Affichage de l'heure réelle synchronisée
+- ✅ **Journal des événements** — Historique complet des actions et alertes
+
+#### 🎯 **GAMEPLAY RICHE**
+- ✅ **Plusieurs mini-jeux** — Câblage réseau, décryptage, brute force
+- ✅ **Progression narrative** — Mission "Protocole Cerbère" avec objectifs
+- ✅ **Système de récompenses** — Points d'expérience et badges
+- ✅ **Interface utilisateur complexe** — Multi-panneaux (stats, terminal, tools, console)
+- ✅ **Écrans distincts** — Startup, Access Granted, Terminal
+- ✅ **Authentification requise** — Système de sécurité avec mot de passe
+
+#### ⚡ **PERFORMANCES OPTIMISÉES**
+- ✅ **WebGL optimisé** — 10,000 particules fluides sans ralentissement
+- ✅ **Gestion mémoire** — Cleanup automatique des intervals et timeouts
+- ✅ **Responsive design** — Adapté à tous les écrans (mobile à desktop)
+- ✅ **Chargement progressif** — Pas de blocage UI lors des animations
+- ✅ **Rendu optimisé** — Requestanimationframe pour fluidité 60fps
+
+#### 🔧 **UTILITAIRES PRATIQUES**
+- ✅ **Capture d'écran** — Effet flash lors de la capture
+- ✅ **Mode sombre/clair** — Basculable en un clic
+- ✅ **Contrôle audio** — Activer/désactiver les sons
+- ✅ **Verrouillage d'urgence** — Réinitialisation sécurisée du système
+- ✅ **Boutons de contrôle** — Minimiser, fermer, réinitialiser panneaux
+- ✅ **Réinitialisation rapide** — Clear terminal, reset stats
+
+#### 🎨 **DESIGN AVANCÉ**
+- ✅ **UI/UX moderne** — Grid CSS, flexbox, layout responsive
+- ✅ **Effets de profondeur** — Box-shadows dynamiques, gradients multiples
+- ✅ **Animations micro-interactions** — Hover effects, focus states, transitions
+- ✅ **Polices spécifiques** — Orbitron pour titres, Courier New pour terminal
+- ✅ **Glass-morphism** — Effet de verre sur les panneaux avec backdrop-filter
+- ✅ **Animations fluides** — Keyframes personnalisées (pulse, glitch, rotate, shimmer)
+
+---
+
+### 🚀 **Comment accéder à CYBER-MATRIX v2.0 :**
+
+1. **Cliquez sur "Animation"** dans le menu de navigation (icône Zap ⚡)
+2. **Entrez le code d'accès** : `Motdepasse`
+3. **Profitez de l'expérience immersive !**
+
+### 📋 **Instructions d'utilisation :**
+
+- **Terminal** : Tapez des commandes réelles (help, status, scan, whoami, time, ls, etc.)
+- **IA Chat** : Cliquez sur le bouton "AI" pour ouvrir le chat avec l'assistant
+- **Jeux** : Essayez le câblage réseau et le décryptage
+- **Outils Crypto** : Chiffrez/déchiffrez du texte en Base64 ou César
+- **Système** : Basculez le mode sombre, contrôlez le son, capturez l'écran
+- **Mission** : Montez en niveau en complétant les objectifs
+- **Alertes** : Consultez la console de surveillance pour les menaces détectées
+
+### 🎯 **Fonctionnalités clés :**
+
+| Fonctionnalité | Description | Tech |
+|---|---|---|
+| **Écrans 3** | Startup → Access Granted → Terminal | Three.js + CSS |
+| **Terminal** | Commandes Linux réalistes | JavaScript purs |
+| **Chat IA** | Dialogue conversationnel | IA Contextuelle |
+| **Jeux** | Câblage, Cryptage, Brute Force | Canvas + Mouse |
+| **Stats** | Temps réel dynamiques | Chart.js |
+| **Audio** | 15+ effets sonores | Tone.js + Howler.js |
+| **Crypto** | Base64, César, SHA256 | Algorithmes natifs |
+| **UI** | Multi-panneaux réactifs | React + Tailwind |
+
+### 💎 **Points forts techniquement :**
+
+- 🎬 **Animations fluides** — 60fps maintenu avec WebGL
+- 🧠 **IA réactive** — Réponses contextuelles intelligentes
+- 🔐 **Système d'authentification** — Sécurité avec mot de passe
+- 📈 **Statistiques vivantes** — Mises à jour toutes les 100ms
+- 🎮 **Gameplay engageant** — Mini-jeux intérieurs et progression
+- 🌈 **Esthétique professionnelle** — Design cyberpunk de qualité AAA
+
+---
+
 ## 📞 Contact
 
 - **Email** : abattieucher@gmail.com
