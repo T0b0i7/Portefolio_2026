@@ -402,9 +402,13 @@ export function ProjectsSection() {
         </div>
 
         {/* Packs Pré-configurés */}
-        <div className="text-center mb-8">
-          <h3 className="text-2xl font-semibold">Packs Pré-configurés</h3>
-          <p className="text-sm text-muted-foreground">Solutions complètes à prix avantageux</p>
+        <div className="text-center mb-12">
+          <h3 className="text-3xl font-display font-bold mb-2 animate-fade-in">
+            <span className="gradient-text">Packs Pré-configurés</span>
+          </h3>
+          <p className="text-base text-muted-foreground animate-fade-in" style={{animationDelay: "100ms"}}>
+            Solutions complètes à prix avantageux
+          </p>
         </div>
 
         {/* Projects Grid - 3x3 */}
@@ -418,10 +422,16 @@ export function ProjectsSection() {
                 className={cn(
                   "group relative overflow-hidden rounded-2xl transition-all duration-500",
                   "border border-border/30 hover:border-primary/50",
+                  "perspective-card",
                   isHovered && "z-10",
                   project.locked && "cursor-not-allowed opacity-75 hover:opacity-85"
                 )}
-                style={{ animationDelay: `${index * 100}ms` }}
+                style={{ 
+                  animationDelay: `${index * 100}ms`,
+                  opacity: 0,
+                  animation: `flip-3d 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards`,
+                  animationDelay: `${index * 100}ms`
+                }}
                 onMouseEnter={() => setHoveredProject(project.id)}
                 onMouseLeave={() => setHoveredProject(null)}
                 onClick={() => {
@@ -475,7 +485,8 @@ export function ProjectsSection() {
                 {/* Glow effect on hover */}
                 <div
                   className={cn(
-                    "absolute -top-1/2 -right-1/2 w-full h-full rounded-full blur-3xl opacity-0 group-hover:opacity-30 transition-all duration-500 -z-10",
+                    "absolute -top-1/2 -right-1/2 w-full h-full rounded-full blur-3xl opacity-0 group-hover:opacity-40 transition-all duration-500 -z-10",
+                    isHovered && "animate-card-glow-expand",
                     project.color === "primary" && "bg-primary",
                     project.color === "secondary" && "bg-secondary",
                     project.color === "accent" && "bg-accent",
@@ -517,7 +528,8 @@ export function ProjectsSection() {
                 {/* Project Visual Section */}
                 <div
                   className={cn(
-                    "relative h-32 overflow-hidden bg-gradient-to-br",
+                    "relative h-32 overflow-hidden bg-gradient-to-br transition-all duration-300 group-hover:shadow-2xl",
+                    "group-hover:scale-110 group-hover:translate-z-20",
                     project.color === "primary" && "from-primary/5 to-accent/5",
                     project.color === "secondary" && "from-secondary/5 to-warning/5",
                     project.color === "accent" && "from-accent/5 to-primary/5",
@@ -550,7 +562,7 @@ export function ProjectsSection() {
                   {/* Category Icon - Larger & More Prominent */}
                   <div
                     className={cn(
-                      "absolute top-5 left-5 p-3 rounded-xl backdrop-blur-md transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg",
+                      "absolute top-5 left-5 p-3 rounded-xl backdrop-blur-md transition-all duration-300 group-hover:scale-125 group-hover:shadow-xl group-hover:rotate-12",
                       project.color === "primary" && "bg-primary/20 border border-primary/30",
                       project.color === "secondary" && "bg-secondary/20 border border-secondary/30",
                       project.color === "accent" && "bg-accent/20 border border-accent/30",
@@ -566,7 +578,7 @@ export function ProjectsSection() {
                   {/* Impact Badge - Enhanced */}
                   <div
                     className={cn(
-                      "absolute top-5 right-5 px-4 py-2 rounded-full backdrop-blur-md text-sm font-semibold transition-all duration-300 group-hover:scale-110",
+                      "absolute top-5 right-5 px-4 py-2 rounded-full backdrop-blur-md text-sm font-semibold transition-all duration-300 group-hover:scale-125 group-hover:shadow-xl group-hover:-rotate-12",
                       project.color === "primary" && "bg-primary/20 text-primary border border-primary/30",
                       project.color === "secondary" && "bg-secondary/20 text-secondary border border-secondary/30",
                       project.color === "accent" && "bg-accent/20 text-accent border border-accent/30",
@@ -575,6 +587,15 @@ export function ProjectsSection() {
                   >
                     {project.metrics.impact}
                   </div>
+
+                  {/* Reflective Shimmer Effect */}
+                  <div
+                    className={cn(
+                      "absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500",
+                      "bg-gradient-to-br from-white/20 via-white/5 to-transparent",
+                      isHovered && "animate-reflect-shimmer"
+                    )}
+                  />
 
                   {/* Shine effect on hover */}
                   <div

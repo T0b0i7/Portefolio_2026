@@ -125,33 +125,49 @@ export function ExperienceTimeline() {
           return (
             <div
               key={exp.id}
-              className="relative pl-20 animate-slide-up"
-              style={{ animationDelay: `${index * 100}ms` }}
+              className="relative pl-20"
+              style={{ 
+                animationDelay: `${index * 150}ms`,
+                opacity: 0,
+                animation: `curtain-reveal 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards`,
+                animationDelay: `${index * 150}ms`
+              }}
             >
               {/* Timeline Dot */}
               <div
                 className={cn(
-                  "absolute left-6 w-5 h-5 rounded-full border-4 border-background",
+                  "absolute left-6 w-5 h-5 rounded-full border-4 border-background transition-all duration-300",
                   styles.dot,
-                  exp.current && "pulse-glow"
+                  exp.current && "pulse-glow animate-glow-pulse"
                 )}
               />
 
               {/* Card */}
               <div
                 className={cn(
-                  "glass rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 card-hover",
+                  "glass rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:scale-105 card-hover group",
                   styles.border
                 )}
               >
+                {/* Glow Effect Background */}
+                <div 
+                  className={cn(
+                    "absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-30 transition-opacity duration-300 blur-xl -z-10",
+                    styles.color === "primary" && "bg-primary",
+                    styles.color === "secondary" && "bg-secondary",
+                    styles.color === "accent" && "bg-accent",
+                    styles.color === "success" && "bg-success"
+                  )}
+                />
+
                 {/* Header */}
                 <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
                   <div className="flex items-start gap-4">
-                    <div className={cn("p-3 rounded-xl", styles.bg)}>
+                    <div className={cn("p-3 rounded-xl transition-all duration-300 group-hover:scale-110", styles.bg)}>
                       <Icon className={cn("w-6 h-6", styles.text)} />
                     </div>
                     <div>
-                      <h3 className="text-lg font-display font-semibold mb-1">
+                      <h3 className="text-lg font-display font-semibold mb-1 group-hover:text-primary transition-colors duration-300">
                         {exp.title}
                       </h3>
                       <p className={cn("font-medium", styles.text)}>{exp.company}</p>
@@ -160,17 +176,17 @@ export function ExperienceTimeline() {
                   </div>
 
                   <div className="flex flex-col items-end gap-2">
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground transition-all duration-300 group-hover:text-primary">
                       <Clock className="w-4 h-4" />
                       <span>{exp.period}</span>
                     </div>
                     {exp.current && (
-                      <span className="px-3 py-1 rounded-full bg-success/20 text-success text-xs font-medium">
+                      <span className="px-3 py-1 rounded-full bg-success/20 text-success text-xs font-medium animate-pulse">
                         En cours
                       </span>
                     )}
                     {exp.badge && (
-                      <span className="px-3 py-1 rounded-full bg-secondary/20 text-secondary text-xs font-medium flex items-center gap-1">
+                      <span className="px-3 py-1 rounded-full bg-secondary/20 text-secondary text-xs font-medium flex items-center gap-1 group-hover:bg-secondary/40 transition-colors duration-300">
                         <TrendingDown className="w-3 h-3" />
                         {exp.badge}
                       </span>
@@ -181,7 +197,11 @@ export function ExperienceTimeline() {
                 {/* Description */}
                 <ul className="space-y-2">
                   {exp.description.map((item, i) => (
-                    <li key={i} className="flex items-start gap-3 text-muted-foreground">
+                    <li key={i} className="flex items-start gap-3 text-muted-foreground group-hover:text-foreground transition-colors duration-300" style={{
+                      animation: `fade-in 0.5s ease-out forwards`,
+                      animationDelay: `${(index * 150) + (i * 50)}ms`,
+                      opacity: 0
+                    }}>
                       <span className={cn("w-1.5 h-1.5 rounded-full mt-2 shrink-0", styles.dot)} />
                       <span>{item}</span>
                     </li>

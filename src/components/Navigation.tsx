@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Home, Briefcase, Folder, Wrench, Mail, User } from "lucide-react";
+import { Home, Briefcase, Folder, Wrench, Mail, User, Zap } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 
@@ -9,6 +9,7 @@ const navItems = [
   { id: "projects", label: "Projets", icon: Folder },
   { id: "services", label: "Services", icon: Wrench },
   { id: "contact", label: "Contact", icon: Mail },
+  { id: "secure-system", label: "Animation", icon: Zap, isExternal: true },
 ];
 
 export function Navigation() {
@@ -79,6 +80,29 @@ export function Navigation() {
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeSection === item.id;
+
+          if (item.isExternal) {
+            return (
+              <a
+                key={item.id}
+                href="/secure-system"
+                className={cn(
+                  "flex items-center gap-3 w-full p-2 rounded-xl transition-all duration-300",
+                  "text-muted-foreground hover:text-foreground hover:bg-muted/50 hover:text-yellow-400 hover:glow-cyan"
+                )}
+              >
+                <Icon className="w-5 h-5 shrink-0" />
+                <span
+                  className={cn(
+                    "text-sm font-medium whitespace-nowrap overflow-hidden transition-all duration-300",
+                    isExpanded ? "opacity-100 w-auto" : "opacity-0 w-0"
+                  )}
+                >
+                  {item.label}
+                </span>
+              </a>
+            );
+          }
 
           return (
             <button

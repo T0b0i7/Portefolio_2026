@@ -1,8 +1,8 @@
 # 🚀 Portfolio 2026 — Eucher ABATTI
 
-Portfolio numérique complet d'un **Développeur Full-Stack Web & Mobile** basé au Bénin. Refonte complète 2026 avec technologies émergentes, projets multidisciplinaires et interface ultra-moderne.
+Portfolio numérique complet d'un Développeur Full-Stack Web & Mobile basé au Bénin. Refonte complète 2026 avec technologies émergentes, projets multidisciplinaires et interface ultra-moderne.
 
-**Lien en direct :** [eucher.dev](https://eucher-portfolio.netlify.app)
+Lien direct : [eucherdev-portfolio.netlify.app](https://eucherdev-portfolio.netlify.app/)
 
 ---
 
@@ -20,11 +20,12 @@ Portfolio numérique complet d'un **Développeur Full-Stack Web & Mobile** basé
 
 ## 👤 À propos
 
-Je suis **Eucher ABATTI**, développeur passionné avec **5+ ans d'expérience** en :
+Je suis Eucher ABATTI, développeur passionné avec 5+ ans d'expérience en :
+
 - 🌐 Développement Web Full-Stack (React, Node.js, Next.js)
-- 📱 Applications Mobiles (Flutter, React Native)
+- 📱 Applications mobiles (Flutter, React Native)
 - 🎨 UI/UX Design (Figma, prototypage interactif)
-- 🤖 Automatisation & Solutions Blockchain (Solidity, Vyper)
+- 🤖 Automatisation et solutions Blockchain (Solidity, Vyper)
 - 🧠 IA Générative & Reconnaissance Gestuelle
 
 **Basé à :** Porto-Novo, Bénin  
@@ -35,6 +36,7 @@ Je suis **Eucher ABATTI**, développeur passionné avec **5+ ans d'expérience**
 
 **Stagiaire Développeur Full-Stack @ INNOVTECH**  
 *Nov 2025 - Fév 2026* | Cotonou, Bénin
+
 - Développement front-end et participation back-end des applications internes
 - Création d'interfaces réactives avec React & TypeScript
 - Intégration de fonctionnalités backend, optimisation des outils internes
@@ -42,6 +44,7 @@ Je suis **Eucher ABATTI**, développeur passionné avec **5+ ans d'expérience**
 
 **Freelance / Prestataire**  
 *2024 - Présent* | Porto-Novo, Bénin
+
 - Création de sites web pour particuliers et entreprises
 - Réalisation d'affiches et supports visuels pour communication digitale
 - Maintenance et accompagnement technique de projets clients

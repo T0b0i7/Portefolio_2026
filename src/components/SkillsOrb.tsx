@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
+const ITEMS_PER_PAGE = 15;
 
 const skills = [
   // Frameworks
@@ -92,17 +95,27 @@ const categories = {
 export function SkillsOrb() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const filteredSkills = activeCategory
     ? skills.filter((s) => s.category === activeCategory)
     : skills;
+
+  const totalPages = Math.ceil(filteredSkills.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const paginatedSkills = filteredSkills.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+  const handleCategoryChange = (category: string | null) => {
+    setActiveCategory(category);
+    setCurrentPage(1);
+  };
 
   return (
     <div className="relative">
       {/* Category Filter */}
       <div className="flex flex-wrap justify-center gap-2 mb-8">
         <button
-          onClick={() => setActiveCategory(null)}
+          onClick={() => handleCategoryChange(null)}
           className={cn(
             "px-4 py-2 rounded-full text-sm font-medium transition-all duration-300",
             !activeCategory
@@ -115,7 +128,7 @@ export function SkillsOrb() {
         {Object.entries(categories).map(([key, { label }]) => (
           <button
             key={key}
-            onClick={() => setActiveCategory(activeCategory === key ? null : key)}
+            onClick={() => handleCategoryChange(activeCategory === key ? null : key)}
             className={cn(
               "px-4 py-2 rounded-full text-sm font-medium transition-all duration-300",
               activeCategory === key
@@ -129,8 +142,8 @@ export function SkillsOrb() {
       </div>
 
       {/* Skills Grid */}
-      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4">
-        {filteredSkills.map((skill, index) => {
+      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4 mb-8">
+        {paginatedSkills.map((skill, index) => {
           const category = categories[skill.category as keyof typeof categories];
           const isHovered = hoveredSkill === skill.name;
 
@@ -197,6 +210,54 @@ export function SkillsOrb() {
           );
         })}
       </div>
+
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center gap-4">
+          <button
+            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+            disabled={currentPage === 1}
+            className={cn(
+              "p-2 rounded-full transition-all duration-300",
+              currentPage === 1
+                ? "glass text-muted-foreground cursor-not-allowed opacity-50"
+                : "glass text-foreground hover:bg-primary hover:text-primary-foreground glow-cyan"
+            )}
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+
+          <div className="flex items-center gap-2">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <button
+                key={page}
+                onClick={() => setCurrentPage(page)}
+                className={cn(
+                  "w-8 h-8 rounded-full text-sm font-medium transition-all duration-300",
+                  currentPage === page
+                    ? "bg-primary text-primary-foreground glow-cyan"
+                    : "glass text-muted-foreground hover:text-foreground"
+                )}
+              >
+                {page}
+              </button>
+            ))}
+          </div>
+
+          <button
+            onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+            disabled={currentPage === totalPages}
+            className={cn(
+              "p-2 rounded-full transition-all duration-300",
+              currentPage === totalPages
+                ? "glass text-muted-foreground cursor-not-allowed opacity-50"
+                : "glass text-foreground hover:bg-primary hover:text-primary-foreground glow-cyan"
+            )}
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

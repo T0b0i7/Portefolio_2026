@@ -34,6 +34,7 @@ export function HeroSection() {
       <div className="absolute inset-0 bg-gradient-radial from-primary/10 via-transparent to-transparent" />
       <div className="absolute inset-0 bg-grid-pattern opacity-20" />
 
+      {/* Content - On Top */}
       <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-5xl mx-auto text-center">
           {/* Profile Image */}
@@ -170,7 +171,7 @@ export function HeroSection() {
       </div>
 
       {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce z-20">
         <button
           onClick={() => document.getElementById("parcours")?.scrollIntoView({ behavior: "smooth" })}
           className="p-3 rounded-full glass hover:glow-cyan transition-all duration-300 hover:text-primary"
