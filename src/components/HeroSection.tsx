@@ -1,183 +1,337 @@
-import { useState } from "react";
-import { ArrowDown, MapPin, Phone, Mail, Github, Linkedin, Facebook, Camera, Upload } from "lucide-react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import heroBg from "@/assets/hero-bg.jpg";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { 
+  Github, 
+  Linkedin, 
+  Facebook, 
+  Mail, 
+  Phone, 
+  MapPin, 
+  Download,
+  ArrowRight,
+  Code,
+  Sparkles,
+  Zap,
+  Globe,
+  Database,
+  Cpu,
+  Terminal,
+  Camera,
+  Menu,
+  X,
+  Sun,
+  Moon
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useTheme } from "@/contexts/ThemeContext";
+
+const techStack = [
+  { name: "React", icon: Code, color: "text-cyan-500" },
+  { name: "TypeScript", icon: Terminal, color: "text-blue-500" },
+  { name: "Node.js", icon: Zap, color: "text-green-500" },
+  { name: "Tailwind CSS", icon: Sparkles, color: "text-purple-500" },
+  { name: "MongoDB", icon: Database, color: "text-emerald-500" },
+  { name: "Next.js", icon: Globe, color: "text-gray-800" },
+  { name: "PostgreSQL", icon: Database, color: "text-blue-600" },
+  { name: "Figma", icon: Sparkles, color: "text-pink-500" },
+];
+
+const socialLinks = [
+  { icon: Github, href: "https://github.com/T0b0i7/", label: "GitHub" },
+  { icon: Linkedin, href: "https://www.linkedin.com/in/eucher-abatti-7a9472283", label: "LinkedIn" },
+  { icon: Facebook, href: "https://www.facebook.com/bi.to.77235", label: "Facebook" },
+];
 
 export function HeroSection() {
   const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [currentTechIndex, setCurrentTechIndex] = useState(0);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { colors, theme, toggleTheme } = useTheme();
 
+  // Handle image upload
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfileImage(reader.result as string);
+      reader.onload = (e) => {
+        setProfileImage(e.target?.result as string);
       };
       reader.readAsDataURL(file);
     }
   };
 
+  // Rotate tech stack
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTechIndex((prev) => (prev + 1) % techStack.length);
+    }, 2000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const getPrimaryColor = () => {
+    const colorMap = {
+      light: 'bg-blue-600 hover:bg-blue-700',
+      dark: 'bg-blue-500 hover:bg-blue-600'
+    };
+    return colorMap[theme];
+  };
+
+  const getTextColor = () => {
+    const colorMap = {
+      light: 'text-blue-600',
+      dark: 'text-blue-400'
+    };
+    return colorMap[theme];
+  };
+
   return (
-    <section
-      id="hero"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
-    >
-      {/* Background Image */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${heroBg})` }}
-      />
-      <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />
-      
-      {/* Background Effects */}
-      <div className="absolute inset-0 bg-gradient-radial from-primary/10 via-transparent to-transparent" />
-      <div className="absolute inset-0 bg-grid-pattern opacity-20" />
+    <section id="hero" className="min-h-screen relative overflow-hidden" style={{ backgroundColor: colors.background }}>
+      {/* Simple Background Pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, ${colors.primary} 1px, transparent 1px)`,
+          backgroundSize: '50px 50px'
+        }} />
+      </div>
 
-      {/* Content - On Top */}
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="max-w-5xl mx-auto text-center">
-          {/* Profile Image */}
-          <div className="relative inline-block mb-8 animate-fade-in group">
-            <Avatar className="w-32 h-32 md:w-40 md:h-40 border-4 border-primary/50 glow-cyan">
-              <AvatarImage src={profileImage || "/profil.png"} alt="Eucher ABATTI" className="object-cover" />
-              <AvatarFallback className="bg-background text-4xl md:text-5xl font-display font-bold gradient-text">
-                EA
-              </AvatarFallback>
-            </Avatar>
-            
-            {/* Upload Overlay */}
-            <label 
-              htmlFor="profile-upload" 
-              className="absolute inset-0 flex items-center justify-center rounded-full bg-background/80 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+      {/* Header Navigation */}
+      <header className="relative z-20 px-6 py-4 backdrop-blur-sm border-b" style={{ backgroundColor: colors.surface + '80', borderColor: colors.border }}>
+        <div className="container mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div 
+              className="w-10 h-10 rounded-lg flex items-center justify-center"
+              style={{ backgroundColor: colors.primary }}
             >
-              <div className="flex flex-col items-center gap-1">
-                <Camera className="w-6 h-6 text-primary" />
-                <span className="text-xs text-muted-foreground">Modifier</span>
+              <Code className="w-6 h-6 text-white" />
+            </div>
+            <span className="text-xl font-bold" style={{ color: colors.text }}>Eucher ABATTI</span>
+          </div>
+          
+          <nav className="hidden md:flex items-center gap-8">
+            <a href="#hero" className="transition-colors" style={{ color: colors.textSecondary }} onMouseEnter={(e) => e.currentTarget.style.color = colors.text} onMouseLeave={(e) => e.currentTarget.style.color = colors.textSecondary}>Accueil</a>
+            <a href="#evolution" className="transition-colors" style={{ color: colors.textSecondary }} onMouseEnter={(e) => e.currentTarget.style.color = colors.text} onMouseLeave={(e) => e.currentTarget.style.color = colors.textSecondary}>Parcours</a>
+            <a href="#projects" className="transition-colors" style={{ color: colors.textSecondary }} onMouseEnter={(e) => e.currentTarget.style.color = colors.text} onMouseLeave={(e) => e.currentTarget.style.color = colors.textSecondary}>Projets</a>
+            <a href="#services" className="transition-colors" style={{ color: colors.textSecondary }} onMouseEnter={(e) => e.currentTarget.style.color = colors.text} onMouseLeave={(e) => e.currentTarget.style.color = colors.textSecondary}>Services</a>
+            <a href="#contact" className="transition-colors" style={{ color: colors.textSecondary }} onMouseEnter={(e) => e.currentTarget.style.color = colors.text} onMouseLeave={(e) => e.currentTarget.style.color = colors.textSecondary}>Contact</a>
+            
+            {/* Theme Toggle in Menu */}
+            <button
+              onClick={toggleTheme}
+              className="relative inline-flex h-8 w-14 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              style={{ backgroundColor: theme === 'dark' ? colors.border : colors.textSecondary + '30' }}
+            >
+              <span className="sr-only">Toggle theme</span>
+              <span
+                className={cn(
+                  'inline-block h-6 w-6 transform rounded-full shadow-lg transition-transform',
+                  theme === 'dark' ? 'translate-x-7' : 'translate-x-1'
+                )}
+                style={{ backgroundColor: colors.surface }}
+              >
+                {theme === 'light' ? (
+                  <Sun className="h-4 w-4 text-yellow-500 m-1" />
+                ) : (
+                  <Moon className="h-4 w-4 text-blue-400 m-1" />
+                )}
+              </span>
+            </button>
+          </nav>
+
+          <div className="flex items-center gap-4">
+            {/* Mobile Theme Toggle */}
+            <button
+              onClick={toggleTheme}
+              className="md:hidden relative inline-flex h-8 w-14 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              style={{ backgroundColor: theme === 'dark' ? colors.border : colors.textSecondary + '30' }}
+            >
+              <span className="sr-only">Toggle theme</span>
+              <span
+                className={cn(
+                  'inline-block h-6 w-6 transform rounded-full shadow-lg transition-transform',
+                  theme === 'dark' ? 'translate-x-7' : 'translate-x-1'
+                )}
+                style={{ backgroundColor: colors.surface }}
+              >
+                {theme === 'light' ? (
+                  <Sun className="h-4 w-4 text-yellow-500 m-1" />
+                ) : (
+                  <Moon className="h-4 w-4 text-blue-400 m-1" />
+                )}
+              </span>
+            </button>
+            
+            <Button className={getPrimaryColor()}>
+              <Download className="w-4 h-4 mr-2" />
+              CV
+            </Button>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <div className="relative z-10 container mx-auto px-6 py-20">
+        <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[calc(100vh-200px)]">
+          {/* Left Side - Profile Image */}
+          <div className="relative">
+            <div className="relative group">
+              {/* Profile Image Container */}
+              <div className="relative rounded-2xl p-8 shadow-lg border" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
+                <div className="relative">
+                  <Avatar className="w-64 h-64 mx-auto">
+                    <AvatarImage 
+                      src={profileImage || "/profil.png"} 
+                      alt="Eucher ABATTI"
+                      className="object-cover"
+                    />
+                    <AvatarFallback className="text-white text-4xl font-bold" style={{ backgroundColor: colors.primary }}>
+                      EA
+                    </AvatarFallback>
+                  </Avatar>
+                  
+                  {/* Upload Button */}
+                  <label 
+                    className="absolute bottom-4 right-4 w-12 h-12 rounded-full flex items-center justify-center cursor-pointer transition-colors shadow-lg"
+                    style={{ backgroundColor: colors.primary }}
+                  >
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                    />
+                    <Camera className="w-5 h-5 text-white" />
+                  </label>
+                </div>
               </div>
-            </label>
-            <input
-              id="profile-upload"
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="hidden"
-            />
-            
-            {/* Status Indicator */}
-            <div className="absolute bottom-1 right-1 w-6 h-6 bg-success rounded-full border-4 border-background animate-pulse" />
-          </div>
 
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-8 animate-fade-in">
-            <span className="w-2 h-2 bg-success rounded-full animate-pulse" />
-            <span className="text-sm text-muted-foreground">
-              Disponible pour de nouveaux projets
-            </span>
-          </div>
+              {/* Floating Elements */}
+              <div 
+                className="absolute -top-4 -right-4 w-16 h-16 rounded-2xl flex items-center justify-center"
+                style={{ backgroundColor: colors.primary + '20' }}
+              >
+                <Cpu className="w-8 h-8" style={{ color: colors.primary }} />
+              </div>
+              
+              <div className="absolute -bottom-4 -left-4 w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: colors.surface === '#ffffff' ? '#f3f4f6' : '#374151' }}>
+                <Terminal className="w-6 h-6" style={{ color: colors.textSecondary }} />
+              </div>
+            </div>
 
-          {/* Name & Title */}
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-bold mb-6 animate-slide-up">
-            <span className="text-foreground">Eucher</span>{" "}
-            <span className="gradient-text">ABATTI</span>
-          </h1>
-
-          <div className="flex items-center justify-center gap-3 mb-8 animate-slide-up animation-delay-100">
-            <div className="h-px w-12 bg-gradient-to-r from-transparent to-primary" />
-            <h2 className="text-xl md:text-2xl font-display text-muted-foreground">
-              Développeur <span className="text-primary">Full-Stack</span> Web & Mobile
-            </h2>
-            <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary" />
-          </div>
-
-          {/* Description */}
-          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-12 leading-relaxed animate-slide-up animation-delay-200">
-            Je conçois des <span className="text-foreground">solutions sur mesure</span> axées sur la 
-            digitalisation des processus métiers. Mon approche repose sur la compréhension des besoins 
-            réels, la <span className="text-primary">rigueur dans l'exécution</span> et une recherche 
-            constante d'<span className="text-secondary">efficacité et d'élégance</span>.
-          </p>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 animate-slide-up animation-delay-300">
-            <Button
-              size="lg"
-              className="bg-primary text-primary-foreground hover:bg-primary/90 glow-cyan px-8 py-6 text-lg font-semibold"
-              onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-            >
-              <Mail className="mr-2 h-5 w-5" />
-              Démarrer un projet
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-muted-foreground/30 hover:border-primary hover:text-primary px-8 py-6 text-lg"
-              onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
-            >
-              Voir mes réalisations
-            </Button>
-          </div>
-
-          {/* Contact Info */}
-          <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground animate-slide-up animation-delay-400">
-            <a
-              href="tel:+22901570024277"
-              className="flex items-center gap-2 hover:text-primary transition-colors"
-            >
-              <Phone className="w-4 h-4" />
-              <span>+229 0157002427</span>
-            </a>
-            <a
-              href="mailto:abattieucher@gmail.com"
-              className="flex items-center gap-2 hover:text-primary transition-colors"
-            >
-              <Mail className="w-4 h-4" />
-              <span>abattieucher@gmail.com</span>
-            </a>
-            <div className="flex items-center gap-2">
-              <MapPin className="w-4 h-4" />
-              <span>Porto-Novo, Bénin</span>
+            {/* Social Links */}
+            <div className="flex justify-center gap-4 mt-8">
+              {socialLinks.map((social) => (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-12 h-12 rounded-full flex items-center justify-center transition-colors border"
+                  style={{ backgroundColor: colors.surface, borderColor: colors.border }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primary + '10'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.surface}
+                  aria-label={social.label}
+                >
+                  <social.icon className="w-5 h-5" style={{ color: colors.textSecondary }} />
+                </a>
+              ))}
             </div>
           </div>
 
-          {/* Social Links */}
-          <div className="flex items-center justify-center gap-4 mt-8 animate-slide-up animation-delay-500">
-            <a
-              href="https://github.com/T0b0i7/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-3 rounded-xl glass hover:glow-cyan transition-all duration-300 hover:-translate-y-1"
+          {/* Right Side - Content */}
+          <div className="space-y-8" style={{ color: colors.text }}>
+            {/* Badge */}
+            <div 
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full"
+              style={{ backgroundColor: colors.primary + '10' }}
             >
-              <Github className="w-5 h-5" />
-            </a>
-            <a
-              href="https://www.linkedin.com/in/eucher-abatti-7a9472283"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-3 rounded-xl glass hover:glow-cyan transition-all duration-300 hover:-translate-y-1"
-            >
-              <Linkedin className="w-5 h-5" />
-            </a>
-            <a
-              href="https://www.facebook.com/bi.to.77235"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-3 rounded-xl glass hover:glow-cyan transition-all duration-300 hover:-translate-y-1"
-            >
-              <Facebook className="w-5 h-5" />
-            </a>
+              <Sparkles className="w-4 h-4" style={{ color: colors.primary }} />
+              <span className="text-sm font-medium" style={{ color: colors.text }}>Développeur Full-Stack & UI/UX Designer</span>
+            </div>
+
+            {/* Main Title */}
+            <div className="space-y-4">
+              <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
+                <span>
+                  Créateur de
+                </span>
+                <br />
+                <span className={getTextColor()}>
+                  Solutions Digitales
+                </span>
+              </h1>
+              
+              <p className="text-xl leading-relaxed" style={{ color: colors.textSecondary }}>
+                Je transforme vos idées en expériences web modernes, performantes et mémorables. 
+                Spécialisé en React, TypeScript et Node.js, je crée des applications qui 
+                allient design élégant et fonctionnalité robuste.
+              </p>
+            </div>
+
+            {/* Current Tech Display */}
+            <div className="rounded-xl p-6 border" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
+              <div className="flex items-center gap-4">
+                <div 
+                  className="p-3 rounded-xl"
+                  style={{ backgroundColor: colors.primary + '10' }}
+                >
+                  {React.createElement(techStack[currentTechIndex].icon, { 
+                    className: cn("w-6 h-6", techStack[currentTechIndex].color) 
+                  })}
+                </div>
+                <div>
+                  <div className="text-sm" style={{ color: colors.textSecondary }}>Technologie actuelle</div>
+                  <div className="text-xl font-bold" style={{ color: colors.text }}>{techStack[currentTechIndex].name}</div>
+                </div>
+              </div>
+            </div>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button 
+                size="lg" 
+                className={cn("text-white px-8 py-4 text-lg font-semibold", getPrimaryColor())}
+                onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
+              >
+                Voir mes projets
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+              
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="px-8 py-4 text-lg font-semibold"
+                style={{ borderColor: colors.border, color: colors.text }}
+                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = colors.primary + '10'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
+                onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
+              >
+                Me contacter
+              </Button>
+            </div>
+
+            {/* Contact Info */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-8">
+              <div className="flex items-center gap-3" style={{ color: colors.textSecondary }}>
+                <Mail className="w-5 h-5" style={{ color: colors.primary }} />
+                <span className="text-sm">abattieucher@gmail.com</span>
+              </div>
+              <div className="flex items-center gap-3" style={{ color: colors.textSecondary }}>
+                <Phone className="w-5 h-5" style={{ color: colors.primary }} />
+                <span className="text-sm">+229 0157002427</span>
+              </div>
+              <div className="flex items-center gap-3" style={{ color: colors.textSecondary }}>
+                <MapPin className="w-5 h-5" style={{ color: colors.primary }} />
+                <span className="text-sm">Porto-Novo, Bénin</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce z-20">
-        <button
-          onClick={() => document.getElementById("parcours")?.scrollIntoView({ behavior: "smooth" })}
-          className="p-3 rounded-full glass hover:glow-cyan transition-all duration-300 hover:text-primary"
-        >
-          <ArrowDown className="w-6 h-6 text-primary animate-pulse" />
-        </button>
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce" style={{ color: colors.textSecondary }}>
+        <ArrowRight className="w-5 h-5 rotate-90" />
       </div>
     </section>
   );

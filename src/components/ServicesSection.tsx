@@ -1,362 +1,460 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
-  Palette,
   Code,
+  Palette,
   Smartphone,
-  Sparkles,
-  Bot,
-  Workflow,
-  Database,
   Globe,
-  ArrowRight,
-  Star,
+  Database,
   Zap,
+  Shield,
+  Rocket,
+  Users,
+  Target,
+  ArrowRight,
   TrendingUp,
+  Lightbulb,
+  Bot,
+  Cloud,
+  Wrench,
+  Monitor,
+  Cpu,
+  GitBranch,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface Service {
-  name: string;
-  price: string;
+  title: string;
   description: string;
   features: string[];
-  popular?: boolean;
-  topSale?: boolean;
-  roi?: string;
+  icon: any;
+  color: string;
+  category: string;
 }
 
-interface ServiceCategory {
-  id: string;
-  name: string;
-  icon: typeof Palette;
-  gradient: string;
-  services: Service[];
-}
-
-const serviceCategories: ServiceCategory[] = [
+const services: Service[] = [
   {
-    id: "design",
-    name: "Design Valley",
-    icon: Palette,
-    gradient: "from-secondary to-warning",
-    services: [
-      {
-        name: "Branding & Identité",
-        price: "350K - 600K",
-        description: "Logo, charte graphique, supports visuels complets",
-        features: ["Logo professionnel", "Charte graphique", "Templates réseaux sociaux"],
-      },
-      {
-        name: "UI/UX Design Pro",
-        price: "550K - 850K",
-        popular: true,
-        description: "Interfaces utilisateur élégantes et intuitives",
-        features: ["Wireframes", "Maquettes Figma", "Prototypes interactifs", "Tests utilisateurs"],
-        roi: "+40% conversion",
-      },
-      {
-        name: "Motion Graphics",
-        price: "250K - 400K",
-        description: "Animations et vidéos promotionnelles",
-        features: ["Animations logo", "Vidéos courtes", "Stories animées"],
-      },
+    category: "Développement Web",
+    title: "Applications Web Complètes",
+    description: "Création de sites web et applications web modernes, responsives et performants adaptées à vos besoins spécifiques.",
+    features: [
+      "Sites vitrines et portfolios",
+      "Applications web sur mesure",
+      "E-commerce et plateformes en ligne",
+      "Tableaux de bord et interfaces admin",
+      "API REST et GraphQL",
+      "Optimisation SEO et performance",
+      "Hébergement et déploiement",
     ],
-  },
-  {
-    id: "dev",
-    name: "Dev City",
     icon: Code,
-    gradient: "from-primary to-accent",
-    services: [
-      {
-        name: "Site Web Premium",
-        price: "650K - 1.2M",
-        description: "Sites vitrines modernes et performants",
-        features: ["Design responsive", "SEO optimisé", "CMS intégré", "Performance A+"],
-      },
-      {
-        name: "Application Mobile",
-        price: "1.2M - 2.5M",
-        topSale: true,
-        description: "Apps iOS/Android sur mesure",
-        features: ["Cross-platform", "UI/UX native", "Backend intégré", "Maintenance incluse"],
-        roi: "Expansion marché x3",
-      },
-      {
-        name: "Plateforme SaaS",
-        price: "1.5M - 3.5M",
-        description: "Solutions cloud évolutives",
-        features: ["Architecture scalable", "Dashboard admin", "API REST", "Analytics"],
-      },
-      {
-        name: "Intégration API",
-        price: "400K - 800K",
-        description: "Connexion de systèmes et automatisation",
-        features: ["APIs tierces", "Webhooks", "Synchronisation", "Documentation"],
-      },
-    ],
+    color: "text-blue-500",
   },
   {
-    id: "ai",
-    name: "AI Zone",
-    icon: Bot,
-    gradient: "from-accent to-purple",
-    services: [
-      {
-        name: "Solutions IA",
-        price: "750K - 1.5M",
-        description: "Intégration d'intelligence artificielle",
-        features: ["Chatbots IA", "Analyse prédictive", "Génération contenu", "NLP"],
-      },
-      {
-        name: "Automatisation Workflow",
-        price: "300K - 600K",
-        description: "Automatisation des processus métiers",
-        features: ["Zapier/Make", "Scripts custom", "Intégrations", "Monitoring"],
-        roi: "-30% temps opérationnel",
-      },
-      {
-        name: "Data Intelligence",
-        price: "500K - 1M",
-        description: "Tableaux de bord et analytics",
-        features: ["Dashboards", "Rapports auto", "KPIs temps réel", "Exports"],
-      },
+    category: "Développement Mobile",
+    title: "Applications Mobile iOS & Android",
+    description: "Développement d'applications mobiles natives et multiplateformes pour atteindre vos utilisateurs sur tous les appareils.",
+    features: [
+      "Applications iOS natives (Swift/Objective-C)",
+      "Applications Android natives (Kotlin/Java)",
+      "Applications cross-platform (React Native/Flutter)",
+      "Interface utilisateur intuitive et adaptative",
+      "Intégration avec les APIs mobiles",
+      "Publication sur App Store et Google Play",
+      "Maintenance et mises à jour",
     ],
+    icon: Smartphone,
+    color: "text-green-500",
+  },
+  {
+    category: "Design & UX",
+    title: "Design UI/UX & Prototypage",
+    description: "Création d'interfaces utilisateur magnifiques et expériences mémorables qui fidélisent vos utilisateurs.",
+    features: [
+      "Design d'interfaces utilisateur (UI)",
+      "Expérience utilisateur (UX)",
+      "Wireframes et maquettes interactives",
+      "Prototypes animés et cliquables",
+      "Design responsive et adaptatif",
+      "Tests utilisateurs et itérations",
+      "Charte graphique et identité visuelle",
+      "Design system et guidelines",
+    ],
+    icon: Palette,
+    color: "text-purple-500",
+  },
+  {
+    category: "Base de Données",
+    title: "Architecture & Gestion de Données",
+    description: "Conception de bases de données robustes et évolutives pour gérer efficacement vos informations critiques.",
+    features: [
+      "Modélisation et conception de schémas",
+      "Bases de données SQL et NoSQL",
+      "Optimisation des requêtes et performances",
+      "Migration et synchronisation de données",
+      "Sauvegarde et récupération",
+      "Sécurité des données et conformité",
+      "API et gestion des accès",
+    ],
+    icon: Database,
+    color: "text-orange-500",
+  },
+  {
+    category: "Cloud & DevOps",
+    title: "Solutions Cloud & Infrastructure",
+    description: "Mise en place d'infrastructures cloud modernes et de pipelines CI/CD pour un déploiement continu et fiable.",
+    features: [
+      "Architecture cloud et microservices",
+      "Hébergement sur AWS, Azure, Google Cloud",
+      "Conteneurisation (Docker, Kubernetes)",
+      "Intégration continue et déploiement (CI/CD)",
+      "Monitoring et alertes en temps réel",
+      "Sauvegarde et reprise après sinistre",
+      "Sécurité et conformité RGPD",
+    ],
+    icon: Cloud,
+    color: "text-cyan-500",
+  },
+  {
+    category: "Automatisation & IA",
+    title: "Automatisation & Intelligence Artificielle",
+    description: "Intégration de l'intelligence artificielle et de l'automatisation pour optimiser vos processus métier.",
+    features: [
+      "Développement de chatbots et assistants IA",
+      "Automatisation des workflows métier",
+      "Machine Learning et analyse prédictive",
+      "Traitement du langage naturel (NLP)",
+      "Intégration d'APIs IA (OpenAI, Claude, etc.)",
+      "Scripts Python et automatisation personnalisés",
+      "Tableaux de bord intelligents et analytics",
+    ],
+    icon: Bot,
+    color: "text-pink-500",
+  },
+  {
+    category: "Maintenance & Support",
+    title: "Maintenance & Support Technique",
+    description: "Service de maintenance continue et de support technique pour garantir la performance et la fiabilité de vos applications.",
+    features: [
+      "Maintenance corrective et évolutive",
+      "Surveillance 24/7 et monitoring",
+      "Support technique et assistance utilisateur",
+      "Mises à jour et patches de sécurité",
+      "Optimisation des performances",
+      "Documentation technique et formation",
+      "Sauvegarde et plan de reprise",
+    ],
+    icon: Wrench,
+    color: "text-yellow-500",
   },
 ];
 
-const packs = [
+const expertise = [
   {
-    name: "Startup Essential",
-    price: "2 250 000",
-    savings: "450K (-16%)",
-    features: [
-      "Identité visuelle complète",
-      "Site web vitrine premium (5 pages)",
-      "UI/UX design sur mesure",
-      "6 mois maintenance Pro",
+    icon: Code,
+    title: "Langages & Frameworks",
+    items: [
+      "JavaScript",
+      "TypeScript",
+      "Python",
+      "React",
+      "Next.js",
+      "Node.js",
+      "Express",
+      "Django",
+      "Flask",
     ],
-    icon: Zap,
-    color: "primary",
   },
   {
-    name: "Scale-Up Pro",
-    price: "4 800 000",
-    savings: "1.2M (-20%)",
-    featured: true,
-    features: [
-      "Audit stratégique complet",
-      "Application web SaaS",
-      "Système d'automatisation",
-      "Gestion de projet 3 mois",
-      "12 mois maintenance Enterprise",
+    icon: Database,
+    title: "Base de Données",
+    items: [
+      "PostgreSQL",
+      "MongoDB",
+      "MySQL",
+      "Redis",
+      "Supabase",
+      "Prisma",
+      "MongoDB Atlas",
     ],
-    icon: TrendingUp,
-    color: "secondary",
+  },
+  {
+    icon: Palette,
+    title: "Design & Outils",
+    items: [
+      "Figma",
+      "Tailwind CSS",
+      "Bootstrap",
+      "Material-UI",
+      "Adobe XD",
+      "VS Code",
+      "Git",
+    ],
+  },
+  {
+    icon: Cloud,
+    title: "Cloud & DevOps",
+    items: [
+      "AWS",
+      "Docker",
+      "Kubernetes",
+      "GitHub Actions",
+      "Vercel",
+      "Netlify",
+      "CI/CD",
+    ],
   },
 ];
 
 export function ServicesSection() {
-  const [activeCategory, setActiveCategory] = useState("design");
+  const [activeCategory, setActiveCategory] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 6;
+  const { colors, theme } = useTheme();
 
-  const activeServices =
-    serviceCategories.find((c) => c.id === activeCategory)?.services || [];
+  const filteredServices = activeCategory === "all" 
+    ? services 
+    : services.filter((service) => service.category === activeCategory);
+
+  const totalPages = Math.ceil(filteredServices.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const paginatedServices = filteredServices.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+  const categories = [
+    { id: "all", name: "Tous les services", icon: Rocket },
+    { id: "Développement Web", name: "Développement Web", icon: Code },
+    { id: "Développement Mobile", name: "Développement Mobile", icon: Smartphone },
+    { id: "Design & UX", name: "Design & UX", icon: Palette },
+    { id: "Base de Données", name: "Base de Données", icon: Database },
+    { id: "Cloud & DevOps", name: "Cloud & DevOps", icon: Cloud },
+    { id: "Automatisation & IA", name: "Automatisation & IA", icon: Bot },
+    { id: "Maintenance & Support", name: "Maintenance & Support", icon: Wrench },
+  ];
+
+  // Reset page when category changes
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [activeCategory]);
 
   return (
-    <section id="services" className="py-20 relative overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 bg-gradient-radial from-accent/5 via-transparent to-transparent" />
-
-      <div className="container mx-auto px-6 relative z-10">
+    <section id="services" className="py-20" style={{ backgroundColor: colors.background }}>
+      <div className="container mx-auto px-6">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-sm text-muted-foreground mb-4">
-            <Sparkles className="w-4 h-4 text-primary" />
-            Solutions & Services
-          </span>
-          <h2 className="text-4xl md:text-5xl font-display font-bold mb-4">
-            <span className="gradient-text">Silicon Valley</span> Virtuelle
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mb-4" style={{ backgroundColor: colors.primary + '10', color: colors.primary }}>
+            <Zap className="w-4 h-4" />
+            Services Développeur
+          </div>
+          <h2 className="text-4xl font-bold mb-4" style={{ color: colors.text }}>
+            Des Solutions <span style={{ color: colors.primary }}>Complètes</span>
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Explorez les quartiers de ma ville numérique. Chaque district offre des
-            solutions spécialisées pour transformer votre vision en réalité.
+          <p className="text-lg max-w-3xl mx-auto leading-relaxed" style={{ color: colors.textSecondary }}>
+            En tant que développeur full-stack, je vous accompagne dans tous vos projets digitaux, 
+            de la conception à la mise en production, en passant par toutes les technologies nécessaires.
           </p>
         </div>
 
-        {/* Category Tabs */}
-        <div className="flex flex-wrap justify-center gap-4 mb-12">
-          {serviceCategories.map((category) => {
-            const Icon = category.icon;
-            const isActive = activeCategory === category.id;
-
-            return (
-              <button
-                key={category.id}
-                onClick={() => setActiveCategory(category.id)}
-                className={cn(
-                  "flex items-center gap-3 px-6 py-3 rounded-2xl font-medium transition-all duration-300",
-                  isActive
-                    ? `bg-gradient-to-r ${category.gradient} text-foreground shadow-lg`
-                    : "glass text-muted-foreground hover:text-foreground"
-                )}
-              >
-                <Icon className="w-5 h-5" />
-                <span>{category.name}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Services Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
-          {activeServices.map((service, index) => (
+        {/* Expertise Grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+          {expertise.map((exp, index) => (
             <div
-              key={service.name}
-              className={cn(
-                "glass rounded-2xl p-6 transition-all duration-300 card-hover relative overflow-hidden",
-                service.popular && "border-primary/50",
-                service.topSale && "border-secondary/50"
-              )}
-              style={{ animationDelay: `${index * 100}ms` }}
+              key={exp.title}
+              className="rounded-xl p-6 border transition-all duration-300 hover:scale-105"
+              style={{ backgroundColor: colors.surface, borderColor: colors.border }}
+              onMouseEnter={(e) => { e.currentTarget.style.borderColor = colors.primary; }}
+              onMouseLeave={(e) => { e.currentTarget.style.borderColor = colors.border; }}
             >
-              {/* Badges */}
-              {service.popular && (
-                <div className="absolute top-4 right-4 flex items-center gap-1 px-3 py-1 rounded-full bg-primary/20 text-primary text-xs font-medium">
-                  <Star className="w-3 h-3" />
-                  Populaire
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 rounded-lg" style={{ backgroundColor: colors.primary + '10' }}>
+                  <exp.icon className="w-6 h-6" style={{ color: colors.primary }} />
                 </div>
-              )}
-              {service.topSale && (
-                <div className="absolute top-4 right-4 flex items-center gap-1 px-3 py-1 rounded-full bg-secondary/20 text-secondary text-xs font-medium">
-                  <Zap className="w-3 h-3" />
-                  Top Vente
-                </div>
-              )}
-
-              {/* Content */}
-              <h3 className="text-xl font-display font-semibold mb-2">{service.name}</h3>
-              <p className="text-2xl font-bold gradient-text mb-3">
-                {service.price} <span className="text-sm text-muted-foreground">FCFA</span>
-              </p>
-              <p className="text-muted-foreground text-sm mb-4">{service.description}</p>
-
-              {/* Features */}
-              <ul className="space-y-2 mb-6">
-                {service.features.map((feature, i) => (
-                  <li key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                    {feature}
+                <h3 className="text-lg font-semibold" style={{ color: colors.text }}>{exp.title}</h3>
+              </div>
+              <ul className="space-y-2">
+                {exp.items.map((item, itemIndex) => (
+                  <li key={itemIndex} className="flex items-center gap-2 text-sm" style={{ color: colors.textSecondary }}>
+                    <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: colors.primary + '40' }} />
+                    {item}
                   </li>
                 ))}
               </ul>
-
-              {/* ROI Badge */}
-              {service.roi && (
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-success/10 text-success text-sm font-medium">
-                  <TrendingUp className="w-4 h-4" />
-                  {service.roi}
-                </div>
-              )}
-
-              {/* CTA */}
-              <Button
-                variant="ghost"
-                className="w-full mt-4 hover:bg-primary/10 hover:text-primary"
-                onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-              >
-                Demander un devis
-                <ArrowRight className="ml-2 w-4 h-4" />
-              </Button>
             </div>
           ))}
         </div>
 
-        {/* Packs Section */}
-        <div className="text-center mb-12">
-          <h3 className="text-2xl md:text-3xl font-display font-bold mb-4">
-            Packs <span className="gradient-text-warm">Pré-configurés</span>
-          </h3>
-          <p className="text-muted-foreground">
-            Solutions complètes à prix avantageux
-          </p>
+        {/* Category Filter */}
+        <div className="flex flex-wrap justify-center gap-3 mb-12">
+          {categories.map((category) => (
+            <button
+              key={category.id}
+              onClick={() => setActiveCategory(category.id)}
+              className={cn(
+                "flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all duration-300",
+                activeCategory === category.id
+                  ? "text-white shadow-lg"
+                  : "hover:bg-gray-100"
+              )}
+              style={{
+                backgroundColor: activeCategory === category.id ? colors.primary : colors.surface,
+                color: activeCategory === category.id ? '#ffffff' : colors.text
+              }}
+              onMouseEnter={(e) => { 
+                if (activeCategory !== category.id) e.currentTarget.style.backgroundColor = colors.primary + '10'; 
+              }}
+              onMouseLeave={(e) => { 
+                if (activeCategory !== category.id) e.currentTarget.style.backgroundColor = colors.surface; 
+              }}
+            >
+              <category.icon className="w-4 h-4" />
+              <span>{category.name}</span>
+              <span className="text-xs px-2 py-1 rounded-full" style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}>
+                {category.id === "all" 
+                  ? services.length 
+                  : services.filter(s => s.category === category.name).length}
+              </span>
+            </button>
+          ))}
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          {packs.map((pack) => {
-            const Icon = pack.icon;
-
-            return (
-              <div
-                key={pack.name}
-                className={cn(
-                  "glass rounded-2xl p-8 transition-all duration-300 card-hover",
-                  pack.featured && "border-secondary/50 scale-105"
-                )}
-              >
-                <div className="flex items-center gap-4 mb-6">
-                  <div
-                    className={cn(
-                      "p-3 rounded-xl",
-                      pack.color === "primary" ? "bg-primary/20" : "bg-secondary/20"
-                    )}
-                  >
-                    <Icon
-                      className={cn(
-                        "w-6 h-6",
-                        pack.color === "primary" ? "text-primary" : "text-secondary"
-                      )}
-                    />
-                  </div>
-                  <div>
-                    <h4 className="text-xl font-display font-bold">{pack.name}</h4>
-                    <p className="text-success text-sm font-medium">
-                      Économie : {pack.savings}
-                    </p>
-                  </div>
+        {/* Services Grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
+          {paginatedServices.map((service, index) => (
+            <div
+              key={service.title}
+              className="rounded-xl p-8 border transition-all duration-300 relative overflow-hidden"
+              style={{ backgroundColor: colors.surface, borderColor: colors.border }}
+              onMouseEnter={(e) => { e.currentTarget.style.borderColor = colors.primary; }}
+              onMouseLeave={(e) => { e.currentTarget.style.borderColor = colors.border; }}
+            >
+              {/* Service Icon */}
+              <div className="flex items-center gap-3 mb-4">
+                <div
+                  className="p-3 rounded-xl"
+                  style={{ backgroundColor: colors.primary + '10' }}
+                >
+                  <service.icon className={cn("w-6 h-6", service.color)} />
                 </div>
+                <div>
+                  <div className="text-xs uppercase tracking-wider mb-1" style={{ color: colors.textSecondary }}>
+                    {service.category}
+                  </div>
+                  <h3 className="text-xl font-bold" style={{ color: colors.text }}>{service.title}</h3>
+                </div>
+              </div>
 
-                <p className="text-3xl font-bold gradient-text mb-6">
-                  {pack.price} <span className="text-lg text-muted-foreground">FCFA</span>
-                </p>
+              {/* Description */}
+              <p className="mb-6 leading-relaxed" style={{ color: colors.textSecondary }}>
+                {service.description}
+              </p>
 
-                <ul className="space-y-3 mb-8">
-                  {pack.features.map((feature, i) => (
-                    <li key={i} className="flex items-center gap-3 text-muted-foreground">
-                      <div className="w-5 h-5 rounded-full bg-success/20 flex items-center justify-center">
-                        <svg
-                          className="w-3 h-3 text-success"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M5 13l4 4L19 7"
-                          />
-                        </svg>
-                      </div>
+              {/* Features */}
+              <div className="space-y-3">
+                <h4 className="font-semibold flex items-center gap-2" style={{ color: colors.text }}>
+                  <Target className="w-4 h-4" style={{ color: colors.primary }} />
+                  Compétences clés
+                </h4>
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {service.features.map((feature, featureIndex) => (
+                    <li key={featureIndex} className="flex items-center gap-2 text-sm" style={{ color: colors.textSecondary }}>
+                      <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: colors.primary + '40' }} />
                       {feature}
                     </li>
                   ))}
                 </ul>
+              </div>
 
+              {/* CTA */}
+              <div className="mt-6 pt-6 border-t" style={{ borderColor: colors.border }}>
                 <Button
-                  className={cn(
-                    "w-full",
-                    pack.color === "primary"
-                      ? "bg-primary hover:bg-primary/90 text-primary-foreground"
-                      : "bg-secondary hover:bg-secondary/90 text-secondary-foreground"
-                  )}
+                  size="lg"
+                  className="w-full text-white font-medium"
+                  style={{ backgroundColor: colors.primary }}
                   onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
                 >
-                  Choisir ce pack
+                  <Users className="w-4 h-4 mr-2" />
+                  Discutons de votre projet
                 </Button>
               </div>
-            );
-          })}
+            </div>
+          ))}
+        </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center gap-4 mb-16">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+              disabled={currentPage === 1}
+              style={{ borderColor: colors.border, color: colors.text }}
+              onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = colors.primary + '10'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
+            >
+              Précédent
+            </Button>
+            
+            <div className="flex gap-2">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <Button
+                  key={page}
+                  variant={currentPage === page ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setCurrentPage(page)}
+                  className="w-10 h-10"
+                  style={{
+                    backgroundColor: currentPage === page ? colors.primary : colors.surface,
+                    color: currentPage === page ? '#ffffff' : colors.text,
+                    borderColor: colors.border
+                  }}
+                  onMouseEnter={(e) => { 
+                    if (currentPage !== page) e.currentTarget.style.backgroundColor = colors.primary + '10'; 
+                  }}
+                  onMouseLeave={(e) => { 
+                    if (currentPage !== page) e.currentTarget.style.backgroundColor = colors.surface; 
+                  }}
+                >
+                  {page}
+                </Button>
+              ))}
+            </div>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+              disabled={currentPage === totalPages}
+              style={{ borderColor: colors.border, color: colors.text }}
+              onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = colors.primary + '10'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
+            >
+              Suivant
+            </Button>
+          </div>
+        )}
+
+        {/* Bottom CTA */}
+        <div className="text-center">
+          <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full mb-6" style={{ backgroundColor: colors.primary + '10' }}>
+            <TrendingUp className="w-5 h-5" style={{ color: colors.primary }} />
+            <span style={{ color: colors.text }}>Prêt à concrétiser votre projet ?</span>
+          </div>
+          <h3 className="text-2xl font-bold mb-4" style={{ color: colors.text }}>
+            De l'idée à la <span style={{ color: colors.primary }}>réalité</span>
+          </h3>
+          <p className="mb-8 max-w-2xl mx-auto leading-relaxed" style={{ color: colors.textSecondary }}>
+            Chaque projet est unique. Je m'engage à vous livrer une solution de qualité, 
+            adaptée à vos besoins spécifiques, dans le respect des délais et du budget.
+          </p>
+          <Button
+            size="lg"
+            className="px-12 py-6 text-lg font-semibold text-white"
+            style={{ backgroundColor: colors.primary }}
+            onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
+          >
+            <ArrowRight className="w-5 h-5 mr-2" />
+            Démarrer votre projet
+          </Button>
         </div>
       </div>
     </section>
