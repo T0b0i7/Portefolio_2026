@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Code,
   Palette,
@@ -209,8 +209,11 @@ const expertise = [
 export function ServicesSection() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [visibleElements, setVisibleElements] = useState<Set<string>>(new Set());
   const ITEMS_PER_PAGE = 6;
   const { colors, theme } = useTheme();
+  const sectionRef = useRef<HTMLElement>(null);
 
   const filteredServices = activeCategory === "all" 
     ? services 
@@ -219,6 +222,45 @@ export function ServicesSection() {
   const totalPages = Math.ceil(filteredServices.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const paginatedServices = filteredServices.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+  // Trigger initial animation on mount
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Intersection Observer for scroll-triggered animations
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const elementId = entry.target.getAttribute('data-animate-id');
+            if (elementId) {
+              setTimeout(() => {
+                setVisibleElements((prev) => new Set([...prev, elementId]));
+              }, 100);
+            }
+          }
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      }
+    );
+
+    // Use component-scoped query for IntersectionObserver
+    const container = sectionRef.current;
+    const elements = container ? container.querySelectorAll('[data-animate-id]') : [];
+    elements.forEach((el) => observer.observe(el));
+
+    return () => {
+      elements.forEach((el) => observer.unobserve(el));
+    };
+  }, [paginatedServices, activeCategory]);
 
   const categories = [
     { id: "all", name: "Tous les services", icon: Rocket },
@@ -237,13 +279,14 @@ export function ServicesSection() {
   }, [activeCategory]);
 
   return (
-    <section id="services" className="py-20" style={{ backgroundColor: colors.background }}>
+    <section id="services" className="py-20" style={{ backgroundColor: colors.background }} ref={sectionRef}>
       <div className="container mx-auto px-6">
         {/* Section Header */}
-        <div className="text-center mb-16">
+        <div className={`text-center mb-16 transition-all duration-1000 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+             style={{ transitionDelay: '100ms' }}>
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mb-4" style={{ backgroundColor: colors.primary + '10', color: colors.primary }}>
             <Zap className="w-4 h-4" />
-            Services Développeur
+            <span className="typewriter">Services Développeur</span>
           </div>
           <h2 className="text-4xl font-bold mb-4" style={{ color: colors.text }}>
             Des Solutions <span style={{ color: colors.primary }}>Complètes</span>
@@ -255,35 +298,214 @@ export function ServicesSection() {
         </div>
 
         {/* Expertise Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+        <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
           {expertise.map((exp, index) => (
             <div
               key={exp.title}
-              className="rounded-xl p-6 border transition-all duration-300 hover:scale-105"
-              style={{ backgroundColor: colors.surface, borderColor: colors.border }}
+              data-animate-id={`expertise-${index}`}
+              className={`expertise-card flex items-center gap-6 p-6 rounded-xl border transition-all duration-500 ${
+                visibleElements.has(`expertise-${index}`) ? 'visible' : ''
+              }`}
+              style={{ 
+                backgroundColor: colors.surface, 
+                borderColor: colors.border,
+                transitionDelay: `${200 + index * 150}ms`
+              }}
               onMouseEnter={(e) => { e.currentTarget.style.borderColor = colors.primary; }}
               onMouseLeave={(e) => { e.currentTarget.style.borderColor = colors.border; }}
             >
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 rounded-lg" style={{ backgroundColor: colors.primary + '10' }}>
-                  <exp.icon className="w-6 h-6" style={{ color: colors.primary }} />
+              {/* Card à gauche - Contenu texte */}
+              <div className="flex-1">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2 rounded-lg" style={{ backgroundColor: colors.primary + '10' }}>
+                    <exp.icon className="w-6 h-6" style={{ color: colors.primary }} />
+                  </div>
+                  <h3 className="text-lg font-semibold" style={{ color: colors.text }}>{exp.title}</h3>
                 </div>
-                <h3 className="text-lg font-semibold" style={{ color: colors.text }}>{exp.title}</h3>
+                <ul className="space-y-2">
+                  {exp.items.slice(0, 4).map((item, itemIndex) => (
+                    <li key={itemIndex} className="flex items-center gap-2 text-sm" style={{ color: colors.textSecondary }}>
+                      <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: colors.primary + '40' }} />
+                      {item}
+                    </li>
+                  ))}
+                  {exp.items.length > 4 && (
+                    <li className="text-sm" style={{ color: colors.primary }}>
+                      +{exp.items.length - 4} autres...
+                    </li>
+                  )}
+                </ul>
               </div>
-              <ul className="space-y-2">
-                {exp.items.map((item, itemIndex) => (
-                  <li key={itemIndex} className="flex items-center gap-2 text-sm" style={{ color: colors.textSecondary }}>
-                    <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: colors.primary + '40' }} />
-                    {item}
-                  </li>
-                ))}
-              </ul>
+
+              {/* SVG à droite - Animation dynamique */}
+              <div className="flex-shrink-0 relative">
+                <svg 
+                  width="120" 
+                  height="120" 
+                  viewBox="0 0 120 120" 
+                  className="expertise-svg"
+                  style={{ 
+                    filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.1))',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  {exp.title === "Développement Web" && (
+                    <g>
+                      {/* Animation de développement web */}
+                      <rect x="15" y="25" width="90" height="70" rx="6" fill="none" stroke={colors.primary} strokeWidth="2" opacity="0.2"/>
+                      <rect x="15" y="25" width="90" height="70" rx="6" fill="none" stroke={colors.primary} strokeWidth="2" className="web-browser">
+                        <animate attributeName="width" values="0;90;90" dur="2s" repeatCount="indefinite"/>
+                      </rect>
+                      <rect x="20" y="35" width="80" height="50" rx="4" fill={colors.primary + '15'}/>
+                      <circle cx="30" cy="45" r="2" fill={colors.primary}>
+                        <animate attributeName="cy" values="45;55;45" dur="1.5s" repeatCount="indefinite"/>
+                      </circle>
+                      <rect x="40" y="50" width="40" height="3" rx="1" fill={colors.primary} className="code-typing">
+                        <animate attributeName="width" values="0;40;0" dur="3s" repeatCount="indefinite"/>
+                      </rect>
+                      <circle cx="85" cy="40" r="3" fill={colors.text}>
+                        <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite"/>
+                      </circle>
+                      <path d="M25 65 L35 65 M30 60 L40 65" stroke={colors.text} strokeWidth="1.5" fill="none" className="connection-pulse">
+                        <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" begin="0.5s" repeatCount="indefinite"/>
+                      </path>
+                    </g>
+                  )}
+
+                  {exp.title === "Développement Mobile" && (
+                    <g>
+                      {/* Animation de développement mobile */}
+                      <rect x="25" y="20" width="70" height="80" rx="8" fill="none" stroke={colors.primary} strokeWidth="2" opacity="0.2"/>
+                      <rect x="25" y="20" width="70" height="80" rx="8" fill={colors.primary + '15'} className="phone-frame">
+                        <animate attributeName="height" values="0;80;80" dur="2s" repeatCount="indefinite"/>
+                      </rect>
+                      <rect x="30" y="30" width="60" height="60" rx="4" fill={colors.surface} stroke={colors.primary} strokeWidth="1"/>
+                      <circle cx="60" cy="50" r="8" fill="none" stroke={colors.primary} strokeWidth="2" className="app-loading">
+                        <animate attributeName="stroke-dasharray" values="0 50;50 0" dur="2s" repeatCount="indefinite"/>
+                      </circle>
+                      <path d="M55 50 L65 50 M60 45 L60 55" stroke={colors.text} strokeWidth="2" className="mobile-signal">
+                        <animate attributeName="opacity" values="0;1;0" dur="1.5s" repeatCount="indefinite"/>
+                      </path>
+                      <circle cx="35" cy="70" r="2" fill={colors.primary}>
+                        <animate attributeName="r" values="2;3;2" dur="1s" repeatCount="indefinite"/>
+                      </circle>
+                    </g>
+                  )}
+
+                  {exp.title === "Design & UX" && (
+                    <g>
+                      {/* Animation de design UX */}
+                      <rect x="20" y="30" width="80" height="60" rx="6" fill="none" stroke={colors.primary} strokeWidth="2" opacity="0.2"/>
+                      <rect x="20" y="30" width="80" height="60" rx="6" fill={colors.primary + '15'} className="design-canvas">
+                        <animate attributeName="width" values="0;80;80" dur="2.5s" repeatCount="indefinite"/>
+                      </rect>
+                      <circle cx="35" cy="45" r="6" fill="none" stroke={colors.primary} strokeWidth="2" className="ux-circle">
+                        <animate attributeName="r" values="6;10;6" dur="2s" repeatCount="indefinite"/>
+                      </circle>
+                      <path d="M35 45 Q50 35 65 45" stroke={colors.primary} strokeWidth="2" fill="none" className="design-path">
+                        <animate attributeName="opacity" values="0;1;0" dur="2s" begin="0.5s" repeatCount="indefinite"/>
+                      </path>
+                      <rect x="50" y="55" width="15" height="15" rx="2" fill={colors.text} className="design-element">
+                        <animate attributeName="y" values="55;45;55" dur="1.5s" repeatCount="indefinite"/>
+                      </rect>
+                      <circle cx="75" cy="40" r="3" fill={colors.primary}>
+                        <animate attributeName="opacity" values="0;1;0" dur="1.8s" begin="1s" repeatCount="indefinite"/>
+                      </circle>
+                    </g>
+                  )}
+
+                  {exp.title === "Base de Données" && (
+                    <g>
+                      {/* Animation de base de données améliorée */}
+                      <ellipse cx="60" cy="50" rx="40" ry="20" fill="none" stroke={colors.primary} strokeWidth="2" opacity="0.2"/>
+                      <ellipse cx="60" cy="50" rx="40" ry="20" fill={colors.primary + '15'} className="database-main">
+                        <animate attributeName="ry" values="0;20;20" dur="2s" repeatCount="indefinite"/>
+                      </ellipse>
+                      <ellipse cx="60" cy="50" rx="35" ry="15" fill="none" stroke={colors.primary} strokeWidth="1.5" className="data-ring">
+                        <animate attributeName="rx" values="35;40;35" dur="3s" repeatCount="indefinite"/>
+                      </ellipse>
+                      <circle cx="45" cy="45" r="4" fill={colors.text} className="data-node">
+                        <animate attributeName="cy" values="45;35;55;45" dur="2.5s" repeatCount="indefinite"/>
+                      </circle>
+                      <circle cx="75" cy="55" r="4" fill={colors.text} className="data-node">
+                        <animate attributeName="cy" values="55;65;45;55" dur="2.5s" begin="0.8s" repeatCount="indefinite"/>
+                      </circle>
+                      <circle cx="60" cy="50" r="6" fill={colors.primary} opacity="0.8"/>
+                      <path d="M45 45 L75 55 M60 35 L60 65" stroke={colors.primary} strokeWidth="1" opacity="0.4" className="data-connections"/>
+                    </g>
+                  )}
+
+                  {exp.title === "Cloud & DevOps" && (
+                    <g>
+                      {/* Animation de Cloud & DevOps améliorée */}
+                      <ellipse cx="35" cy="35" rx="18" ry="10" fill={colors.primary + '20'} className="cloud-main">
+                        <animate attributeName="cx" values="35;40;35" dur="3s" repeatCount="indefinite"/>
+                      </ellipse>
+                      <ellipse cx="75" cy="40" rx="15" ry="8" fill={colors.primary + '20'} className="cloud-secondary">
+                        <animate attributeName="cx" values="75;70;75" dur="3s" begin="1s" repeatCount="indefinite"/>
+                      </ellipse>
+                      <ellipse cx="55" cy="30" rx="12" ry="6" fill={colors.primary + '20'} className="cloud-tertiary">
+                        <animate attributeName="cx" values="55;60;55" dur="3s" begin="2s" repeatCount="indefinite"/>
+                      </ellipse>
+                      <rect x="25" y="55" width="70" height="35" rx="4" fill="none" stroke={colors.primary} strokeWidth="2" opacity="0.2"/>
+                      <rect x="25" y="55" width="70" height="35" rx="4" fill={colors.primary + '10'} className="server-rack">
+                        <animate attributeName="height" values="0;35;35" dur="2.5s" repeatCount="indefinite"/>
+                      </rect>
+                      <circle cx="35" cy="65" r="2" fill={colors.primary}>
+                        <animate attributeName="opacity" values="0;1;0" dur="1s" repeatCount="indefinite"/>
+                      </circle>
+                      <circle cx="50" cy="65" r="2" fill={colors.primary}>
+                        <animate attributeName="opacity" values="0;1;0" dur="1s" begin="0.3s" repeatCount="indefinite"/>
+                      </circle>
+                      <circle cx="65" cy="65" r="2" fill={colors.primary}>
+                        <animate attributeName="opacity" values="0;1;0" dur="1s" begin="0.6s" repeatCount="indefinite"/>
+                      </circle>
+                      <circle cx="80" cy="65" r="2" fill={colors.primary}>
+                        <animate attributeName="opacity" values="0;1;0" dur="1s" begin="0.9s" repeatCount="indefinite"/>
+                      </circle>
+                    </g>
+                  )}
+
+                  {exp.title === "Automatisation & IA" && (
+                    <g>
+                      {/* Animation d'IA et automatisation */}
+                      <circle cx="60" cy="45" r="25" fill="none" stroke={colors.primary} strokeWidth="2" opacity="0.2"/>
+                      <circle cx="60" cy="45" r="25" fill={colors.primary + '15'} className="ai-brain">
+                        <animate attributeName="r" values="0;25;25" dur="2.5s" repeatCount="indefinite"/>
+                      </circle>
+                      <circle cx="60" cy="45" r="15" fill="none" stroke={colors.primary} strokeWidth="1.5" className="ai-core">
+                        <animate attributeName="r" values="15;18;15" dur="2s" repeatCount="indefinite"/>
+                      </circle>
+                      <circle cx="60" cy="45" r="8" fill={colors.primary} opacity="0.9"/>
+                      <path d="M45 30 Q35 20 25 30 M75 30 Q85 20 95 30" stroke={colors.primary} strokeWidth="1.5" fill="none" className="neural-path">
+                        <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite"/>
+                      </path>
+                      <circle cx="45" cy="30" r="3" fill={colors.text} className="neural-node">
+                        <animate attributeName="r" values="3;4;3" dur="1.5s" repeatCount="indefinite"/>
+                      </circle>
+                      <circle cx="75" cy="30" r="3" fill={colors.text} className="neural-node">
+                        <animate attributeName="r" values="3;4;3" dur="1.5s" begin="0.7s" repeatCount="indefinite"/>
+                      </circle>
+                      <circle cx="25" cy="30" r="3" fill={colors.text} className="neural-node">
+                        <animate attributeName="r" values="3;4;3" dur="1.5s" begin="1.4s" repeatCount="indefinite"/>
+                      </circle>
+                      <circle cx="95" cy="30" r="3" fill={colors.text} className="neural-node">
+                        <animate attributeName="r" values="3;4;3" dur="1.5s" begin="2.1s" repeatCount="indefinite"/>
+                      </circle>
+                    </g>
+                  )}
+                </svg>
+              </div>
             </div>
           ))}
         </div>
 
         {/* Category Filter */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
+        <div className={`flex flex-wrap justify-center gap-3 mb-12 fade-in-up ${
+          visibleElements.has('category-filter') ? 'visible' : ''
+        }`}
+             data-animate-id="category-filter"
+             style={{ transitionDelay: '600ms' }}>
           {categories.map((category) => (
             <button
               key={category.id}
@@ -321,8 +543,15 @@ export function ServicesSection() {
           {paginatedServices.map((service, index) => (
             <div
               key={service.title}
-              className="rounded-xl p-8 border transition-all duration-300 relative overflow-hidden"
-              style={{ backgroundColor: colors.surface, borderColor: colors.border }}
+              data-animate-id={`service-${index}`}
+              className={`service-card rounded-xl p-8 border transition-all duration-300 relative overflow-hidden ${
+                visibleElements.has(`service-${index}`) ? 'visible' : ''
+              }`}
+              style={{ 
+                backgroundColor: colors.surface, 
+                borderColor: colors.border,
+                transitionDelay: `${800 + index * 150}ms`
+              }}
               onMouseEnter={(e) => { e.currentTarget.style.borderColor = colors.primary; }}
               onMouseLeave={(e) => { e.currentTarget.style.borderColor = colors.border; }}
             >
@@ -434,7 +663,11 @@ export function ServicesSection() {
         )}
 
         {/* Bottom CTA */}
-        <div className="text-center">
+        <div className={`text-center fade-in-up ${
+          visibleElements.has('bottom-cta') ? 'visible' : ''
+        }`}
+             data-animate-id="bottom-cta"
+             style={{ transitionDelay: '1200ms' }}>
           <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full mb-6" style={{ backgroundColor: colors.primary + '10' }}>
             <TrendingUp className="w-5 h-5" style={{ color: colors.primary }} />
             <span style={{ color: colors.text }}>Prêt à concrétiser votre projet ?</span>

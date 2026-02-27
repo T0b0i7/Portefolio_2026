@@ -1,5 +1,5 @@
 import React from "react";
-import { Github, Linkedin, Facebook, Mail, Phone, MapPin, ArrowUp, Heart, Code, Globe, Sparkles, Zap, Users, Target, Award } from "lucide-react";
+import { Github, Linkedin, Facebook, Mail, Phone, MapPin, ArrowUp, Code, Globe, Sparkles, Zap, Users, Target, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/contexts/ThemeContext";
 import { cn } from "@/lib/utils";
@@ -150,9 +150,7 @@ export function Footer() {
           {/* Copyright */}
           <div className="text-sm" style={{ color: colors.textSecondary }}>
             <span>© {currentYear} Eucher ABATTI.</span>
-            <span className="hidden md:inline ml-2">
-              Fait avec <Heart className="w-4 h-4 text-red-500 inline" /> au Bénin
-            </span>
+          
           </div>
 
           {/* Back to Top */}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { GraduationCap, Briefcase, Code, Database, Globe, Server, Smartphone, Cloud, Shield, GitBranch, Building2, Rocket, Clock, TrendingDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -153,52 +153,41 @@ const colorStyles = {
 
 export function EvolutionSection() {
   const [activeTab, setActiveTab] = useState<"experience" | "skills">("experience");
+  const [visibleCards, setVisibleCards] = useState<Set<string>>(new Set());
   const { colors, theme } = useTheme();
+  const sectionRef = useRef<HTMLElement>(null);
 
-  // Injecter les animations CSS personnalisées
+  // Intersection Observer pour déclencher les animations au scroll
   useEffect(() => {
-    const styleId = 'evolution-section-animations';
-    if (!document.getElementById(styleId)) {
-      const style = document.createElement('style');
-      style.id = styleId;
-      style.textContent = `
-        @keyframes fade-in-up {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const cardId = entry.target.getAttribute('data-card-id') || '';
+            setTimeout(() => {
+              setVisibleCards((prev) => new Set([...prev, cardId]));
+            }, 200); // Délai avant de commencer l'animation
           }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        
-        @keyframes fade-in {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-        
-        @keyframes curtain-reveal {
-          from {
-            opacity: 0;
-            transform: translateX(-20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-      `;
-      document.head.appendChild(style);
-    }
-  }, []);
+        });
+      },
+      {
+        threshold: 0.2, // Déclenche quand 20% de la carte est visible
+        rootMargin: '0px 0px -50px 0px' // Déclenche un peu avant que la carte ne soit entièrement visible
+      }
+    );
+
+    // Observer toutes les cartes - scoped to component
+    const container = sectionRef.current;
+    const cardElements = container ? container.querySelectorAll('[data-card-id]') : [];
+    cardElements.forEach((el) => observer.observe(el));
+
+    return () => {
+      cardElements.forEach((el) => observer.unobserve(el));
+    };
+  }, [activeTab]); // Re-initialiser quand on change de tab
 
   return (
-    <section id="evolution" className="py-20 relative" style={{ backgroundColor: colors.background }}>
+    <section id="evolution" className="py-20 relative" style={{ backgroundColor: colors.background }} ref={sectionRef}>
       <div className="absolute inset-0 opacity-5">
         <div className="absolute inset-0" style={{
           backgroundImage: `radial-gradient(circle at 1px 1px, ${colors.primary} 1px, transparent 1px)`,
@@ -284,18 +273,23 @@ export function EvolutionSection() {
                 {experiences.map((exp, index) => {
                   const Icon = exp.icon;
                   const isLeft = exp.side === "left";
+                  const isVisible = visibleCards.has(exp.id.toString());
+                  const animationDelay = isVisible ? `${index * 150}ms` : '0ms';
 
                   return (
                     <div
                       key={exp.id}
+                      data-card-id={exp.id.toString()}
                       className={cn(
-                        "relative flex items-center",
-                        isLeft ? "justify-start" : "justify-end"
+                        "relative flex items-center transition-all duration-1000 ease-out",
+                        isLeft ? "justify-start" : "justify-end",
+                        isVisible ? "opacity-100" : "opacity-0"
                       )}
                       style={{ 
-                        opacity: 0,
-                        animation: `curtain-reveal 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards`,
-                        animationDelay: `${index * 150}ms` 
+                        transform: isVisible 
+                          ? (isLeft ? "translateX(0)" : "translateX(0)")
+                          : (isLeft ? "translateX(-50px)" : "translateX(50px)"),
+                        transitionDelay: animationDelay
                       }}
                     >
                       {/* Timeline Dot */}
@@ -361,12 +355,16 @@ export function EvolutionSection() {
                         {/* Description */}
                         <ul className="space-y-2">
                           {exp.description.map((item, i) => (
-                            <li key={i} className="flex items-start gap-3" style={{ 
-                              color: colors.textSecondary,
-                              animation: `fade-in 0.5s ease-out forwards`,
-                              animationDelay: `${(index * 150) + (i * 50)}ms`,
-                              opacity: 0
-                            }}>
+                            <li 
+                              key={i} 
+                              className="flex items-start gap-3 transition-all duration-500 ease-out"
+                              style={{ 
+                                color: colors.textSecondary,
+                                opacity: isVisible ? 1 : 0,
+                                transform: isVisible ? "translateY(0)" : "translateY(10px)",
+                                transitionDelay: isVisible ? `${index * 150 + (i * 100)}ms` : '0ms'
+                              }}
+                            >
                               <span className="w-1.5 h-1.5 rounded-full mt-2" style={{ backgroundColor: colors.primary }} />
                               <span>{item}</span>
                             </li>
@@ -381,15 +379,19 @@ export function EvolutionSection() {
           ) : (
             <div className="grid md:grid-cols-2 gap-6">
               {skills.map((skill, index) => {
+                const isVisible = visibleCards.has(skill.category);
+                const animationDelay = isVisible ? `${index * 100}ms` : '0ms';
+
                 return (
                   <div
                     key={skill.category}
+                    data-card-id={skill.category}
                     className="rounded-xl p-6 hover:shadow-lg transition-all duration-300 group hover:-translate-y-2 hover:scale-105"
                     style={{ 
                       backgroundColor: colors.surface,
-                      opacity: 0,
-                      animation: `fade-in-up 0.6s ease-out forwards`,
-                      animationDelay: `${index * 100}ms` 
+                      opacity: isVisible ? 1 : 0,
+                      transform: isVisible ? "translateY(0)" : "translateY(30px)",
+                      transitionDelay: animationDelay
                     }}
                   >
                     <div className="flex items-center gap-3 mb-4">
@@ -406,9 +408,9 @@ export function EvolutionSection() {
                           key={techIndex}
                           className="px-3 py-1 text-sm rounded-full cursor-default hover:scale-110 transition-all duration-300"
                           style={{ 
-                            opacity: 0,
-                            animation: `fade-in 0.4s ease-out forwards`,
-                            animationDelay: `${(index * 100) + (techIndex * 50)}ms`,
+                            opacity: isVisible ? 1 : 0,
+                            transform: isVisible ? "scale(1)" : "scale(0.8)",
+                            transitionDelay: isVisible ? `${index * 100 + (techIndex * 50)}ms` : '0ms',
                             backgroundColor: colors.primary + '10',
                             color: colors.text
                           }}

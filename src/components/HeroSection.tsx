@@ -47,6 +47,7 @@ export function HeroSection() {
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [currentTechIndex, setCurrentTechIndex] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
   const { colors, theme, toggleTheme } = useTheme();
 
   // Handle image upload
@@ -67,6 +68,14 @@ export function HeroSection() {
       setCurrentTechIndex((prev) => (prev + 1) % techStack.length);
     }, 2000);
     return () => clearInterval(interval);
+  }, []);
+
+  // Trigger animation on mount
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 100);
+    return () => clearTimeout(timer);
   }, []);
 
   const getPrimaryColor = () => {
@@ -96,7 +105,8 @@ export function HeroSection() {
       </div>
 
       {/* Header Navigation */}
-      <header className="relative z-20 px-6 py-4 backdrop-blur-sm border-b" style={{ backgroundColor: colors.surface + '80', borderColor: colors.border }}>
+      <header className={`relative z-20 px-6 py-4 backdrop-blur-sm border transition-all duration-1000 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}
+            style={{ backgroundColor: colors.surface + '80', borderColor: colors.border }}>
         <div className="container mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div 
@@ -129,7 +139,7 @@ export function HeroSection() {
                 )}
                 style={{ backgroundColor: colors.surface }}
               >
-                {theme === 'light' ? (
+                {theme === 'dark' ? (
                   <Sun className="h-4 w-4 text-yellow-500 m-1" />
                 ) : (
                   <Moon className="h-4 w-4 text-blue-400 m-1" />
@@ -153,7 +163,7 @@ export function HeroSection() {
                 )}
                 style={{ backgroundColor: colors.surface }}
               >
-                {theme === 'light' ? (
+                {theme === 'dark' ? (
                   <Sun className="h-4 w-4 text-yellow-500 m-1" />
                 ) : (
                   <Moon className="h-4 w-4 text-blue-400 m-1" />
@@ -173,7 +183,7 @@ export function HeroSection() {
       <div className="relative z-10 container mx-auto px-6 py-20">
         <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[calc(100vh-200px)]">
           {/* Left Side - Profile Image */}
-          <div className="relative">
+          <div className={`relative transition-all duration-1000 ease-out ${isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
             <div className="relative group">
               {/* Profile Image Container */}
               <div className="relative rounded-2xl p-8 shadow-lg border" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
@@ -219,15 +229,19 @@ export function HeroSection() {
             </div>
 
             {/* Social Links */}
-            <div className="flex justify-center gap-4 mt-8">
-              {socialLinks.map((social) => (
+            <div className={`flex justify-center gap-4 mt-8 transition-all duration-1000 ease-out delay-300 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+              {socialLinks.map((social, index) => (
                 <a
                   key={social.label}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-12 h-12 rounded-full flex items-center justify-center transition-colors border"
-                  style={{ backgroundColor: colors.surface, borderColor: colors.border }}
+                  className="w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 border hover:scale-110"
+                  style={{ 
+                    backgroundColor: colors.surface, 
+                    borderColor: colors.border,
+                    transitionDelay: `${350 + index * 100}ms`
+                  }}
                   onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primary + '10'}
                   onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.surface}
                   aria-label={social.label}
@@ -242,7 +256,7 @@ export function HeroSection() {
           <div className="space-y-8" style={{ color: colors.text }}>
             {/* Badge */}
             <div 
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full"
+              className={`inline-flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-1000 ease-out ${isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}
               style={{ backgroundColor: colors.primary + '10' }}
             >
               <Sparkles className="w-4 h-4" style={{ color: colors.primary }} />
@@ -251,7 +265,8 @@ export function HeroSection() {
 
             {/* Main Title */}
             <div className="space-y-4">
-              <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
+              <h1 className={`text-5xl lg:text-6xl font-bold leading-tight transition-all duration-1000 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                  style={{ transitionDelay: '200ms' }}>
                 <span>
                   Créateur de
                 </span>
@@ -261,7 +276,11 @@ export function HeroSection() {
                 </span>
               </h1>
               
-              <p className="text-xl leading-relaxed" style={{ color: colors.textSecondary }}>
+              <p className={`text-xl leading-relaxed transition-all duration-1000 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                 style={{ 
+                   color: colors.textSecondary,
+                   transitionDelay: '400ms'
+                 }}>
                 Je transforme vos idées en expériences web modernes, performantes et mémorables. 
                 Spécialisé en React, TypeScript et Node.js, je crée des applications qui 
                 allient design élégant et fonctionnalité robuste.
@@ -269,7 +288,12 @@ export function HeroSection() {
             </div>
 
             {/* Current Tech Display */}
-            <div className="rounded-xl p-6 border" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
+            <div className={`rounded-xl p-6 border transition-all duration-1000 ease-out ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
+                 style={{ 
+                   backgroundColor: colors.surface, 
+                   borderColor: colors.border,
+                   transitionDelay: '600ms'
+                 }}>
               <div className="flex items-center gap-4">
                 <div 
                   className="p-3 rounded-xl"
@@ -287,10 +311,11 @@ export function HeroSection() {
             </div>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className={`flex flex-col sm:flex-row gap-4 transition-all duration-1000 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                 style={{ transitionDelay: '800ms' }}>
               <Button 
                 size="lg" 
-                className={cn("text-white px-8 py-4 text-lg font-semibold", getPrimaryColor())}
+                className={cn("text-white px-8 py-4 text-lg font-semibold transition-all duration-300 hover:scale-105", getPrimaryColor())}
                 onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
               >
                 Voir mes projets
@@ -300,7 +325,7 @@ export function HeroSection() {
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="px-8 py-4 text-lg font-semibold"
+                className="px-8 py-4 text-lg font-semibold transition-all duration-300 hover:scale-105"
                 style={{ borderColor: colors.border, color: colors.text }}
                 onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = colors.primary + '10'; }}
                 onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
@@ -311,7 +336,8 @@ export function HeroSection() {
             </div>
 
             {/* Contact Info */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-8">
+            <div className={`grid grid-cols-1 sm:grid-cols-3 gap-4 pt-8 transition-all duration-1000 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                 style={{ transitionDelay: '1000ms' }}>
               <div className="flex items-center gap-3" style={{ color: colors.textSecondary }}>
                 <Mail className="w-5 h-5" style={{ color: colors.primary }} />
                 <span className="text-sm">abattieucher@gmail.com</span>
@@ -330,7 +356,11 @@ export function HeroSection() {
       </div>
 
       {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce" style={{ color: colors.textSecondary }}>
+      <div className={`absolute bottom-8 left-1/2 transform -translate-x-1/2 transition-all duration-1000 ease-out ${isLoaded ? 'opacity-100 translate-y-0 animate-bounce' : 'opacity-0 translate-y-4'}`}
+           style={{ 
+             color: colors.textSecondary,
+             transitionDelay: '1200ms'
+           }}>
         <ArrowRight className="w-5 h-5 rotate-90" />
       </div>
     </section>

@@ -20,7 +20,7 @@ export function ThemeSelector() {
               theme === 'dark' ? 'translate-x-7' : 'translate-x-1'
             )}
           >
-            {theme === 'light' ? (
+            {theme === 'dark' ? (
               <Sun className="h-4 w-4 text-yellow-500 m-1" />
             ) : (
               <Moon className="h-4 w-4 text-blue-400 m-1" />
@@ -30,10 +30,10 @@ export function ThemeSelector() {
       </div>
       
       <div className="mt-3 flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-        {theme === 'light' ? (
+        {theme === 'dark' ? (
           <>
-            <Sun className="w-3 h-3" />
-            <span>Mode clair</span>
+            <Moon className="w-3 h-3" />
+            <span>Mode sombre</span>
           </>
         ) : (
           <>

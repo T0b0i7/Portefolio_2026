@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-type Theme = 'light' | 'dark';
+type Theme = 'dark';
 
 interface ThemeColors {
   primary: string;
@@ -16,18 +16,6 @@ interface ThemeColors {
 }
 
 const themes: Record<Theme, ThemeColors> = {
-  light: {
-    primary: '#2563eb',
-    primaryDark: '#1d4ed8',
-    primaryLight: '#3b82f6',
-    secondary: '#0ea5e9',
-    background: '#ffffff',
-    surface: '#ffffff',
-    text: '#1e293b',
-    textSecondary: '#64748b',
-    border: '#e2e8f0',
-    gradient: 'from-blue-600 to-cyan-500'
-  },
   dark: {
     primary: '#3b82f6',
     primaryDark: '#2563eb',
@@ -64,12 +52,17 @@ interface ThemeProviderProps {
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [theme, setTheme] = useState<Theme>('light');
+  const [theme, setTheme] = useState<Theme>('dark');
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('portfolio-theme') as Theme;
-    if (savedTheme && themes[savedTheme]) {
-      setTheme(savedTheme);
+    // Always force dark theme - light theme disabled
+    const savedTheme = localStorage.getItem('portfolio-theme');
+    if (savedTheme === 'dark') {
+      setTheme('dark');
+    } else {
+      // Force dark theme and save to localStorage
+      localStorage.setItem('portfolio-theme', 'dark');
+      setTheme('dark');
     }
   }, []);
 
@@ -79,8 +72,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   };
 
   const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    setThemeWithStorage(newTheme);
+    // Theme switching disabled - always dark
+    return;
   };
 
   const colors = themes[theme];
