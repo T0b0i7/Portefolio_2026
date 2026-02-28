@@ -3,36 +3,35 @@ import { EvolutionSection } from "@/components/EvolutionSection";
 import { ProjectsSection } from "@/components/ProjectsSection";
 import { ServicesSection } from "@/components/ServicesSection";
 import { ContactSection } from "@/components/ContactSection";
+import { EnigmaSection } from "@/components/EnigmaSection";
 import { Footer } from "@/components/Footer";
+import { Navigation } from "@/components/Navigation";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 
 const Index = () => {
   return (
     <ThemeProvider>
       <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
-        {/* Hero Section */}
+        {/* Navigation */}
+        <Navigation />
+
+        {/* Hero Section - The Solar System Greeting */}
         <HeroSection />
 
         {/* Evolution Section */}
         <EvolutionSection />
 
-        {/* Section Divider */}
-        <div className="section-divider" />
-
         {/* Projects Section */}
         <ProjectsSection />
-
-        {/* Section Divider */}
-        <div className="section-divider" />
 
         {/* Services Section */}
         <ServicesSection />
 
-        {/* Section Divider */}
-        <div className="section-divider" />
-
         {/* Contact Section */}
         <ContactSection />
+
+        {/* Enigma Section - The Suspended Question */}
+        <EnigmaSection />
 
         {/* Footer */}
         <Footer />

@@ -8,9 +8,14 @@ export default {
   theme: {
     container: {
       center: true,
-      padding: "2rem",
+      padding: {
+        DEFAULT: "1rem",
+        sm: "1.5rem",
+        lg: "2rem",
+      },
       screens: {
         "2xl": "1400px",
+        "xs": "480px",
       },
     },
     extend: {
@@ -81,6 +86,14 @@ export default {
         warning: {
           DEFAULT: "hsl(var(--warning))",
         },
+        // Stitch Brand Colors
+        brand: {
+          dark: '#0B1120',
+          card: '#161E2E',
+          accent: '#3B82F6',
+          secondary: '#1E293B',
+          text: '#94A3B8',
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -89,7 +102,7 @@ export default {
       },
       fontFamily: {
         display: ["Space Grotesk", "system-ui", "sans-serif"],
-        sans: ["Inter", "system-ui", "sans-serif"],
+        sans: ["Sora", "Inter", "system-ui", "sans-serif"],
         mono: ["JetBrains Mono", "monospace"],
       },
       keyframes: {

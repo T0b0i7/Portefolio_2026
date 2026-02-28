@@ -1,218 +1,143 @@
 import { useState, useEffect } from "react";
-import { Home, Briefcase, Folder, Wrench, Mail, User, Zap, Menu, X } from "lucide-react";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { cn } from "@/lib/utils";
-
-const navItems = [
-  { id: "hero", label: "Accueil", icon: Home },
-  { id: "evolution", label: "Parcours", icon: Briefcase },
-  { id: "projects", label: "Projets", icon: Folder },
-  { id: "services", label: "Services", icon: Wrench },
-  { id: "contact", label: "Contact", icon: Mail },
-  { id: "secure-system", label: "Animation", icon: Zap, isExternal: true },
-];
+import { Menu, X, Sun, Moon, Terminal, Globe } from "lucide-react";
+import { useTheme } from "@/contexts/ThemeContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function Navigation() {
-  const [activeSection, setActiveSection] = useState("hero");
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { theme, toggleTheme } = useTheme();
+  const { language, toggleLanguage, lang } = useLanguage();
+
+  const navLinks = [
+    { href: "#accueil", label: lang("Accueil", "Home") },
+    { href: "#parcours", label: lang("Parcours", "Timeline") },
+    { href: "#projects", label: lang("Projets", "Projects") },
+    { href: "#services", label: lang("Services", "Services") },
+    { href: "#contact", label: lang("Contact", "Contact") },
+  ];
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = navItems.map((item) => ({
-        id: item.id,
-        element: document.getElementById(item.id),
-      }));
-
-      const current = sections.find((section) => {
-        if (section.element) {
-          const rect = section.element.getBoundingClientRect();
-          return rect.top <= 200 && rect.bottom >= 200;
-        }
-        return false;
-      });
-
-      if (current) {
-        setActiveSection(current.id);
-      }
+      setIsScrolled(window.scrollY > 20);
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-    // Close mobile menu after navigation
-    setIsMobileMenuOpen(false);
-  };
-
   return (
-    <>
-      {/* Desktop Navigation - Sidebar */}
-      <nav
-        className={cn(
-          "hidden md:flex fixed left-4 top-1/2 -translate-y-1/2 z-50 glass rounded-2xl transition-all duration-300",
-          isExpanded ? "w-48 opacity-100" : "w-14 opacity-40 hover:opacity-100"
-        )}
-        onMouseEnter={() => setIsExpanded(true)}
-        onMouseLeave={() => setIsExpanded(false)}
-      >
-        <div className="p-3 space-y-2">
-          {/* Profile Avatar */}
-          <button
-            onClick={() => scrollToSection("hero")}
-            className={cn(
-              "flex items-center justify-center w-full p-2 rounded-xl transition-all duration-300 mb-2",
-              activeSection === "hero"
-                ? "bg-primary/20 glow-cyan"
-                : "hover:bg-muted/50"
-            )}
-          >
-            <Avatar className="w-8 h-8 border-2 border-primary/50">
-              <AvatarImage src="/profil.png" alt="Eucher ABATTI" className="object-cover" />
-              <AvatarFallback className="text-xs font-bold bg-primary/20 text-primary">
-                EA
-              </AvatarFallback>
-            </Avatar>
-          </button>
-
-          <div className="h-px bg-border/30" />
-
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = activeSection === item.id;
-
-            if (item.isExternal) {
-              return (
-                <a
-                  key={item.id}
-                  href="/secure-system"
-                  className={cn(
-                    "flex items-center gap-3 w-full p-2 rounded-xl transition-all duration-300",
-                    "text-muted-foreground hover:text-foreground hover:bg-muted/50 hover:text-yellow-400 hover:glow-cyan"
-                  )}
-                >
-                  <Icon className="w-5 h-5 shrink-0" />
-                  <span
-                    className={cn(
-                      "text-sm font-medium whitespace-nowrap overflow-hidden transition-all duration-300",
-                      isExpanded ? "opacity-100 w-auto" : "opacity-0 w-0"
-                    )}
-                  >
-                    {item.label}
-                  </span>
-                </a>
-              );
-            }
-
-            return (
-              <button
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className={cn(
-                  "flex items-center gap-3 w-full p-2 rounded-xl transition-all duration-300",
-                  isActive
-                    ? "bg-primary/20 text-primary glow-cyan"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                )}
-              >
-                <Icon className={cn("w-5 h-5 shrink-0", isActive && "text-primary")} />
-                <span
-                  className={cn(
-                    "text-sm font-medium whitespace-nowrap overflow-hidden transition-all duration-300",
-                    isExpanded ? "opacity-100 w-auto" : "opacity-0 w-0"
-                  )}
-                >
-                  {item.label}
-                </span>
-                {isActive && !isExpanded && (
-                  <span className="absolute right-0 w-1 h-6 bg-primary rounded-l-full" />
-                )}
-              </button>
-            );
-          })}
-        </div>
-      </nav>
-
-      {/* Mobile Navigation - Top Bar with Hamburger Menu */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-50 glass border-b border-border/20">
-        <div className="flex items-center justify-between p-4">
-          {/* Profile Avatar */}
-          <button
-            onClick={() => scrollToSection("hero")}
-            className="flex items-center gap-3"
-          >
-            <Avatar className="w-10 h-10 border-2 border-primary/50">
-              <AvatarImage src="/profil.png" alt="Eucher ABATTI" className="object-cover" />
-              <AvatarFallback className="text-sm font-bold bg-primary/20 text-primary">
-                EA
-              </AvatarFallback>
-            </Avatar>
-            <span className="font-display font-bold text-lg">Portfolio</span>
-          </button>
-
-          {/* Hamburger Menu Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="p-2 rounded-lg hover:bg-muted/50 transition-colors"
-            aria-label="Toggle menu"
-          >
-            {isMobileMenuOpen ? (
-              <X className="w-6 h-6" />
-            ) : (
-              <Menu className="w-6 h-6" />
-            )}
-          </button>
-        </div>
-
-        {/* Mobile Menu Dropdown */}
-        {isMobileMenuOpen && (
-          <div className="absolute top-full left-0 right-0 glass border-b border-border/20 shadow-lg">
-            <div className="p-4 space-y-2">
-              {navItems.map((item) => {
-                const Icon = item.icon;
-                const isActive = activeSection === item.id;
-
-                if (item.isExternal) {
-                  return (
-                    <a
-                      key={item.id}
-                      href="/secure-system"
-                      className={cn(
-                        "flex items-center gap-3 w-full p-3 rounded-xl transition-all duration-300",
-                        "text-muted-foreground hover:text-foreground hover:bg-muted/50 hover:text-yellow-400 hover:glow-cyan"
-                      )}
-                    >
-                      <Icon className="w-5 h-5 shrink-0" />
-                      <span className="text-sm font-medium">{item.label}</span>
-                    </a>
-                  );
-                }
-
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => scrollToSection(item.id)}
-                    className={cn(
-                      "flex items-center gap-3 w-full p-3 rounded-xl transition-all duration-300 text-left",
-                      isActive
-                        ? "bg-primary/20 text-primary glow-cyan"
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                    )}
-                  >
-                    <Icon className={cn("w-5 h-5 shrink-0", isActive && "text-primary")} />
-                    <span className="text-sm font-medium">{item.label}</span>
-                  </button>
-                );
-              })}
+    <nav
+      className={`fixed top-0 w-full z-50 transition-all duration-300 ${isScrolled
+        ? "glass-card border-b border-white/5 bg-brand-dark/80 backdrop-blur-md"
+        : "bg-transparent"
+        }`}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
+        {/* New Dev Logo */}
+        <a href="#accueil" className="flex items-center gap-3 hover:scale-105 transition-transform duration-300">
+          <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-accent to-blue-400 p-[1px]">
+            <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
+              <Terminal className="w-5 h-5 text-brand-accent" />
             </div>
           </div>
-        )}
+          <div className="flex flex-col justify-center">
+            <div className="flex items-center gap-1 leading-none">
+              <span className="text-lg font-bold text-white tracking-tighter uppercase">Eucher</span>
+              <span className="text-lg font-bold text-brand-accent tracking-tighter uppercase">Abatti</span>
+            </div>
+            <div className="text-[10px] font-mono text-slate-500 flex items-center gap-1 group">
+              <span className="text-brand-accent font-bold">const</span>
+              <span>role</span>
+              <span className="text-blue-400">=</span>
+              <span className="text-orange-400">"dev"</span>
+              <span className="animate-pulse">_</span>
+            </div>
+          </div>
+        </a>
+
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
+          {navLinks.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              className="hover:text-white transition-colors duration-200"
+            >
+              {link.label}
+            </a>
+          ))}
+        </div>
+
+        {/* Right Side */}
+        <div className="flex items-center gap-4">
+          {/* Theme Toggle */}
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-full hover:bg-white/10 transition-colors text-muted-foreground hover:text-white"
+            aria-label="Toggle theme"
+          >
+            {theme === "dark" ? (
+              <Sun className="w-5 h-5" />
+            ) : (
+              <Moon className="w-5 h-5" />
+            )}
+          </button>
+
+          {/* Language Toggle */}
+          <button
+            onClick={toggleLanguage}
+            className="group flex items-center gap-2 bg-slate-900/50 hover:bg-brand-accent border border-white/5 hover:border-brand-accent px-3 py-1.5 rounded-full transition-all shadow-lg hidden sm:flex"
+          >
+            <Globe className="w-4 h-4 text-brand-accent group-hover:text-white transition-colors animate-spin-slow" />
+            <span className="text-xs font-bold text-white uppercase tracking-wider">
+              {language}
+            </span>
+          </button>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden p-2 rounded-full hover:bg-white/10 transition-colors"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? (
+              <X className="w-5 h-5" />
+            ) : (
+              <Menu className="w-5 h-5" />
+            )}
+          </button>
+        </div>
       </div>
-    </>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden glass-card border-t border-white/5 animate-slide-down">
+          <div className="px-4 sm:px-6 py-4 space-y-3">
+            {navLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="block text-sm font-medium text-muted-foreground hover:text-white transition-colors py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {link.label}
+              </a>
+            ))}
+            {/* Language toggle in mobile menu */}
+            <button
+              className="flex items-center gap-2 bg-brand-accent/10 border border-brand-accent/20 px-5 py-2.5 rounded-full text-sm font-semibold text-brand-accent hover:bg-brand-accent hover:text-white transition-all mt-2 w-full justify-center"
+              onClick={() => {
+                toggleLanguage();
+                setMobileMenuOpen(false);
+              }}
+            >
+              <Globe className="w-4 h-4" />
+              <span>{language === "FR" ? "Passer en EN" : "Switch to FR"}</span>
+            </button>
+          </div>
+        </div>
+      )}
+    </nav>
   );
 }
+

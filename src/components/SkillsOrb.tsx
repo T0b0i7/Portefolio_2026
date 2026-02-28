@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const ITEMS_PER_PAGE = 15;
 
@@ -33,7 +34,7 @@ const skills = [
   { name: "Prolog", category: "language", level: 40 },
   { name: "Mercury", category: "language", level: 15 },
   { name: "Solidity", category: "language", level: 55 },
-  { name: "Vyper", category: "language", level: 10},
+  { name: "Vyper", category: "language", level: 10 },
   { name: "Rust (Solana)", category: "language", level: 10 },
   // Bases de données
   { name: "PostgreSQL", category: "database", level: 75 },
@@ -81,21 +82,22 @@ const skills = [
   { name: "Webflow", category: "nocode", level: 70 },
 ];
 
-const categories = {
-  framework: { color: "bg-primary", label: "Frameworks" },
-  language: { color: "bg-secondary", label: "Langages" },
-  database: { color: "bg-accent", label: "Bases de données" },
-  design: { color: "bg-warning", label: "Design" },
-  tool: { color: "bg-muted-foreground", label: "Outils" },
-  automation: { color: "bg-success", label: "Automatisation" },
-  ai: { color: "bg-violet", label: "IA" },
-  nocode: { color: "bg-gold", label: "No-Code" },
-};
-
 export function SkillsOrb() {
+  const { lang } = useLanguage();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+
+  const categories = {
+    framework: { color: "bg-primary", label: "Frameworks" },
+    language: { color: "bg-secondary", label: lang("Langages", "Languages") },
+    database: { color: "bg-accent", label: lang("Bases de données", "Databases") },
+    design: { color: "bg-warning", label: "Design" },
+    tool: { color: "bg-muted-foreground", label: lang("Outils", "Tools") },
+    automation: { color: "bg-success", label: lang("Automatisation", "Automation") },
+    ai: { color: "bg-violet", label: "IA" },
+    nocode: { color: "bg-gold", label: "No-Code" },
+  };
 
   const filteredSkills = activeCategory
     ? skills.filter((s) => s.category === activeCategory)
@@ -123,7 +125,7 @@ export function SkillsOrb() {
               : "glass text-muted-foreground hover:text-foreground"
           )}
         >
-          Tous
+          {lang("Tous", "All")}
         </button>
         {Object.entries(categories).map(([key, { label }]) => (
           <button
@@ -188,7 +190,7 @@ export function SkillsOrb() {
                       strokeDasharray={`${skill.level} 100`}
                     />
                   </svg>
-                  <span className="absolute inset-0 flex items-center justify-center text-xs font-bold">
+                  <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">
                     {skill.level}%
                   </span>
                 </div>
@@ -261,3 +263,4 @@ export function SkillsOrb() {
     </div>
   );
 }
+
