@@ -1,431 +1,138 @@
-import { useState, useEffect, useRef } from "react";
-import { GraduationCap, Briefcase, Code, Database, Globe, Server, Smartphone, Cloud, Shield, GitBranch, Building2, Rocket, Clock, TrendingDown } from "lucide-react";
+import { Briefcase, GraduationCap, Award } from "lucide-react";
+import { ScrollAnimation } from "@/components/ui/ScrollAnimation";
 import { cn } from "@/lib/utils";
-import { useTheme } from "@/contexts/ThemeContext";
-
-const experiences = [
-  {
-    id: 1,
-    type: "work",
-    title: "Stagiaire Développeur Full-Stack",
-    company: "INNOVTECH",
-    location: "Cotonou, Aidjèdo (Télétravail)",
-    period: "Nov 2025 - Fév 2026",
-    current: true,
-    description: [
-      "Développement front-end et participation au back-end des applications internes",
-      "Création d'interfaces et intégration de fonctionnalités",
-      "Optimisation des outils internes et automatisation des processus",
-    ],
-    icon: Rocket,
-    color: "primary",
-    side: "left"
-  },
-  {
-    id: 2,
-    type: "work",
-    title: "Stagiaire Développeur / Technicien Informatique",
-    company: "SIAB – Société Industrielle d'Acier du Bénin",
-    location: "Djeffa",
-    period: "Juin 2024 - Avril 2025",
-    current: false,
-    description: [
-      "Conception, développement et déploiement de systèmes internes",
-      "Outils d'automatisation réduisant le temps de traitement de 30%",
-      "Maintenance des équipements informatiques et support technique",
-    ],
-    badge: "-30% temps de traitement",
-    icon: Building2,
-    color: "secondary",
-    side: "right"
-  },
-  {
-    id: 3,
-    type: "work",
-    title: "Freelance / Prestataire",
-    company: "Développeur & Designer Graphique",
-    location: "Porto-Novo, Bénin",
-    period: "2024 - Présent",
-    current: true,
-    description: [
-      "Création de sites web pour particuliers et entreprises",
-      "Réalisation d'affiches et supports visuels pour la communication digitale",
-      "Maintenance et accompagnement technique de projets clients",
-    ],
-    icon: Briefcase,
-    color: "accent",
-    side: "left"
-  },
-  {
-    id: 4,
-    type: "education",
-    title: "Licence Professionnelle en Système Informatique Logiciel (SIL)",
-    company: "HECM - Haute École de Commerce et de Management",
-    location: "Porto Novo, Bénin",
-    period: "Terminé",
-    current: false,
-    description: [
-      "Spécialisation en développement logiciel et systèmes d'information",
-    ],
-    badge: "Très Bien",
-    icon: GraduationCap,
-    color: "success",
-    side: "right"
-  },
-  {
-    id: 5,
-    type: "education",
-    title: "Baccalauréat Série D (scientifique)",
-    company: "Collège Catholique Notre-Dame de Lourdes",
-    location: "Porto-Novo",
-    period: "2021 - 2022",
-    current: false,
-    description: [],
-    icon: GraduationCap,
-    color: "success",
-    side: "left"
-  },
-];
-
-const skills = [
-  {
-    category: "Frontend",
-    icon: Code,
-    technologies: ["React", "Next.js", "JavaScript ES6+", "TypeScript", "HTML5", "CSS3", "Tailwind CSS", "Bootstrap"]
-  },
-  {
-    category: "Backend",
-    icon: Server,
-    technologies: ["Node.js", "PHP", "Laravel", "Django", "API REST", "Architecture MVC", "JWT"]
-  },
-  {
-    category: "Base de données",
-    icon: Database,
-    technologies: ["MySQL", "PostgreSQL", "SQL Server", "Supabase", "Airtable"]
-  },
-  {
-    category: "IA & Automatisation",
-    icon: Cloud,
-    technologies: ["ChatGPT", "DALL·E", "Zapier", "Python Scripts", "No-Code Tools"]
-  },
-  {
-    category: "Outils & DevOps",
-    icon: GitBranch,
-    technologies: ["VS Code", "Git", "GitHub", "Docker", "Postman", "Webpack", "Vite"]
-  },
-  {
-    category: "Design & UX",
-    icon: Globe,
-    technologies: ["Figma", "Canva", "UI/UX Design", "Responsive Design", "Prototypes", "Wireframes"]
-  }
-];
-
-const colorStyles = {
-  primary: {
-    bg: "bg-primary/10",
-    border: "border-primary/30",
-    text: "text-primary",
-    dot: "bg-primary",
-    glow: "glow-cyan",
-  },
-  secondary: {
-    bg: "bg-secondary/10",
-    border: "border-secondary/30",
-    text: "text-secondary",
-    dot: "bg-secondary",
-    glow: "glow-orange",
-  },
-  accent: {
-    bg: "bg-accent/10",
-    border: "border-accent/30",
-    text: "text-accent",
-    dot: "bg-accent",
-    glow: "glow-violet",
-  },
-  success: {
-    bg: "bg-success/10",
-    border: "border-success/30",
-    text: "text-success",
-    dot: "bg-success",
-    glow: "",
-  },
-};
+import { useLanguage } from "@/contexts/LanguageContext";
+import { getExperiences } from "@/data/experienceData";
 
 export function EvolutionSection() {
-  const [activeTab, setActiveTab] = useState<"experience" | "skills">("experience");
-  const [visibleCards, setVisibleCards] = useState<Set<string>>(new Set());
-  const { colors, theme } = useTheme();
-  const sectionRef = useRef<HTMLElement>(null);
-
-  // Intersection Observer pour déclencher les animations au scroll
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const cardId = entry.target.getAttribute('data-card-id') || '';
-            setTimeout(() => {
-              setVisibleCards((prev) => new Set([...prev, cardId]));
-            }, 200); // Délai avant de commencer l'animation
-          }
-        });
-      },
-      {
-        threshold: 0.2, // Déclenche quand 20% de la carte est visible
-        rootMargin: '0px 0px -50px 0px' // Déclenche un peu avant que la carte ne soit entièrement visible
-      }
-    );
-
-    // Observer toutes les cartes - scoped to component
-    const container = sectionRef.current;
-    const cardElements = container ? container.querySelectorAll('[data-card-id]') : [];
-    cardElements.forEach((el) => observer.observe(el));
-
-    return () => {
-      cardElements.forEach((el) => observer.unobserve(el));
-    };
-  }, [activeTab]); // Re-initialiser quand on change de tab
+  const { lang } = useLanguage();
+  const timelineItems = getExperiences(lang);
 
   return (
-    <section id="evolution" className="py-20 relative" style={{ backgroundColor: colors.background }} ref={sectionRef}>
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, ${colors.primary} 1px, transparent 1px)`,
-          backgroundSize: '50px 50px'
-        }} />
-      </div>
-      
-      <div className="container mx-auto px-6 relative z-10">
+    <section id="parcours" className="py-16 sm:py-20 md:py-24 bg-brand-dark/50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mb-4" style={{ backgroundColor: colors.primary + '10', color: colors.primary }}>
-            <GraduationCap className="w-4 h-4" />
-            Mon Évolution
-          </div>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: colors.text }}>
-            Mon <span style={{ color: colors.primary }}>Parcours</span>
-          </h2>
-          <p className="text-lg max-w-2xl mx-auto leading-relaxed" style={{ color: colors.textSecondary }}>
-            Découvrez mon parcours professionnel et mes compétences techniques à travers les années.
-          </p>
-        </div>
-
-        {/* Tabs Navigation */}
-        <div className="flex justify-center mb-12">
-          <div className="inline-flex rounded-xl p-1" style={{ backgroundColor: colors.surface, border: colors.border }}>
-            <button
-              onClick={() => setActiveTab("experience")}
-              className={cn(
-                "px-6 py-3 rounded-lg font-medium transition-all duration-300 flex items-center gap-2",
-                activeTab === "experience"
-                  ? "text-white shadow-lg"
-                  : ""
+        <ScrollAnimation>
+          <div className="text-center mb-10 sm:mb-12 md:mb-16">
+            <span className="text-brand-accent font-bold tracking-[0.2em] text-xs sm:text-sm uppercase">
+              {lang("Mon Évolution", "My Evolution")}
+            </span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mt-3 sm:mt-4">
+              {lang("Mon", "My")} <span className="text-brand-accent">{lang("Parcours", "Timeline")}</span>
+            </h2>
+            <p className="text-muted-foreground mt-3 sm:mt-4 max-w-2xl mx-auto text-sm sm:text-base px-4 sm:px-0">
+              {lang(
+                "Une chronologie de mes expériences professionnelles et académiques.",
+                "A timeline of my professional and academic experiences."
               )}
-              style={{
-                backgroundColor: activeTab === "experience" ? colors.primary : colors.surface,
-                color: activeTab === "experience" ? '#ffffff' : colors.text
-              }}
-              onMouseEnter={(e) => { 
-                if (activeTab !== "experience") e.currentTarget.style.backgroundColor = colors.primary + '10'; 
-              }}
-              onMouseLeave={(e) => { 
-                if (activeTab !== "experience") e.currentTarget.style.backgroundColor = colors.surface; 
-              }}
-            >
-              <Briefcase className="w-4 h-4" />
-              Expériences & Formation
-            </button>
-            <button
-              onClick={() => setActiveTab("skills")}
-              className={cn(
-                "px-6 py-3 rounded-lg font-medium transition-all duration-300 flex items-center gap-2",
-                activeTab === "skills"
-                  ? "text-white shadow-lg"
-                  : ""
-              )}
-              style={{
-                backgroundColor: activeTab === "skills" ? colors.primary : colors.surface,
-                color: activeTab === "skills" ? '#ffffff' : colors.text
-              }}
-              onMouseEnter={(e) => { 
-                if (activeTab !== "skills") e.currentTarget.style.backgroundColor = colors.primary + '10'; 
-              }}
-              onMouseLeave={(e) => { 
-                if (activeTab !== "skills") e.currentTarget.style.backgroundColor = colors.surface; 
-              }}
-            >
-              <Code className="w-4 h-4" />
-              Compétences Techniques
-            </button>
+            </p>
           </div>
-        </div>
+        </ScrollAnimation>
 
-        {/* Tab Content */}
-        <div className="max-w-4xl mx-auto">
-          {activeTab === "experience" ? (
-            <div className="relative">
-              {/* Timeline Line */}
-              <div className="absolute left-1/2 top-0 bottom-0 w-0.5 opacity-30 transform -translate-x-1/2" style={{
-                background: `linear-gradient(to bottom, ${colors.primary}, ${colors.primaryDark}, ${colors.primaryLight})`
-              }} />
+        {/* Timeline Container */}
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6">
+          {/* Vertical Line - Left aligned on mobile, centered on desktop */}
+          <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-brand-accent via-slate-700 to-transparent md:-translate-x-1/2" />
 
-              <div className="space-y-12">
-                {experiences.map((exp, index) => {
-                  const Icon = exp.icon;
-                  const isLeft = exp.side === "left";
-                  const isVisible = visibleCards.has(exp.id.toString());
-                  const animationDelay = isVisible ? `${index * 150}ms` : '0ms';
+          <div className="space-y-12">
+            {timelineItems.map((item, index) => {
+              const IsWork = item.type === "work";
+              return (
+                <ScrollAnimation
+                  key={index}
+                  animation={index % 2 === 0 ? "fade-left" : "fade-right"}
+                  delay={index * 100}
+                >
+                  <div className={cn(
+                    "relative flex flex-col md:flex-row items-start md:items-center",
+                    index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
+                  )}>
 
-                  return (
-                    <div
-                      key={exp.id}
-                      data-card-id={exp.id.toString()}
-                      className={cn(
-                        "relative flex items-center transition-all duration-1000 ease-out",
-                        isLeft ? "justify-start" : "justify-end",
-                        isVisible ? "opacity-100" : "opacity-0"
-                      )}
-                      style={{ 
-                        transform: isVisible 
-                          ? (isLeft ? "translateX(0)" : "translateX(0)")
-                          : (isLeft ? "translateX(-50px)" : "translateX(50px)"),
-                        transitionDelay: animationDelay
-                      }}
-                    >
-                      {/* Timeline Dot */}
-                      <div
-                        className={cn(
-                          "absolute left-1/2 w-5 h-5 rounded-full border-4 transition-all duration-300 transform -translate-x-1/2",
-                          exp.current ? `${colors.primary} pulse-glow animate-pulse` : colors.border,
-                          exp.current ? "border-4" : "border-4"
-                        )}
-                      />
+                    {/* Unique Animated Dot */}
+                    <div className="absolute left-0 md:left-1/2 md:-translate-x-1/2 top-0 md:top-auto z-20 flex items-center justify-center">
+                      {/* Pulse effect */}
+                      <div className={cn(
+                        "absolute w-12 h-12 rounded-full animate-ping opacity-20",
+                        IsWork ? "bg-brand-accent" : "bg-purple-500"
+                      )} />
+                      <div className={cn(
+                        "relative w-8 h-8 rounded-full flex items-center justify-center border-2 border-brand-dark shadow-xl",
+                        IsWork ? "bg-brand-accent text-white" : "bg-purple-600 text-white"
+                      )}>
+                        {IsWork ? <Briefcase className="w-4 h-4" /> : <GraduationCap className="w-4 h-4" />}
+                      </div>
+                    </div>
 
-                      {/* Card */}
-                      <div
-                        className={cn(
-                          "rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:scale-105 group relative",
-                          isLeft ? "w-5/12 mr-auto" : "w-5/12 ml-auto"
-                        )}
-                        style={{ 
-                          backgroundColor: colors.surface,
-                          borderColor: colors.border
-                        }}
-                      >
-                        {/* Glow Effect Background */}
-                        <div 
-                          className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-30 transition-opacity duration-300 blur-xl -z-10"
-                          style={{ backgroundColor: colors.primary + '20' }}
-                        />
+                    {/* Content Card */}
+                    <div className={cn(
+                      "w-full md:w-[45%] mt-10 md:mt-0 pl-12 md:pl-0",
+                      index % 2 === 0 ? "md:pr-12 md:text-right" : "md:pl-12 md:text-left"
+                    )}>
+                      <div className="glass-card p-5 rounded-2xl border border-white/5 transition-all duration-500 hover:border-brand-accent/30 hover:translate-y-[-5px] group">
+                        {/* Header Area */}
+                        <div className={cn(
+                          "flex flex-col gap-2 mb-4",
+                          index % 2 === 0 ? "md:items-end" : "md:items-start"
+                        )}>
+                          <span className="text-[10px] uppercase font-bold tracking-widest text-brand-accent bg-brand-accent/10 px-3 py-1 rounded-full w-fit">
+                            {item.period}
+                          </span>
+                          <h3 className="text-lg font-bold text-slate-100 group-hover:text-brand-accent transition-colors">
+                            {item.title}
+                          </h3>
+                        </div>
 
-                        {/* Header */}
-                        <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
-                          <div className="flex items-start gap-4">
-                            <div className="p-3 rounded-xl transition-all duration-300 group-hover:scale-110" style={{ backgroundColor: colors.primary + '10' }}>
-                              <Icon className="w-6 h-6" style={{ color: colors.primary }} />
-                            </div>
-                            <div>
-                              <h3 className="text-lg font-semibold mb-1 group-hover:text-primary transition-colors duration-300" style={{ color: colors.text }}>
-                                {exp.title}
-                              </h3>
-                              <p className="font-medium" style={{ color: colors.text }}>{exp.company}</p>
-                              <p className="text-sm" style={{ color: colors.textSecondary }}>{exp.location}</p>
-                            </div>
-                          </div>
-
-                          <div className="flex flex-col items-end gap-2">
-                            <div className="flex items-center gap-2 text-sm" style={{ color: colors.textSecondary }}>
-                              <Clock className="w-4 h-4" style={{ color: colors.primary }} />
-                              <span>{exp.period}</span>
-                            </div>
-                            {exp.current && (
-                              <span className="px-3 py-1 rounded-full text-white text-xs font-medium animate-pulse" style={{ backgroundColor: colors.primary }}>
-                                En cours
-                              </span>
-                            )}
-                            {exp.badge && (
-                              <span className="px-3 py-1 rounded-full text-white text-xs font-medium flex items-center gap-1" style={{ backgroundColor: colors.secondary }}>
-                                <TrendingDown className="w-3 h-3" />
-                                {exp.badge}
-                              </span>
-                            )}
+                        {/* Company & Location */}
+                        <div className={cn(
+                          "flex flex-col mb-4",
+                          index % 2 === 0 ? "md:items-end" : "md:items-start"
+                        )}>
+                          <p className="text-sm font-bold text-slate-300">{item.company}</p>
+                          <div className="flex items-center gap-1.5 text-xs text-slate-500 mt-1">
+                            <Award className="w-3 h-3 text-brand-accent/50" />
+                            <span>{item.location}</span>
                           </div>
                         </div>
 
-                        {/* Description */}
-                        <ul className="space-y-2">
-                          {exp.description.map((item, i) => (
-                            <li 
-                              key={i} 
-                              className="flex items-start gap-3 transition-all duration-500 ease-out"
-                              style={{ 
-                                color: colors.textSecondary,
-                                opacity: isVisible ? 1 : 0,
-                                transform: isVisible ? "translateY(0)" : "translateY(10px)",
-                                transitionDelay: isVisible ? `${index * 150 + (i * 100)}ms` : '0ms'
-                              }}
-                            >
-                              <span className="w-1.5 h-1.5 rounded-full mt-2" style={{ backgroundColor: colors.primary }} />
-                              <span>{item}</span>
+                        {/* Status Badge */}
+                        {item.status && (
+                          <div className={cn(
+                            "mb-4 flex",
+                            index % 2 === 0 ? "md:justify-end" : "md:justify-start"
+                          )}>
+                            <span className={cn(
+                              "text-[10px] font-bold px-2 py-0.5 rounded-md",
+                              item.status === lang("Terminé", "Completed") ? "bg-emerald-500/10 text-emerald-400" : "bg-blue-500/10 text-blue-400"
+                            )}>
+                              {item.status}
+                            </span>
+                          </div>
+                        )}
+
+                        {/* Description List */}
+                        <ul className={cn(
+                          "space-y-2 text-xs text-slate-400 border-t border-white/5 pt-4",
+                          index % 2 === 0 ? "md:text-right" : "md:text-left"
+                        )}>
+                          {item.description.map((desc, i) => (
+                            <li key={i} className="leading-relaxed">
+                              {desc}
                             </li>
                           ))}
                         </ul>
                       </div>
                     </div>
-                  );
-                })}
-              </div>
-            </div>
-          ) : (
-            <div className="grid md:grid-cols-2 gap-6">
-              {skills.map((skill, index) => {
-                const isVisible = visibleCards.has(skill.category);
-                const animationDelay = isVisible ? `${index * 100}ms` : '0ms';
 
-                return (
-                  <div
-                    key={skill.category}
-                    data-card-id={skill.category}
-                    className="rounded-xl p-6 hover:shadow-lg transition-all duration-300 group hover:-translate-y-2 hover:scale-105"
-                    style={{ 
-                      backgroundColor: colors.surface,
-                      opacity: isVisible ? 1 : 0,
-                      transform: isVisible ? "translateY(0)" : "translateY(30px)",
-                      transitionDelay: animationDelay
-                    }}
-                  >
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="p-2 rounded-lg" style={{ backgroundColor: colors.primary + '10' }}>
-                        <skill.icon className="w-6 h-6" style={{ color: colors.primary }} />
-                      </div>
-                      <h3 className="text-lg font-bold" style={{ color: colors.text, transition: 'color 0.3s' }}>
-                        {skill.category}
-                      </h3>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {skill.technologies.map((tech, techIndex) => (
-                        <span
-                          key={techIndex}
-                          className="px-3 py-1 text-sm rounded-full cursor-default hover:scale-110 transition-all duration-300"
-                          style={{ 
-                            opacity: isVisible ? 1 : 0,
-                            transform: isVisible ? "scale(1)" : "scale(0.8)",
-                            transitionDelay: isVisible ? `${index * 100 + (techIndex * 50)}ms` : '0ms',
-                            backgroundColor: colors.primary + '10',
-                            color: colors.text
-                          }}
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
+                    {/* Empty Space for Desktop Centering */}
+                    <div className="hidden md:block w-[45%]" />
                   </div>
-                );
-              })}
-            </div>
-          )}
+                </ScrollAnimation>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>
   );
 }
+

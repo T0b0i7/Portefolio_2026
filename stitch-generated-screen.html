@@ -1,0 +1,419 @@
+<!DOCTYPE html><html class="scroll-smooth" lang="fr"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Eucher ABATTI | Créateur de Solutions Digitales</title>
+<meta content="Portfolio de Eucher ABATTI - Développeur Full-Stack &amp; UI/UX Designer spécialisé en React, TypeScript et Node.js." name="description">
+<!-- Google Fonts: Sora -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Sora', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              dark: '#0B1120',
+              card: '#161E2E',
+              accent: '#3B82F6',
+              secondary: '#1E293B',
+              text: '#94A3B8'
+            }
+          },
+          backgroundImage: {
+            'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-animations">
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .animate-float { animation: float 5s ease-in-out infinite; }
+    
+    .glass-card {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .timeline-dot::after {
+      content: '';
+      position: absolute;
+      width: 2px;
+      height: 100%;
+      background: #1E293B;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: -1;
+    }
+  </style>
+</head>
+<body class="bg-brand-dark text-white font-sans selection:bg-brand-accent selection:text-white">
+<!-- BEGIN: Navigation -->
+<nav class="fixed top-0 w-full z-50 glass-card border-b border-white/5">
+<div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-10 h-10 bg-brand-accent rounded-lg flex items-center justify-center font-bold text-xl" style="">E</div>
+<span class="font-bold text-lg tracking-tight hidden sm:block uppercase" style="">Eucher <span class="text-brand-accent" style="">ABATTI</span></span>
+</div>
+<div class="hidden md:flex items-center gap-8 text-sm font-medium text-brand-text">
+<a class="hover:text-white transition-colors" href="#accueil" style="">Accueil</a>
+<a class="hover:text-white transition-colors" href="#parcours" style="">Parcours</a>
+<a class="hover:text-white transition-colors" href="#projets" style="">Projets</a>
+<a class="hover:text-white transition-colors" href="#services" style="">Services</a>
+<a class="hover:text-white transition-colors" href="#contact" style="">Contact</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-white/10 transition-colors" style="">
+<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"></path></svg>
+</button>
+<a class="bg-brand-accent px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-blue-600 transition-all shadow-lg shadow-brand-accent/20" href="#contact" style="">FR</a>
+</div>
+</div>
+</nav>
+<!-- END: Navigation -->
+<main>
+<!-- BEGIN: Hero Section -->
+<section class="relative pt-32 pb-20 overflow-hidden" id="accueil">
+<!-- Background Glows -->
+<div class="absolute top-0 right-0 -z-10 w-1/3 h-1/3 bg-brand-accent/10 blur-[120px] rounded-full"></div>
+<div class="absolute bottom-0 left-0 -z-10 w-1/4 h-1/4 bg-blue-500/10 blur-[100px] rounded-full"></div>
+<div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+<div data-purpose="hero-content">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-accent/10 border border-brand-accent/20 text-brand-accent text-xs font-bold mb-6" style="">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-accent opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-brand-accent"></span>
+</span>
+            DÉVELOPPEUR FULL-STACK &amp; UI/UX DESIGNER
+          </div>
+<h1 class="text-5xl md:text-7xl font-extrabold leading-tight mb-6" style="">
+            Créateur de <br>
+<span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent to-blue-400" style="">Solutions Digitales</span>
+</h1>
+<p class="text-brand-text text-lg md:text-xl max-w-lg mb-10 leading-relaxed" style="">
+            Je transforme vos idées en expériences web modernes, performantes et mémorables. Spécialisé en React, TypeScript et Node.js.
+          </p>
+<div class="flex flex-wrap gap-4 mb-12">
+<a class="px-8 py-4 bg-brand-accent rounded-xl font-bold hover:translate-y-[-2px] transition-all shadow-xl shadow-brand-accent/20" href="#projets" style="">Voir mes projets</a>
+<a class="px-8 py-4 bg-brand-secondary rounded-xl font-bold hover:bg-slate-700 transition-all" href="#contact" style="">Me contacter</a>
+</div>
+<div class="flex items-center gap-6 text-brand-text">
+<a class="hover:text-white transition-colors" href="#" style=""><svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"></path></svg></a>
+<a class="hover:text-white transition-colors" href="#" style=""><svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg></a>
+</div>
+</div>
+<div class="relative flex justify-center">
+<div class="relative w-72 h-72 md:w-96 md:h-96">
+<!-- Animated rings -->
+<div class="absolute inset-0 border-2 border-brand-accent/20 rounded-full animate-[spin_10s_linear_infinite]"></div>
+<div class="absolute inset-4 border border-white/5 rounded-full animate-[spin_15s_linear_infinite_reverse]"></div>
+<div class="absolute inset-8 rounded-full overflow-hidden border-4 border-brand-secondary ring-4 ring-brand-accent/10 shadow-2xl">
+<!-- Placeholder for user avatar -->
+<img alt="Eucher Abatti" class="w-full h-full object-cover" src="https://img.freepik.com/photos-premium/portrait-jeune-homme-blanc-beau-americain-nerd-developpeur-logiciels-programmeur-ouvrier_407474-17714.jpg" style="">
+</div>
+<!-- Floating Tech Tags -->
+<div class="absolute -top-4 -right-4 bg-brand-card p-3 rounded-2xl shadow-xl border border-white/10 animate-float" style="animation-delay: 1s;">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 bg-blue-400 rounded-md"></div>
+<span class="text-xs font-bold" style="">React.js</span>
+</div>
+</div>
+<div class="absolute bottom-10 -left-8 bg-brand-card p-3 rounded-2xl shadow-xl border border-white/10 animate-float">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 bg-teal-400 rounded-md"></div>
+<span class="text-xs font-bold" style="">Tailwind CSS</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Hero Section -->
+<!-- BEGIN: Experience Timeline -->
+<section class="py-24 bg-brand-dark/50" id="parcours">
+<div class="max-w-7xl mx-auto px-6">
+<div class="text-center mb-16">
+<span class="text-brand-accent font-bold tracking-[0.2em] text-sm uppercase" style="">Mon Évolution</span>
+<h2 class="text-4xl md:text-5xl font-extrabold mt-4" style="">Mon <span class="text-brand-accent" style="">Parcours</span></h2>
+<p class="text-brand-text mt-4 max-w-2xl mx-auto" style="">Une chronologie de mes expériences professionnelles et de ma montée en compétences.</p>
+</div>
+<div class="relative max-w-4xl mx-auto space-y-12 before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-brand-accent/50 before:via-slate-800 before:to-transparent">
+<!-- Timeline Item 1 -->
+<div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+<div class="flex items-center justify-center w-10 h-10 rounded-full border border-brand-accent bg-brand-dark text-brand-accent absolute left-0 md:left-1/2 md:-translate-x-1/2 z-10 shadow-[0_0_15px_rgba(59,130,246,0.5)]">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<div class="w-[calc(100%-4rem)] md:w-[45%] glass-card p-6 rounded-2xl ml-16 md:ml-0 transition-transform hover:scale-[1.02]">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-bold text-xl text-white" style="">Stagiaire Développeur Full-Stack</h3>
+<span class="text-xs bg-brand-accent/20 text-brand-accent px-2 py-1 rounded" style="">2023 - 2024</span>
+</div>
+<p class="text-brand-accent font-semibold text-sm mb-4" style="">INNOVTECH</p>
+<ul class="text-sm text-brand-text space-y-2 list-disc list-inside">
+<li class="" style="">Développement d'interfaces et intégration de fonctionnalités</li>
+<li class="" style="">Optimisation des outils internes et automatisation</li>
+</ul>
+</div>
+</div>
+<!-- Timeline Item 2 -->
+<div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+<div class="flex items-center justify-center w-10 h-10 rounded-full border border-slate-700 bg-brand-dark text-brand-text absolute left-0 md:left-1/2 md:-translate-x-1/2 z-10">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<div class="w-[calc(100%-4rem)] md:w-[45%] glass-card p-6 rounded-2xl ml-16 md:ml-0 transition-transform hover:scale-[1.02]">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-bold text-xl text-white" style="">Licence Informatique de Gestion</h3>
+<span class="text-xs bg-slate-700/50 text-brand-text px-2 py-1 rounded" style="">2020 - 2023</span>
+</div>
+<p class="text-brand-accent font-semibold text-sm mb-4" style="">HECM Bénin</p>
+<p class="text-sm text-brand-text" style="">Spécialisation en développement logiciel et systèmes d'information.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Experience Timeline -->
+<!-- BEGIN: Projects Showcase -->
+<section class="py-24 bg-brand-dark" id="projets">
+<div class="max-w-7xl mx-auto px-6">
+<div class="text-center mb-16">
+<span class="text-brand-accent font-bold tracking-[0.2em] text-sm uppercase" style="">Mes Réalisations</span>
+<h2 class="text-4xl md:text-5xl font-extrabold mt-4" style="">Projets <span class="text-brand-accent" style="">Phares</span></h2>
+</div>
+<!-- Filter Pills -->
+<div class="flex flex-wrap justify-center gap-4 mb-12">
+<button class="px-6 py-2 rounded-full bg-brand-accent text-white font-bold text-sm" style="">Tous</button>
+<button class="px-6 py-2 rounded-full bg-brand-secondary text-brand-text font-bold text-sm hover:text-white transition-colors" style="">Web Apps</button>
+<button class="px-6 py-2 rounded-full bg-brand-secondary text-brand-text font-bold text-sm hover:text-white transition-colors" style="">Design UI/UX</button>
+<button class="px-6 py-2 rounded-full bg-brand-secondary text-brand-text font-bold text-sm hover:text-white transition-colors" style="">Mobile</button>
+</div>
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Project Card 1 -->
+<div class="group relative overflow-hidden rounded-3xl bg-brand-card border border-white/5 transition-all hover:border-brand-accent/50 hover:shadow-2xl hover:shadow-brand-accent/10">
+<div class="aspect-video overflow-hidden">
+<img alt="Project 1" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8meo1dtuap6U3lBp3x161krqMrrSXUadBu7p_EgBxhabeENTx4v7HjhXK1SZh3xBsdqzi8cD_wF2-EI21hmxjxj_7BKVx4fDhpLpyMHggJMvJdT9nUFx3_zhvhn-bFD3ZaLMAwm9DhHYovV9HbUC9UMrXilKr8q4LXvZTqtgLt_h3-1fB4XYt60ShtrBzuMUQMyhpWib0F-Nj0qp-88cpzSRIscmkDoOpHQdoR_VwB4Wu9ij2v3lbnILMF5j2EqMlVt8n_wEnNC5z" style="">
+</div>
+<div class="p-8">
+<div class="flex gap-2 mb-4">
+<span class="text-[10px] uppercase tracking-widest bg-brand-accent/10 text-brand-accent px-2 py-1 rounded font-bold" style="">React</span>
+<span class="text-[10px] uppercase tracking-widest bg-brand-accent/10 text-brand-accent px-2 py-1 rounded font-bold" style="">Node.js</span>
+</div>
+<h3 class="text-2xl font-bold mb-3 group-hover:text-brand-accent transition-colors" style="">Plateforme E-commerce</h3>
+<p class="text-brand-text text-sm mb-6 line-clamp-2" style="">Solution complète de vente en ligne avec gestion de stock en temps réel et paiement sécurisé.</p>
+<a class="inline-flex items-center gap-2 text-brand-accent font-bold text-sm group/link" href="#" style="">
+                Voir le projet 
+                <svg class="w-4 h-4 transition-transform group-hover/link:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 8l4 4m0 0l-4 4m4-4H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+<!-- Project Card 2 -->
+<div class="group relative overflow-hidden rounded-3xl bg-brand-card border border-white/5 transition-all hover:border-brand-accent/50 hover:shadow-2xl hover:shadow-brand-accent/10">
+<div class="aspect-video overflow-hidden">
+<img alt="Project 2" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpPFCuueuK2AHVWb-CtsOynDhotMQ9j27JegGJzEYOXFU5mSht_ogIPBLUhdnVO4xC8XTGRekQWSVuccJMjo5rzVWLC14H9eHIvLOuL5CjER3n0MjfXzLK6uQ8nKfXe1DumQtw1rFaEdmWMmDIXrAORS8ELo4N6GyyRxWB7p1zOWkX7izRkRvvZtKSn5yKqE5kybWZ2NO0zGW9OHrssMTQe6qAL-M0CyHDgKDSaO87WiWD98xAjA7x5ZGasPwd0fUmMemnnAe_5OpU" style="">
+</div>
+<div class="p-8">
+<div class="flex gap-2 mb-4">
+<span class="text-[10px] uppercase tracking-widest bg-brand-accent/10 text-brand-accent px-2 py-1 rounded font-bold" style="">TypeScript</span>
+<span class="text-[10px] uppercase tracking-widest bg-brand-accent/10 text-brand-accent px-2 py-1 rounded font-bold" style="">Prisma</span>
+</div>
+<h3 class="text-2xl font-bold mb-3 group-hover:text-brand-accent transition-colors" style="">ERP Interne INNOVTECH</h3>
+<p class="text-brand-text text-sm mb-6 line-clamp-2" style="">Automatisation des processus administratifs et suivi des indicateurs de performance.</p>
+<a class="inline-flex items-center gap-2 text-brand-accent font-bold text-sm group/link" href="#" style="">
+                Voir le projet 
+                <svg class="w-4 h-4 transition-transform group-hover/link:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 8l4 4m0 0l-4 4m4-4H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+<!-- Project Card 3 -->
+<div class="group relative overflow-hidden rounded-3xl bg-brand-card border border-white/5 transition-all hover:border-brand-accent/50 hover:shadow-2xl hover:shadow-brand-accent/10">
+<div class="aspect-video overflow-hidden">
+<img alt="Project 3" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOjThpSy5yfrY8eMX6S2gYlOPjY0LEs8ArJ86h93u8MrQsguUq6NT_S-yf9Kq5YUu-bHrCFVYDGNnMrFgrA9FzuFOuDrlvi9SASElQVvHReJTR7n6Ff9PkS45D1b3c_xVd0lSE6N_9D7MLIbQmO16BG7v_7PBgxF1_3apsWONonzNWIBDgP45CpXim3zcLj2CNwKiIvVXv7r9xUY72pxMb-iFz55unTOA4T60cLPK1Vb6tzGBfaLJG34hzkvMT3_26Ar5fHk1cSbvO" style="">
+</div>
+<div class="p-8">
+<div class="flex gap-2 mb-4">
+<span class="text-[10px] uppercase tracking-widest bg-brand-accent/10 text-brand-accent px-2 py-1 rounded font-bold" style="">Framer Motion</span>
+<span class="text-[10px] uppercase tracking-widest bg-brand-accent/10 text-brand-accent px-2 py-1 rounded font-bold" style="">UI Design</span>
+</div>
+<h3 class="text-2xl font-bold mb-3 group-hover:text-brand-accent transition-colors" style="">Portfolio Victoria</h3>
+<p class="text-brand-text text-sm mb-6 line-clamp-2" style="">Portfolio minimaliste et immersif conçu pour une architecte d'intérieur.</p>
+<a class="inline-flex items-center gap-2 text-brand-accent font-bold text-sm group/link" href="#" style="">
+                Voir le projet 
+                <svg class="w-4 h-4 transition-transform group-hover/link:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 8l4 4m0 0l-4 4m4-4H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+</div>
+<div class="mt-16 text-center">
+<button class="bg-brand-secondary hover:bg-slate-700 px-10 py-4 rounded-2xl font-bold transition-all" style="">Plus de réalisations</button>
+</div>
+</div>
+</section>
+<!-- END: Projects Showcase -->
+<!-- BEGIN: Skills & Services -->
+<section class="py-24 bg-brand-dark relative" id="services">
+<div class="max-w-7xl mx-auto px-6 relative">
+<div class="text-center mb-16">
+<span class="text-brand-accent font-bold tracking-[0.2em] text-sm uppercase" style="">Mon Expertise</span>
+<h2 class="text-4xl md:text-5xl font-extrabold mt-4" style="">Compétences &amp; <span class="text-brand-accent" style="">Services</span></h2>
+</div>
+<div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+<!-- Skill Category -->
+<div class="glass-card p-8 rounded-3xl border-t-4 border-t-blue-500">
+<div class="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center text-blue-500 mb-6">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<h4 class="font-bold text-lg mb-4" style="">Frontend</h4>
+<ul class="text-brand-text text-sm space-y-3">
+<li class="flex items-center gap-2" style=""><div class="w-1.5 h-1.5 rounded-full bg-brand-accent"></div> React &amp; Next.js</li>
+<li class="flex items-center gap-2" style=""><div class="w-1.5 h-1.5 rounded-full bg-brand-accent"></div> TypeScript</li>
+<li class="flex items-center gap-2" style=""><div class="w-1.5 h-1.5 rounded-full bg-brand-accent"></div> Tailwind CSS</li>
+<li class="flex items-center gap-2" style=""><div class="w-1.5 h-1.5 rounded-full bg-brand-accent"></div> Framer Motion</li>
+</ul>
+</div>
+<div class="glass-card p-8 rounded-3xl border-t-4 border-t-green-500">
+<div class="w-12 h-12 bg-green-500/10 rounded-xl flex items-center justify-center text-green-500 mb-6">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<h4 class="font-bold text-lg mb-4" style="">Backend</h4>
+<ul class="text-brand-text text-sm space-y-3">
+<li class="flex items-center gap-2" style=""><div class="w-1.5 h-1.5 rounded-full bg-green-500"></div> Node.js / Express</li>
+<li class="flex items-center gap-2" style=""><div class="w-1.5 h-1.5 rounded-full bg-green-500"></div> PostgreSQL / MongoDB</li>
+<li class="flex items-center gap-2" style=""><div class="w-1.5 h-1.5 rounded-full bg-green-500"></div> API REST &amp; GraphQL</li>
+<li class="flex items-center gap-2" style=""><div class="w-1.5 h-1.5 rounded-full bg-green-500"></div> Firebase / Supabase</li>
+</ul>
+</div>
+<div class="glass-card p-8 rounded-3xl border-t-4 border-t-purple-500">
+<div class="w-12 h-12 bg-purple-500/10 rounded-xl flex items-center justify-center text-purple-500 mb-6">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<h4 class="font-bold text-lg mb-4" style="">UI/UX Design</h4>
+<ul class="text-brand-text text-sm space-y-3">
+<li class="flex items-center gap-2" style=""><div class="w-1.5 h-1.5 rounded-full bg-purple-500"></div> Figma / Adobe XD</li>
+<li class="flex items-center gap-2" style=""><div class="w-1.5 h-1.5 rounded-full bg-purple-500"></div> Wireframing</li>
+<li class="flex items-center gap-2" style=""><div class="w-1.5 h-1.5 rounded-full bg-purple-500"></div> Prototypage</li>
+<li class="flex items-center gap-2" style=""><div class="w-1.5 h-1.5 rounded-full bg-purple-500"></div> Design Systems</li>
+</ul>
+</div>
+<div class="glass-card p-8 rounded-3xl border-t-4 border-t-orange-500">
+<div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center text-orange-500 mb-6">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<h4 class="font-bold text-lg mb-4" style="">DevOps</h4>
+<ul class="text-brand-text text-sm space-y-3">
+<li class="flex items-center gap-2" style=""><div class="w-1.5 h-1.5 rounded-full bg-orange-500"></div> Docker / CI-CD</li>
+<li class="flex items-center gap-2" style=""><div class="w-1.5 h-1.5 rounded-full bg-orange-500"></div> AWS / Vercel</li>
+<li class="flex items-center gap-2" style=""><div class="w-1.5 h-1.5 rounded-full bg-orange-500"></div> Git / GitHub</li>
+<li class="flex items-center gap-2" style=""><div class="w-1.5 h-1.5 rounded-full bg-orange-500"></div> Testing (Jest)</li>
+</ul>
+</div>
+</div>
+<!-- Call to Action Banner -->
+<div class="bg-gradient-to-r from-brand-accent/20 to-blue-600/20 border border-brand-accent/30 rounded-3xl p-10 flex flex-col md:flex-row items-center justify-between gap-8">
+<div>
+<h3 class="text-3xl font-bold mb-2" style="">Prêt à donner vie à votre projet ?</h3>
+<p class="text-brand-text" style="">Disponible pour de nouvelles opportunités en freelance ou CDI.</p>
+</div>
+<a class="bg-brand-accent whitespace-nowrap px-8 py-4 rounded-xl font-bold hover:bg-blue-600 transition-all shadow-xl shadow-brand-accent/20" href="#contact" style="">Démarrer un projet</a>
+</div>
+</div>
+</section>
+<!-- END: Skills & Services -->
+<!-- BEGIN: Contact Section -->
+<section class="py-24 bg-brand-dark" id="contact">
+<div class="max-w-7xl mx-auto px-6">
+<div class="grid lg:grid-cols-2 gap-16">
+<div data-purpose="contact-info">
+<span class="text-brand-accent font-bold tracking-[0.2em] text-sm uppercase" style="">Contact</span>
+<h2 class="text-4xl md:text-5xl font-extrabold mt-4 mb-8" style="">Commençons une <span class="text-brand-accent" style="">Collaboration</span></h2>
+<p class="text-brand-text mb-12 max-w-md" style="">Une idée ? Un projet ? Je suis à votre écoute pour concrétiser vos besoins technologiques.</p>
+<div class="space-y-8">
+<div class="flex items-center gap-6">
+<div class="w-12 h-12 bg-brand-secondary rounded-2xl flex items-center justify-center text-brand-accent border border-white/5">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<div>
+<p class="text-xs text-brand-text uppercase font-bold" style="">Email</p>
+<p class="font-bold" style="">abattieucher@gmail.com</p>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="w-12 h-12 bg-brand-secondary rounded-2xl flex items-center justify-center text-brand-accent border border-white/5">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<div>
+<p class="text-xs text-brand-text uppercase font-bold" style="">Localisation</p>
+<p class="font-bold" style="">Porto-Novo, Bénin (Remote Friendly)</p>
+</div>
+</div>
+</div>
+<div class="mt-12">
+<p class="text-sm font-bold text-brand-text mb-4" style="">SUIVEZ-MOI</p>
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-lg bg-brand-secondary border border-white/5 flex items-center justify-center hover:bg-brand-accent transition-colors" href="#" style="">
+<svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"></path></svg>
+</a>
+<a class="w-10 h-10 rounded-lg bg-brand-secondary border border-white/5 flex items-center justify-center hover:bg-brand-accent transition-colors" href="#" style="">
+<svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg>
+</a>
+</div>
+</div>
+</div>
+<div class="glass-card p-10 rounded-3xl">
+<form action="#" class="space-y-6" method="POST">
+<div class="grid md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="text-xs font-bold uppercase text-brand-text" for="name" style="">Nom complet</label>
+<input class="w-full bg-brand-dark/50 border-white/10 rounded-xl px-5 py-4 focus:border-brand-accent focus:ring-0 transition-all placeholder:text-slate-600" id="name" name="name" placeholder="John Doe" type="text">
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold uppercase text-brand-text" for="email" style="">Adresse Email</label>
+<input class="w-full bg-brand-dark/50 border-white/10 rounded-xl px-5 py-4 focus:border-brand-accent focus:ring-0 transition-all placeholder:text-slate-600" id="email" name="email" placeholder="john@example.com" type="email">
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold uppercase text-brand-text" for="subject" style="">Sujet</label>
+<input class="w-full bg-brand-dark/50 border-white/10 rounded-xl px-5 py-4 focus:border-brand-accent focus:ring-0 transition-all placeholder:text-slate-600" id="subject" name="subject" placeholder="Collaboration Web" type="text">
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold uppercase text-brand-text" for="message" style="">Votre message</label>
+<textarea class="w-full bg-brand-dark/50 border-white/10 rounded-xl px-5 py-4 focus:border-brand-accent focus:ring-0 transition-all placeholder:text-slate-600" id="message" name="message" placeholder="Décrivez votre projet..." rows="5"></textarea>
+</div>
+<button class="w-full bg-brand-accent py-5 rounded-xl font-bold hover:bg-blue-600 transition-all shadow-xl shadow-brand-accent/20 flex items-center justify-center gap-3" type="submit" style="">
+                Envoyer le message
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+</form>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Contact Section -->
+</main>
+<!-- BEGIN: Footer -->
+<footer class="bg-brand-dark border-t border-white/5 py-12">
+<div class="max-w-7xl mx-auto px-6">
+<div class="flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 bg-brand-accent rounded-lg flex items-center justify-center font-bold text-lg" style="">E</div>
+<span class="font-bold text-sm tracking-tight uppercase" style="">Eucher <span class="text-brand-accent" style="">ABATTI</span></span>
+</div>
+<div class="flex gap-8 text-sm text-brand-text">
+<a class="hover:text-white transition-colors" href="#" style="">Mentions légales</a>
+<a class="hover:text-white transition-colors" href="#" style="">Politique de confidentialité</a>
+</div>
+<p class="text-xs text-brand-text" style="">© 2024 Eucher ABATTI. Tous droits réservés.</p>
+</div>
+</div>
+</footer>
+<!-- END: Footer -->
+</body></html>

@@ -1,172 +1,138 @@
-import React from "react";
-import { Github, Linkedin, Facebook, Mail, Phone, MapPin, ArrowUp, Code, Globe, Sparkles, Zap, Users, Target, Award } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useTheme } from "@/contexts/ThemeContext";
-import { cn } from "@/lib/utils";
-
-const footerSections = [
-  {
-    title: "Services",
-    links: [
-      { name: "Développement Web", href: "#services" },
-      { name: "Applications Mobile", href: "#services" },
-      { name: "UI/UX Design", href: "#services" },
-      { name: "Consulting Tech", href: "#services" },
-    ],
-  },
-  {
-    title: "Navigation",
-    links: [
-      { name: "Accueil", href: "#hero" },
-      { name: "Parcours", href: "#evolution" },
-      { name: "Projets", href: "#projects" },
-      { name: "Contact", href: "#contact" },
-    ],
-  },
-  {
-    title: "Légal",
-    links: [
-      { name: "Mentions légales", href: "#" },
-      { name: "Politique de confidentialité", href: "#" },
-      { name: "CGU", href: "#" },
-    ],
-  },
-];
-
-const contactInfo = [
-  { icon: Mail, value: "abattieucher@gmail.com", href: "mailto:abattieucher@gmail.com" },
-  { icon: Phone, value: "+229 0157002427", href: "tel:+22901570024277" },
-  { icon: MapPin, value: "Porto-Novo, Bénin" },
-];
-
-const socialLinks = [
-  { icon: Github, href: "https://github.com/T0b0i7/", label: "GitHub" },
-  { icon: Linkedin, href: "https://www.linkedin.com/in/eucher-abatti-7a9472283", label: "LinkedIn" },
-  { icon: Facebook, href: "https://www.facebook.com/bi.to.77235", label: "Facebook" },
-];
-
-const stats = [
-  { icon: Code, value: "50+", label: "Projets livrés" },
-  { icon: Users, value: "30+", label: "Clients satisfaits" },
-  { icon: Award, value: "5+", label: "Années d'expérience" },
-  { icon: Globe, value: "8+", label: "Pays desservis" },
-];
+import React, { useState } from "react";
+import { Terminal, ShieldCheck, FileText, Globe } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function Footer() {
-  const { colors, theme } = useTheme();
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
+  const { lang, language } = useLanguage();
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="relative border-t" style={{ backgroundColor: colors.background, borderColor: colors.border }}>
-      <div className="container mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-          {/* Brand Section */}
-          <div className="col-span-1 md:col-span-2 space-y-4">
-            <div className="flex items-center gap-3 mb-4">
-              <div 
-                className="w-10 h-10 rounded-lg flex items-center justify-center"
-                style={{ backgroundColor: colors.primary }}
-              >
-                <Code className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold" style={{ color: colors.text }}>Eucher ABATTI</h3>
-                <p className="text-sm" style={{ color: colors.textSecondary }}>Développeur Full-Stack</p>
-              </div>
-            </div>
-            
-            <p className="leading-relaxed" style={{ color: colors.textSecondary }}>
-              Spécialisé dans la création d'applications web modernes et solutions digitales innovantes. 
-              Je transforme vos idées en expériences performantes et élégantes.
-            </p>
+    <footer className="bg-slate-950 border-t border-white/5 pt-16 pb-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16 items-start">
 
-            {/* Quick Contact */}
-            <div className="space-y-2">
-              {contactInfo.map((contact, index) => (
-                <div key={index} className="flex items-center gap-2 text-sm" style={{ color: colors.textSecondary }}>
-                  <contact.icon className="w-4 h-4" style={{ color: colors.primary }} />
-                  {contact.href ? (
-                    <a
-                      href={contact.href}
-                      className="hover:underline"
-                      style={{ color: colors.textSecondary }}
-                    >
-                      {contact.value}
-                    </a>
-                  ) : (
-                    <span>{contact.value}</span>
-                  )}
+          {/* Column 1: Brand/Identity */}
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-accent to-blue-400 p-[1px]">
+                <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
+                  <Terminal className="w-5 h-5 text-brand-accent" />
                 </div>
-              ))}
+              </div>
+              <div className="flex flex-col">
+                <span className="font-bold text-lg text-white tracking-tighter uppercase leading-none">
+                  Eucher <span className="text-brand-accent">ABATTI</span>
+                </span>
+                <span className="text-[10px] font-mono text-slate-500 mt-1">Full-Stack Architect & IA</span>
+              </div>
             </div>
+            <p className="text-sm text-slate-400 max-w-xs leading-relaxed">
+              {lang(
+                "Conception d'expériences numériques innovantes alliant performance, esthétique et intelligence artificielle.",
+                "Designing innovative digital experiences combining performance, aesthetics, and artificial intelligence."
+              )}
+            </p>
+          </div>
 
-            {/* Social Links */}
-            <div className="flex items-center gap-3 pt-4">
-              {socialLinks.map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-lg flex items-center justify-center border"
-                  style={{ backgroundColor: colors.primary + '10', borderColor: colors.border }}
-                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = colors.primary + '20'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = colors.primary + '10'; }}
-                  aria-label={social.label}
-                >
-                  <social.icon className="w-5 h-5" style={{ color: colors.primary }} />
-                </a>
-              ))}
+          {/* Column 2: Legal Links & Content */}
+          <div className="flex flex-col gap-4">
+            <h4 className="text-sm font-bold text-white uppercase tracking-widest">{lang("Cadre Légal", "Legal Framework")}</h4>
+            <div className="flex flex-col gap-3">
+              {/* Mentions Légales Dialog */}
+              <Dialog>
+                <DialogTrigger className="flex items-center gap-2 text-sm text-slate-400 hover:text-brand-accent transition-colors w-fit">
+                  <FileText className="w-4 h-4" />
+                  {lang("Mentions légales", "Legal Notice")}
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl bg-slate-900 border-white/10 text-slate-300 max-h-[80vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle className="text-2xl font-bold text-white mb-4">
+                      {lang("Mentions Légales", "Legal Notice")}
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4 text-sm leading-relaxed">
+                    <section>
+                      <h5 className="text-white font-bold mb-2">{lang("1. Édition du site", "1. Site Edition")}</h5>
+                      <p>{lang("Le présent site est édité par : Eucher ABATTI, entrepreneur individuel.", "This site is edited by: Eucher ABATTI, individual entrepreneur.")}</p>
+                      <p>{lang("Domicilié à Porto-Novo, Bénin.", "Located in Porto-Novo, Benin.")}</p>
+                      <p>{lang("Email : abattieucher@gmail.com", "Email: abattieucher@gmail.com")}</p>
+                      <p>{lang("Téléphone : +229 0157002427", "Phone: +229 0157002427")}</p>
+                    </section>
+                    <section>
+                      <h5 className="text-white font-bold mb-2">{lang("2. Hébergement", "2. Hosting")}</h5>
+                      <p>{lang("Le site est hébergé par Netlify Inc., situé à San Francisco, Californie, USA.", "The site is hosted by Netlify Inc., located in San Francisco, California, USA.")}</p>
+                    </section>
+                    <section>
+                      <h5 className="text-white font-bold mb-2">{lang("3. Propriété intellectuelle", "3. Intellectual Property")}</h5>
+                      <p>{lang("L'ensemble de ce site (structure, textes, logos, images) relève de la législation sur le droit d'auteur. Toute reproduction totale ou partielle est interdite sans autorisation.", "This entire site (structure, texts, logos, images) is subject to copyright law. Total or partial reproduction is prohibited without authorization.")}</p>
+                    </section>
+                  </div>
+                </DialogContent>
+              </Dialog>
+
+              {/* Politique de Confidentialité Dialog */}
+              <Dialog>
+                <DialogTrigger className="flex items-center gap-2 text-sm text-slate-400 hover:text-brand-accent transition-colors w-fit">
+                  <ShieldCheck className="w-4 h-4" />
+                  {lang("Politique de confidentialité", "Privacy Policy")}
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl bg-slate-900 border-white/10 text-slate-300 max-h-[80vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle className="text-2xl font-bold text-white mb-4">
+                      {lang("Politique de Confidentialité", "Privacy Policy")}
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4 text-sm leading-relaxed">
+                    <section>
+                      <h5 className="text-white font-bold mb-2">{lang("1. Collecte des données", "1. Data Collection")}</h5>
+                      <p>{lang("Les seules données personnelles collectées via ce site sont celles envoyées volontairement par l'utilisateur via le formulaire de contact (nom, email).", "The only personal data collected via this site are those voluntarily sent by the user via the contact form (name, email).")}</p>
+                    </section>
+                    <section>
+                      <h5 className="text-white font-bold mb-2">{lang("2. Utilisation des données", "2. Use of Data")}</h5>
+                      <p>{lang("Ces données sont utilisées uniquement pour répondre à vos demandes professionnelles. Elles ne sont jamais vendues ni transmises à des tiers.", "This data is used solely to respond to your professional requests. It is never sold or transmitted to third parties.")}</p>
+                    </section>
+                    <section>
+                      <h5 className="text-white font-bold mb-2">{lang("3. Vos droits", "3. Your Rights")}</h5>
+                      <p>{lang("Conformément à la réglementation relative à la protection des données, vous disposez d'un droit d'accès, de rectification et de suppression de vos données personnelles sur simple demande par email.", "In accordance with data protection regulations, you have a right of access, rectification, and deletion of your personal data upon request by email.")}</p>
+                    </section>
+                    <section>
+                      <h5 className="text-white font-bold mb-2">{lang("4. Cookies", "4. Cookies")}</h5>
+                      <p>{lang("Ce site est conçu pour être respectueux de la vie privée et n'utilise pas de cookies publicitaires ou de traçage intrusif.", "This site is designed to be respectfull of privacy and does not use advertising or intrusive tracking cookies.")}</p>
+                    </section>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
 
-          {/* Footer Links */}
-          {footerSections.map((section) => (
-            <div key={section.title} className="space-y-4">
-              <h4 className="font-semibold text-base" style={{ color: colors.text }}>{section.title}</h4>
-              <ul className="space-y-2">
-                {section.links.map((link) => (
-                  <li key={link.name}>
-                    <a
-                      href={link.href}
-                      className="text-sm hover:underline transition-colors"
-                      style={{ color: colors.textSecondary }}
-                    >
-                      {link.name}
-                    </a>
-                  </li>
-                ))}
-              </ul>
+          {/* Column 3: Tech Status */}
+          <div className="flex flex-col gap-4">
+            <h4 className="text-sm font-bold text-white uppercase tracking-widest">{lang("État du Système", "System Status")}</h4>
+            <div className="bg-white/5 border border-white/10 rounded-xl p-4 flex items-center gap-4">
+              <div className="w-3 h-3 bg-brand-accent rounded-full animate-pulse shadow-[0_0_10px_rgba(59,130,246,0.5)]" />
+              <div>
+                <p className="text-xs font-mono text-white leading-none uppercase">Deploy: Online</p>
+                <p className="text-[10px] text-slate-500 mt-1 font-mono">v1.2.4-stable | {language}:selected</p>
+              </div>
             </div>
-          ))}
+          </div>
         </div>
 
-        {/* Bottom Section */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6 pt-8 border-t" style={{ borderColor: colors.border }}>
-          {/* Copyright */}
-          <div className="text-sm" style={{ color: colors.textSecondary }}>
-            <span>© {currentYear} Eucher ABATTI.</span>
-          
+        {/* Bottom Bar */}
+        <div className="pt-8 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <p className="text-xs text-slate-500 font-mono">
+            © {currentYear} <span className="text-slate-400">Eucher ABATTI</span>. {lang("Tous droits réservés.", "All rights reserved.")}
+          </p>
+          <div className="flex items-center gap-2 text-[10px] text-slate-600 font-mono uppercase tracking-[0.2em]">
+            <span>Build with</span>
+            <span className="text-brand-accent">React</span>
+            <span>+</span>
+            <span className="text-blue-400">Tailwind</span>
           </div>
-
-          {/* Back to Top */}
-          <Button
-            onClick={scrollToTop}
-            variant="outline"
-            size="sm"
-            style={{ borderColor: colors.border, color: colors.text }}
-            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = colors.primary + '10'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
-          >
-            <ArrowUp className="w-4 h-4 mr-2" />
-            Haut de page
-          </Button>
         </div>
       </div>
     </footer>
   );
 }
+
