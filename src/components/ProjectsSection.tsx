@@ -766,11 +766,11 @@ export function ProjectsSection() {
                   </div>
 
                   {/* Right Column: Actions */}
-                  <div className="flex flex-col gap-3 justify-end pb-2">
+                  <div className="flex flex-col sm:flex-row gap-3 justify-end items-center md:col-span-2 mt-4 pt-6 border-t border-white/5">
                     {selectedProject.url && (
                       <button
                         onClick={() => window.open(selectedProject.url, "_blank")}
-                        className="w-full h-12 flex items-center justify-center gap-2 bg-white text-slate-900 font-bold rounded-2xl hover:bg-slate-200 transition-all hover:scale-[1.02] active:scale-95 shadow-lg"
+                        className="w-full sm:flex-1 h-12 flex items-center justify-center gap-2 bg-white text-slate-900 font-bold rounded-2xl hover:bg-slate-200 transition-all hover:scale-[1.02] active:scale-95 shadow-lg"
                       >
                         <ExternalLink className="w-4 h-4" />
                         {lang("Consulter l'application", "View Application")}
@@ -782,7 +782,7 @@ export function ProjectsSection() {
                         closeDialog();
                         document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
                       }}
-                      className="w-full h-12 flex items-center justify-center gap-2 bg-slate-800 text-white font-bold rounded-2xl border border-white/10 hover:bg-slate-700 transition-all hover:scale-[1.02] active:scale-95"
+                      className="w-full sm:flex-1 h-12 flex items-center justify-center gap-2 bg-slate-800 text-white font-bold rounded-2xl border border-white/10 hover:bg-slate-700 transition-all hover:scale-[1.02] active:scale-95"
                     >
                       <Download className="w-4 h-4 text-brand-accent" />
                       {lang("Télécharger les ressources", "Download Resources")}
