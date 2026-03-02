@@ -105,29 +105,7 @@ export function Navigation() {
 
           {/* ══════════ SETTINGS ACTIONS ══════════ */}
           <div className="flex items-center gap-2 sm:gap-4">
-            {/* Theme Switcher Container */}
-            <div className="flex items-center gap-1 bg-white/5 rounded-xl p-1 border border-white/5 backdrop-blur-sm">
-              <button
-                onClick={() => theme === 'light' && toggleTheme()}
-                className={cn(
-                  "p-2 rounded-lg transition-all",
-                  theme === 'dark' ? "bg-brand-accent text-white shadow-lg shadow-blue-500/20" : "text-slate-500 hover:text-slate-300"
-                )}
-                aria-label="Dark mode"
-              >
-                <Moon className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => theme === 'dark' && toggleTheme()}
-                className={cn(
-                  "p-2 rounded-lg transition-all",
-                  theme === 'light' ? "bg-brand-accent text-white shadow-lg shadow-blue-500/20" : "text-slate-500 hover:text-slate-300"
-                )}
-                aria-label="Light mode"
-              >
-                <Sun className="w-4 h-4" />
-              </button>
-            </div>
+            {/* Theme currently fixed to dark */}
 
             {/* Language Toggle */}
             <button
