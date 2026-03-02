@@ -1,0 +1,16 @@
+{
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false,
+  "tailwindCSS.experimental.classRegex": [
+    ["\\:class\\=\"([^\"]*)\"", "([\"'])(?:(?=(\\\\?)).)*?\\1"],
+    ["cn\\(([^)]*)\\)", "`([^`]*)$"],
+    ["classNames\\(([^)]*)\\)", "'([^']*)'"]
+  ],
+  "tailwindCSS.includeLanguages": {
+    "typescript": "typescript",
+    "typescriptreact": "typescriptreact",
+    "plaintext": "html"
+  },
+  "tailwindCSS.experimental.configFile": "tailwind.config.ts"
+}
