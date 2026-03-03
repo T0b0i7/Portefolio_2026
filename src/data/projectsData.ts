@@ -315,4 +315,31 @@ export const getProjects = (lang: (fr: string, en: string) => string): Project[]
         image: "/design/owo2.webp",
         url: "https://owofinance.netlify.app/",
     },
+    {
+        id: 22,
+        title: "Portfolio.OS",
+        category: "Portfolio",
+        description: lang(
+            "Portfolio.OS – Le Système d'Exploitation du Portfolio Authentique. Une plateforme next-gen permettant de voir 16 designs différents en temps réel pour une même expérience.",
+            "Portfolio.OS – The Authentic Portfolio Operating System. A next-gen platform allowing to see 10 different designs in real-time for the same experience."
+        ),
+        tags: ["React 19", "TypeScript", "Tailwind CSS 4", "Framer Motion", "Vite", "IA"],
+        metrics: { impact: lang("Innovation design", "Design innovation"), type: "Open Source" },
+        color: "primary",
+        status: lang("Terminé", "Completed"),
+        url: "https://portefolio-os-bice.vercel.app/",
+        images: [
+            "/design/P1.PNG",
+            "/design/P2.PNG",
+            "/design/P3.PNG",
+            "/design/P4.PNG",
+            "/design/P5.PNG",
+            "/design/P6.PNG",
+            "/design/P7.PNG",
+            "/design/P8.PNG",
+            "/design/P9.PNG",
+            "/design/P10.PNG",
+            "/design/P11.PNG",
+        ],
+    },
 ];

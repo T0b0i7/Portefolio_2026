@@ -1,6 +1,15 @@
 {
-  "name": "vite_react_shadcn_ts",
-  "private": true,
+  "name": "portfolio-os",
+  "description": "Le Système d'Exploitation du Portfolio Authentique - Une plateforme next-gen permettant de voir 10 designs différents en temps réel",
+  "keywords": [
+    "portfolio",
+    "react",
+    "typescript",
+    "tailwindcss",
+    "theme",
+    "design-system"
+  ],
+  "category": "Portfolio",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
