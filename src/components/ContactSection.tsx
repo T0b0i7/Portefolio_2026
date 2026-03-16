@@ -57,6 +57,9 @@ export function ContactSection() {
     // Simulate form submission
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
+    // @ts-ignore
+    if (window.umami) window.umami.track("contact-form-submit", { subject: formData.subject });
+
     toast.success(lang("Message envoyé avec succès!", "Message sent successfully!"), {
       description: lang("Je vous répondrai dans les plus brefs délais.", "I will get back to you as soon as possible."),
     });

@@ -2,9 +2,11 @@ import { useState, useEffect, useRef } from "react";
 import { Github, Linkedin, Facebook, ArrowRight, Mail, Phone, MapPin, HelpCircle, Brain, Terminal, ShieldAlert } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useTracking } from "@/hooks/useTracking";
 
 export function EnigmaSection() {
     const { lang } = useLanguage();
+    const { trackEvent } = useTracking();
     const [isLoaded, setIsLoaded] = useState(false);
     const [activeTab, setActiveTab] = useState<"pnp" | "ia" | "triangle">("triangle");
     const [rotation, setRotation] = useState({ x: 0, y: 0 });
@@ -62,13 +64,13 @@ export function EnigmaSection() {
                     </h1>
 
                     <div className="flex flex-wrap gap-2 mb-8">
-                        <button onClick={() => setActiveTab("triangle")} className={cn("px-4 py-2 rounded-lg text-xs font-bold border transition-all uppercase tracking-widest", activeTab === "triangle" ? "bg-blue-600 border-blue-400 text-white" : "bg-white/5 border-white/10 text-slate-500")}>
+                        <button onClick={() => { setActiveTab("triangle"); trackEvent("enigma-tab", { tab: "triangle" }); }} className={cn("px-4 py-2 rounded-lg text-xs font-bold border transition-all uppercase tracking-widest", activeTab === "triangle" ? "bg-blue-600 border-blue-400 text-white" : "bg-white/5 border-white/10 text-slate-500")}>
                             {lang("Le Triangle Pur", "The Pure Triangle")}
                         </button>
-                        <button onClick={() => setActiveTab("pnp")} className={cn("px-4 py-2 rounded-lg text-xs font-bold border transition-all uppercase tracking-widest", activeTab === "pnp" ? "bg-blue-600 border-blue-400 text-white" : "bg-white/5 border-white/10 text-slate-500")}>
+                        <button onClick={() => { setActiveTab("pnp"); trackEvent("enigma-tab", { tab: "pnp" }); }} className={cn("px-4 py-2 rounded-lg text-xs font-bold border transition-all uppercase tracking-widest", activeTab === "pnp" ? "bg-blue-600 border-blue-400 text-white" : "bg-white/5 border-white/10 text-slate-500")}>
                             {lang("P vs NP", "P vs NP")}
                         </button>
-                        <button onClick={() => setActiveTab("ia")} className={cn("px-4 py-2 rounded-lg text-xs font-bold border transition-all uppercase tracking-widest", activeTab === "ia" ? "bg-blue-600 border-blue-400 text-white" : "bg-white/5 border-white/10 text-slate-500")}>
+                        <button onClick={() => { setActiveTab("ia"); trackEvent("enigma-tab", { tab: "ia" }); }} className={cn("px-4 py-2 rounded-lg text-xs font-bold border transition-all uppercase tracking-widest", activeTab === "ia" ? "bg-blue-600 border-blue-400 text-white" : "bg-white/5 border-white/10 text-slate-500")}>
                             {lang("IA & Boîte Noire", "AI & Black Box")}
                         </button>
                     </div>

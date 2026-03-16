@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useOptimizedImages } from "@/hooks/use-optimized-images";
+import { useTracking } from "@/hooks/useTracking";
 import { getProjects } from "@/data/projectsData";
 
 import { Project } from "@/types/project";
@@ -14,6 +16,8 @@ const ITEMS_PER_PAGE_MOBILE = 1;
 export function ProjectsSection() {
   const { lang, language } = useLanguage();
   const projects = getProjects(lang);
+  const { getOptimizedImage } = useOptimizedImages();
+  const { trackEvent } = useTracking();
 
   const getCategoryCount = (categoryId: string) => {
     if (categoryId === "all") return projects.filter(p => !p.locked).length;
@@ -194,6 +198,12 @@ export function ProjectsSection() {
   const openProjectDialog = (project: Project) => {
     setSelectedProject(project);
     setIsDialogOpen(true);
+    trackEvent("project-view", { id: project.id, title: project.title });
+    // Focus management for accessibility
+    setTimeout(() => {
+      const modal = document.querySelector('[role="dialog"]') as HTMLElement;
+      if (modal) modal.focus();
+    }, 100);
   };
 
   const closeDialog = () => {
@@ -290,7 +300,10 @@ export function ProjectsSection() {
                   return (
                     <button
                       key={category.id}
-                      onClick={() => setActiveCategory(category.id)}
+                      onClick={() => {
+                        setActiveCategory(category.id);
+                        trackEvent("category-filter-mobile", { category: category.id });
+                      }}
                       className={cn(
                         "flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium transition-all duration-300",
                         activeCategory === category.id ? "text-white shadow-lg" : "text-slate-400 bg-slate-800/30"
@@ -355,7 +368,10 @@ export function ProjectsSection() {
                   return (
                     <button
                       key={category.id}
-                      onClick={() => setActiveCategory(category.id)}
+                      onClick={() => {
+                        setActiveCategory(category.id);
+                        trackEvent("category-filter-desktop", { category: category.id });
+                      }}
                       className={cn(
                         "flex items-center gap-2 px-5 py-3 rounded-full font-medium transition-all duration-300",
                         activeCategory === category.id ? "text-white shadow-lg shadow-blue-500/20" : ""
@@ -417,13 +433,23 @@ export function ProjectsSection() {
                 >
                   {/* Project Image */}
                   <div className="relative h-36 sm:h-40 md:h-44 overflow-hidden">
-                    {project.image || (project.images && project.images[0]) ? (
-                      <img
-                        src={project.image ?? project.images?.[0]}
-                        alt={project.title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
-                    ) : (
+                    {project.image || (project.images && project.images[0]) ? (() => {
+                      const imagePath = project.image ?? project.images?.[0] ?? '';
+                      const optimized = getOptimizedImage(imagePath);
+
+                      return (
+                        <img
+                          src={optimized ? `/design/optimized/${optimized.webp}` : imagePath}
+                          srcSet={optimized ? optimized.srcset.split(', ').map(src => `/design/optimized/${src}`).join(', ') : undefined}
+                          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                          alt={project.title}
+                          loading="lazy"
+                          decoding="async"
+                          fetchPriority="low"
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        />
+                      );
+                    })() : (
                       <div
                         className="w-full h-full flex items-center justify-center"
                         style={{ backgroundColor: colors.primary + '20' }}
@@ -445,7 +471,10 @@ export function ProjectsSection() {
                       </button>
                       {project.url && (
                         <button
-                          onClick={() => window.open(project.url, "_blank")}
+                          onClick={() => {
+                            window.open(project.url, "_blank");
+                            trackEvent("project-external-link", { id: project.id, title: project.title });
+                          }}
                           className="h-9 w-9 rounded-lg flex items-center justify-center backdrop-blur-sm"
                           style={{ backgroundColor: colors.surface + '90', border: `1px solid ${colors.border}` }}
                         >
@@ -706,31 +735,40 @@ export function ProjectsSection() {
                     </div>
 
                     <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-                      {selectedProject.images.map((image, index) => (
-                        <div
-                          key={index}
-                          className="relative group rounded-2xl overflow-hidden aspect-video cursor-zoom-in bg-slate-800 border border-white/5"
-                          onClick={() => setActiveImage(image)}
-                        >
-                          {failedImages.has(index) ? (
-                            <div className="w-full h-full flex items-center justify-center">
-                              <Camera className="w-6 h-6 text-slate-600" />
-                            </div>
-                          ) : (
-                            <>
-                              <img
-                                src={image}
-                                alt="Aperçu"
-                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 grayscale-[0.3] group-hover:grayscale-0"
-                                onError={() => setFailedImages(prev => new Set([...prev, index]))}
-                              />
-                              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                <Eye className="w-6 h-6 text-white" />
+                      {selectedProject.images.map((image, index) => {
+                        const optimized = getOptimizedImage(image);
+
+                        return (
+                          <div
+                            key={index}
+                            className="relative group rounded-2xl overflow-hidden aspect-video cursor-zoom-in bg-slate-800 border border-white/5"
+                            onClick={() => setActiveImage(optimized ? `/design/optimized/${optimized.webp}` : image)}
+                          >
+                            {failedImages.has(index) ? (
+                              <div className="w-full h-full flex items-center justify-center">
+                                <Camera className="w-6 h-6 text-slate-600" />
                               </div>
-                            </>
-                          )}
-                        </div>
-                      ))}
+                            ) : (
+                              <>
+                                <img
+                                  src={optimized ? `/design/optimized/${optimized.webp}` : image}
+                                  srcSet={optimized ? optimized.srcset.split(', ').map(src => `/design/optimized/${src}`).join(', ') : undefined}
+                                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                                  alt={`${selectedProject.title} - ${lang("Image de la galerie", "Gallery image")} ${index + 1}/${selectedProject.images.length}`}
+                                  loading="lazy"
+                                  decoding="async"
+                                  fetchPriority="low"
+                                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 grayscale-[0.3] group-hover:grayscale-0"
+                                  onError={() => setFailedImages(prev => new Set([...prev, index]))}
+                                />
+                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                  <Eye className="w-6 h-6 text-white" />
+                                </div>
+                              </>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 )}
@@ -809,6 +847,8 @@ export function ProjectsSection() {
           <img
             src={activeImage}
             alt="Plein écran"
+            loading="eager"
+            decoding="async"
             className="max-w-full max-h-full object-contain shadow-2xl rounded-lg border border-white/5"
             onClick={(e) => e.stopPropagation()}
           />

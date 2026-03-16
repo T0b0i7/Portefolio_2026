@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Github, Linkedin, Facebook, ArrowRight, Mail, Phone, MapPin } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useTracking } from "@/hooks/useTracking";
 
 const socialLinks = [
   { icon: Github, href: "https://github.com/ton-T0b0i7/", label: "GitHub" },
@@ -14,6 +15,7 @@ const socialLinks = [
 export function HeroSection() {
   const [isLoaded, setIsLoaded] = useState(false);
   const { lang } = useLanguage();
+  const { trackEvent } = useTracking();
 
   useEffect(() => {
     setIsLoaded(true);
@@ -103,6 +105,7 @@ export function HeroSection() {
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-8">
             <a
               href="#projects"
+              onClick={() => trackEvent("hero-view-projects")}
               className="px-8 py-4 bg-brand-accent rounded-xl font-bold hover:translate-y-[-2px] transition-all shadow-xl shadow-brand-accent/20 flex items-center justify-center gap-2 uppercase text-sm tracking-wider"
             >
               {lang("Voir mes projets", "View my projects")}
@@ -110,6 +113,7 @@ export function HeroSection() {
             </a>
             <a
               href="#contact"
+              onClick={() => trackEvent("hero-contact-me")}
               className="px-8 py-4 bg-white/5 border border-white/10 backdrop-blur-md rounded-xl font-bold hover:bg-white/10 transition-all text-center uppercase text-sm tracking-wider"
             >
               {lang("Me contacter", "Contact me")}
@@ -124,6 +128,7 @@ export function HeroSection() {
                 href={social.href}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackEvent("social-click", { platform: social.label })}
                 className="text-muted-foreground hover:text-white transition-colors"
                 aria-label={social.label}
               >
@@ -155,6 +160,8 @@ export function HeroSection() {
                     <img
                       src="/profil.png"
                       alt="Eucher Abatti"
+                      loading="eager"
+                      decoding="async"
                       className="w-full h-full object-cover grayscale-[10%] hover:grayscale-0 transition-all duration-700 hover:scale-105"
                     />
                     {/* Glass Overlay Reflect */}

@@ -1,31 +1,62 @@
 import { useState, useEffect, useRef } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { supabase } from "@/lib/supabase";
+import { useTechNews } from "@/hooks/useTechNews";
+import { 
+  ResponsiveContainer, 
+  AreaChart, 
+  Area, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  BarChart, 
+  Bar 
+} from "recharts";
+import dayjs from "dayjs";
 
 interface AlertItem {
   text: string;
   time: string;
 }
 
+interface ChartDataPoint {
+  date: string;
+  visits: number;
+}
+
+interface ProjectStat {
+  name: string;
+  views: number;
+}
+
 export function SecureSystem() {
   const { lang, language } = useLanguage();
+  const { news, loading: newsLoading } = useTechNews();
   const [screenState, setScreenState] = useState<"startup" | "access-granted" | "terminal">("startup");
+  const [activeTab, setActiveTab] = useState<"terminal" | "analytics" | "logs" | "news">("terminal");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [initProgress, setInitProgress] = useState(0);
   const [codeLines, setCodeLines] = useState<string[]>([]);
   const [hackMessages, setHackMessages] = useState<string[]>([]);
-  const [alerts, setAlerts] = useState<AlertItem[]>([]);
+  const [realtimeLogs, setRealtimeLogs] = useState<any[]>([]);
+  const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
+  const [projectStats, setProjectStats] = useState<ProjectStat[]>([]);
+  
   const [stats, setStats] = useState({
     networkSpeed: 12.4,
     cpuUsage: 34,
     memoryUsage: 7.2,
     threatCount: 3,
     temperature: 42,
-    missionProgress: 30
+    missionProgress: 30,
+    uniqueVisitors: 0,
+    totalClicks: 0,
+    conversionRate: 0
   });
+
   const [systemTime, setSystemTime] = useState("");
-  const [audioEnabled, setAudioEnabled] = useState(true);
-  const [darkMode, setDarkMode] = useState(true);
   const [commandInput, setCommandInput] = useState("");
   const [aiChatOpen, setAiChatOpen] = useState(false);
   const [aiMessages, setAiMessages] = useState<{ sender: string, text: string }[]>([
@@ -33,7 +64,7 @@ export function SecureSystem() {
       sender: "bot",
       text: lang(
         "Bonjour, je suis votre assistant IA CYBER-MATRIX.\nTapez 'help' pour voir les commandes disponibles.",
-        "Hello, I am your AI assistant CYBER-MATRIX.\nType 'help' to see available commands."
+        "Hello, I am your AI assistant CYBER-MATRIX.\nType 'help' for available commands."
       )
     }
   ]);
@@ -42,13 +73,114 @@ export function SecureSystem() {
   const [cryptoResult, setCryptoResult] = useState("");
 
   const codeOutputRef = useRef<HTMLDivElement>(null);
-  const consoleOutputRef = useRef<HTMLDivElement>(null);
   const aiMessagesRef = useRef<HTMLDivElement>(null);
   const currentLineRef = useRef(0);
   const hackIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const statsIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const alertIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const timeIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // --- DATA FETCHING & REALTIME ---
+
+  const fetchVisitorStats = async () => {
+    try {
+      const { count: total } = await supabase
+        .from("visitor_events")
+        .select("*", { count: "exact", head: true });
+
+      const { data: sessions } = await supabase
+        .from("visitor_events")
+        .select("session_id");
+
+      const uniqueSessions = new Set(sessions?.map((e) => e.session_id) ?? []).size;
+
+      const { count: conversions } = await supabase
+        .from("visitor_events")
+        .select("*", { count: "exact", head: true })
+        .eq("event_name", "contact-form-submit");
+
+      const conversion = uniqueSessions > 0
+        ? Math.round(((conversions ?? 0) / uniqueSessions) * 1000) / 10
+        : 0;
+
+      setStats((prev) => ({
+        ...prev,
+        uniqueVisitors: uniqueSessions,
+        totalClicks: total ?? 0,
+        conversionRate: conversion,
+      }));
+    } catch (e) { console.error(e); }
+  };
+
+  const fetchAnalyticsData = async () => {
+    try {
+      // Last 7 days chart data
+      const sevenDaysAgo = dayjs().subtract(7, 'day').toISOString();
+      const { data: events } = await supabase
+        .from("visitor_events")
+        .select("created_at, session_id")
+        .gte("created_at", sevenDaysAgo);
+
+      const dailyMap: Record<string, Set<string>> = {};
+      for (let i = 0; i < 7; i++) {
+        dailyMap[dayjs().subtract(i, 'day').format('DD/MM')] = new Set();
+      }
+
+      events?.forEach(event => {
+        const dateKey = dayjs(event.created_at).format('DD/MM');
+        if (dailyMap[dateKey]) dailyMap[dateKey].add(event.session_id);
+      });
+
+      const formattedData = Object.entries(dailyMap).map(([date, sessions]) => ({
+        date,
+        visits: sessions.size
+      })).reverse();
+
+      setChartData(formattedData);
+
+      // Project popularity
+      const { data: projectEvents } = await supabase
+        .from("visitor_events")
+        .select("metadata")
+        .eq("event_name", "project-view");
+
+      const projectMap: Record<string, number> = {};
+      projectEvents?.forEach(e => {
+        const title = e.metadata?.title || "Unknown";
+        projectMap[title] = (projectMap[title] || 0) + 1;
+      });
+
+      const formattedProjects = Object.entries(projectMap)
+        .map(([name, views]) => ({ name, views }))
+        .sort((a, b) => b.views - a.views)
+        .slice(0, 5);
+
+      setProjectStats(formattedProjects);
+    } catch (e) { console.error(e); }
+  };
+
+  useEffect(() => {
+    if (screenState === "terminal") {
+      fetchVisitorStats();
+      fetchAnalyticsData();
+
+      // Realtime subscription
+      const channel = supabase
+        .channel('schema-db-changes')
+        .on(
+          'postgres_changes',
+          { event: 'INSERT', schema: 'public', table: 'visitor_events' },
+          (payload) => {
+            setRealtimeLogs(prev => [payload.new, ...prev].slice(0, 50));
+            fetchVisitorStats();
+          }
+        )
+        .subscribe();
+
+      return () => { supabase.removeChannel(channel); };
+    }
+  }, [screenState]);
+
+  // --- SYSTEM LOGIC ---
 
   const codeSnippets = [
     { prompt: "[root@cyber-matrix]# ", command: "whoami", output: "root" },
@@ -56,8 +188,6 @@ export function SecureSystem() {
     { prompt: "[root@cyber-matrix]# ", command: "cat /proc/cpuinfo | grep 'model name' | head -1", output: "model name\t: Intel(R) Xeon(R) CPU E5-2699 v4 @ 2.20GHz" },
     { prompt: "[root@cyber-matrix]# ", command: "free -h", output: "Mem:           125G         24G         89G        1.2G         11G         99G" },
     { prompt: "[root@cyber-matrix]# ", command: "df -h /", output: "/dev/nvme0n1p2  2.0T  456G  1.5T  24% /" },
-    { prompt: "[root@cyber-matrix]# ", command: "ss -tulpn | grep LISTEN", output: "tcp   LISTEN 0      128          0.0.0.0:22          0.0.0.0:*\ntcp   LISTEN 0      128          0.0.0.0:80          0.0.0.0:*\ntcp   LISTEN 0      128          0.0.0.0:443         0.0.0.0:*" },
-    { prompt: "[root@cyber-matrix]# ", command: "ps aux | grep -E '(ssh|nginx|mysql)' | head -5", output: "root       1234  0.0  0.1  12345  6789 ?        Ss   10:00   0:00 /usr/sbin/sshd\nwww-data   1235  0.0  0.3  23456  9012 ?        S    10:00   0:00 nginx: worker process" },
     { prompt: "[SYSTEM]# ", command: "SESSION_SECURE --status=ACTIVE --user=ROOT", output: lang("Système sécurisé. Aucune menace détectée.", "System secure. No threats detected.") }
   ];
 
@@ -66,51 +196,35 @@ export function SecureSystem() {
     lang("🔍 Analyse des journaux système", "🔍 System logs analysis"),
     lang("✓ Vérification de l'intégrité des fichiers", "✓ File integrity check"),
     lang("📊 Scan des processus actifs", "📊 Active processes scan"),
-    lang("🔗 Contrôle des connexions établies", "🔗 Established connections check"),
-    lang("👥 Audit des permissions utilisateur", "👥 User permissions audit"),
     lang("🛡️ Scan des vulnérabilités détecté", "🛡️ Vulnerability scan detected"),
-    lang("📡 Mise à jour des bases de données IDS", "📡 IDS databases updating")
   ];
 
   const aiResponses: { [key: string]: string | (() => string) } = {
     help: lang(
-      "Commandes disponibles:\nstatus - Affiche le statut du système\nscan - Scanne le réseau\nwhoami - Affiche l'utilisateur courant\ntime - Affiche l'heure système\ncrypto - Affiche les outils de cryptographie\nclear - Efface le terminal",
-      "Available commands:\nstatus - Display system status\nscan - Scan network\nwhoami - Display current user\ntime - Display system time\ncrypto - Display crypto tools\nclear - Clear terminal"
+      "Commandes disponibles:\nstatus - Affiche le statut du système\nwhoami - Affiche l'utilisateur courant\ntime - Affiche l'heure système\nclear - Efface le terminal\nnews - Voir les actus tech",
+      "Available commands:\nstatus - Display system status\nwhoami - Display current user\ntime - Display system time\nclear - Clear terminal\nnews - See tech news"
     ),
-    status: lang(
-      `Système: OPTIMAL\nCPU: ${stats.cpuUsage}%\nMémoire: ${stats.memoryUsage}/16 GB\nTempérature: ${stats.temperature}°C\nMenaces: ${stats.threatCount}`,
-      `System: OPTIMAL\nCPU: ${stats.cpuUsage}%\nMemory: ${stats.memoryUsage}/16 GB\nTemperature: ${stats.temperature}°C\nThreats: ${stats.threatCount}`
+    status: () => lang(
+      `Système: OPTIMAL\nCPU: ${stats.cpuUsage}%\nMémoire: ${stats.memoryUsage}/16 GB\nTempérature: ${stats.temperature}°C\nVisiteurs: ${stats.uniqueVisitors}`,
+      `System: OPTIMAL\nCPU: ${stats.cpuUsage}%\nMemory: ${stats.memoryUsage}/16 GB\nTemperature: ${stats.temperature}°C\nVisitors: ${stats.uniqueVisitors}`
     ),
-    scan: lang(
-      "Scan réseau en cours...\n192.168.1.1 - Routeur principal\n192.168.1.100 - Votre machine\n192.168.1.150 - Serveur inconnu\n192.168.1.200 - Base de données",
-      "Network scan in progress...\n192.168.1.1 - Main Router\n192.168.1.100 - Your machine\n192.168.1.150 - Unknown server\n192.168.1.200 - Database"
-    ),
-    whoami: lang(
-      "Utilisateur: AGENT_NEO\nNiveau: QUANTUM\nID: 01101000\nSession: ACTIVE",
-      "User: AGENT_NEO\nLevel: QUANTUM\nID: 01101000\nSession: ACTIVE"
-    ),
+    whoami: lang("User: AGENT_NEO\nLevel: QUANTUM\nSession: ACTIVE", "User: AGENT_NEO\nLevel: QUANTUM\nSession: ACTIVE"),
     time: () => lang(`Heure système: ${systemTime}`, `System time: ${systemTime}`),
-    crypto: lang(
-      "Outils cryptographiques disponibles:\n- Base64 Encode/Decode\n- Chiffre César\n- SHA256\n- MD5",
-      "Crypto tools available:\n- Base64 Encode/Decode\n- Caesar Cipher\n- SHA256\n- MD5"
-    ),
+    news: () => { setActiveTab("news"); return lang("Transfert vers le module News...", "Transferring to News module..."); },
     default: lang("Commande non reconnue. Tapez 'help' pour l'aide.", "Command not recognized. Type 'help' for help.")
   };
 
   const checkPassword = () => {
-    if (!password) {
-      setErrorMessage(lang("ERREUR: Code d'accès requis", "ERROR: Access code required"));
-      setTimeout(() => setErrorMessage(""), 3000);
-      return;
-    }
-
     if (password === "Motdepasse") {
       setScreenState("access-granted");
       let width = 0;
       const interval = setInterval(() => {
-        width += 2;
+        width += 4;
         setInitProgress(width);
-        if (width >= 100) clearInterval(interval);
+        if (width >= 100) {
+          clearInterval(interval);
+          setTimeout(startTerminal, 500);
+        }
       }, 30);
     } else {
       setErrorMessage(lang("ERREUR: Code d'accès incorrect", "ERROR: Incorrect access code"));
@@ -121,493 +235,312 @@ export function SecureSystem() {
 
   const startTerminal = () => {
     setScreenState("terminal");
-    currentLineRef.current = 0;
-    setCodeLines([]);
-    typeCode();
-
     if (hackIntervalRef.current) clearInterval(hackIntervalRef.current);
-    hackIntervalRef.current = setInterval(generateHackMessages, 800);
+    hackIntervalRef.current = setInterval(() => {
+      const msg = hackMessagesList[Math.floor(Math.random() * hackMessagesList.length)];
+      setHackMessages(prev => [...prev.slice(-4), msg]);
+    }, 2000);
 
     if (statsIntervalRef.current) clearInterval(statsIntervalRef.current);
-    statsIntervalRef.current = setInterval(updateStats, 100);
-
-    if (alertIntervalRef.current) clearInterval(alertIntervalRef.current);
-    alertIntervalRef.current = setInterval(generateAlert, 3000);
+    statsIntervalRef.current = setInterval(() => {
+      setStats(prev => ({
+        ...prev,
+        networkSpeed: parseFloat((Math.random() * 5 + 10).toFixed(1)),
+        cpuUsage: Math.floor(Math.random() * 20 + 30),
+        memoryUsage: parseFloat((Math.random() * 2 + 6).toFixed(1)),
+        temperature: Math.floor(Math.random() * 10 + 38),
+      }));
+    }, 100);
 
     if (timeIntervalRef.current) clearInterval(timeIntervalRef.current);
-    timeIntervalRef.current = setInterval(updateSystemTime, 1000);
-    updateSystemTime();
+    timeIntervalRef.current = setInterval(() => {
+      setSystemTime(new Date().toLocaleTimeString('fr-FR', { hour12: false }));
+    }, 1000);
+    
+    typeCode();
   };
 
   const typeCode = () => {
     if (currentLineRef.current >= codeSnippets.length) {
-      setTimeout(() => {
-        currentLineRef.current = 0;
-        setCodeLines([]);
-        typeCode();
-      }, 5000);
+      currentLineRef.current = 0;
       return;
     }
-
     const snippet = codeSnippets[currentLineRef.current];
-    const line1 = snippet.prompt + snippet.command;
-    const line2 = snippet.output;
-
-    setCodeLines(prev => [...prev, line1]);
-    setTimeout(() => {
-      setCodeLines(prev => [...prev, line2]);
-      currentLineRef.current++;
-      setTimeout(typeCode, 800);
-    }, 300);
-  };
-
-  const generateHackMessages = () => {
-    const msg = hackMessagesList[Math.floor(Math.random() * hackMessagesList.length)];
-    const now = new Date();
-    const time = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
-
-    setHackMessages(prev => [...prev.slice(-5), `[${time}] ${msg}`]);
-  };
-
-  const generateAlert = () => {
-    const alertTexts = [
-      lang("Tentative de connexion non autorisée détectée", "Unauthorized login attempt detected"),
-      lang("Scan de ports en cours sur l'interface eth0", "Port scan in progress on eth0 interface"),
-      lang("Anomalie détectée dans les logs système", "Anomaly detected in system logs"),
-      lang("Trafic réseau suspect détecté", "Suspicious network traffic detected"),
-      lang("Utilisation CPU anormale sur le serveur DB", "Abnormal CPU usage on DB server"),
-    ];
-
-    if (Math.random() > 0.6) {
-      const alertText = alertTexts[Math.floor(Math.random() * alertTexts.length)];
-      const now = new Date();
-      const time = now.toLocaleTimeString('fr-FR');
-
-      if (consoleOutputRef.current) {
-        const alertDiv = document.createElement('div');
-        alertDiv.textContent = `[${time}] ⚠️ ${alertText}`;
-        consoleOutputRef.current.appendChild(alertDiv);
-        consoleOutputRef.current.scrollTop = consoleOutputRef.current.scrollHeight;
-      }
-    }
-  };
-
-  const updateStats = () => {
-    setStats(prev => ({
-      ...prev,
-      networkSpeed: parseFloat((Math.random() * 5 + 10).toFixed(1)),
-      cpuUsage: Math.floor(Math.random() * 20 + 30),
-      memoryUsage: parseFloat((Math.random() * 2 + 6).toFixed(1)),
-      threatCount: Math.floor(Math.random() * 5),
-      temperature: Math.floor(Math.random() * 10 + 38),
-    }));
-  };
-
-  const updateSystemTime = () => {
-    const now = new Date();
-    const time = now.toLocaleTimeString('fr-FR', {
-      hour12: false,
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit'
-    });
-    setSystemTime(time);
+    setCodeLines(prev => [...prev, snippet.prompt + snippet.command, snippet.output]);
+    currentLineRef.current++;
+    setTimeout(typeCode, 2000);
   };
 
   const executeCommand = () => {
     if (!commandInput.trim()) return;
-
     const cmd = commandInput.toLowerCase().trim();
     let response = aiResponses[cmd] || aiResponses.default;
-
-    if (typeof response === 'function') {
-      response = response();
-    }
-
+    if (typeof response === 'function') response = response();
+    
     if (codeOutputRef.current) {
-      const cmdLine = document.createElement('div');
-      cmdLine.innerHTML = `<span style="color: #ff0">[root]#</span> ${commandInput}`;
-      codeOutputRef.current.appendChild(cmdLine);
-
-      const responseLine = document.createElement('div');
-      responseLine.innerHTML = `<span style="color: #8f8">${response}</span>`;
-      responseLine.style.whiteSpace = 'pre-wrap';
-      codeOutputRef.current.appendChild(responseLine);
-
+      const line = `<div style="color:#ff0">[root]# ${commandInput}</div><div style="color:#8f8;margin-bottom:8px">${response}</div>`;
+      codeOutputRef.current.innerHTML += line;
       codeOutputRef.current.scrollTop = codeOutputRef.current.scrollHeight;
     }
-
     setCommandInput("");
   };
 
-  const sendAIMessage = () => {
-    if (!aiInput.trim()) return;
+  // --- UI COMPONENTS ---
 
-    const userMsg = { sender: "user", text: aiInput };
-    setAiMessages(prev => [...prev, userMsg]);
-
-    setTimeout(() => {
-      const cmd = aiInput.toLowerCase().trim();
-      let botResponse = aiResponses[cmd] || aiResponses.default;
-
-      if (typeof botResponse === 'function') {
-        botResponse = botResponse();
-      }
-
-      const botMsg = { sender: "bot", text: botResponse };
-      setAiMessages(prev => [...prev, botMsg]);
-
-      if (aiMessagesRef.current) {
-        setTimeout(() => {
-          aiMessagesRef.current!.scrollTop = aiMessagesRef.current!.scrollHeight;
-        }, 0);
-      }
-    }, 500);
-
-    setAiInput("");
-  };
-
-  const encryptBase64 = () => {
-    if (!cryptoInput) return;
-    const encoded = btoa(cryptoInput);
-    setCryptoResult(`Base64: ${encoded}`);
-  };
-
-  const decryptBase64 = () => {
-    if (!cryptoInput) return;
-    try {
-      const decoded = atob(cryptoInput);
-      setCryptoResult(lang(`Décodé: ${decoded}`, `Decoded: ${decoded}`));
-    } catch (e) {
-      setCryptoResult(lang("Erreur: Texte Base64 invalide", "Error: Invalid Base64 text"));
-    }
-  };
-
-  const encryptCaesar = () => {
-    if (!cryptoInput) return;
-    const shift = 3;
-    let result = '';
-
-    for (let i = 0; i < cryptoInput.length; i++) {
-      let char = cryptoInput[i];
-      if (char.match(/[a-z]/i)) {
-        const code = cryptoInput.charCodeAt(i);
-        if (code >= 65 && code <= 90) {
-          char = String.fromCharCode(((code - 65 + shift) % 26) + 65);
-        } else if (code >= 97 && code <= 122) {
-          char = String.fromCharCode(((code - 97 + shift) % 26) + 97);
-        }
-      }
-      result += char;
-    }
-
-    setCryptoResult(lang(`César(+3): ${result}`, `Caesar(+3): ${result}`));
-  };
-
-  useEffect(() => {
-    return () => {
-      if (hackIntervalRef.current) clearInterval(hackIntervalRef.current);
-      if (statsIntervalRef.current) clearInterval(statsIntervalRef.current);
-      if (alertIntervalRef.current) clearInterval(alertIntervalRef.current);
-      if (timeIntervalRef.current) clearInterval(timeIntervalRef.current);
-    };
-  }, []);
+  const TabButton = ({ id, label }: { id: typeof activeTab, label: string }) => (
+    <button 
+      onClick={() => setActiveTab(id)}
+      className={`px-4 py-2 text-xs font-bold uppercase tracking-widest transition-all border-b-2 ${
+        activeTab === id ? "border-green-500 text-green-400 bg-green-500/10" : "border-transparent text-slate-500 hover:text-green-700"
+      }`}
+    >
+      {label}
+    </button>
+  );
 
   return (
-    <div className="w-full min-h-screen bg-black text-green-500 font-mono overflow-hidden relative" style={{ backgroundColor: '#000', color: '#0f0' }}>
+    <div className="w-full min-h-screen bg-black text-green-500 font-mono overflow-hidden relative">
       <style>{`
-        .scanlines {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(to bottom, transparent 50%, rgba(0, 255, 0, 0.03) 50%);
-          background-size: 100% 4px;
-          pointer-events: none;
-          z-index: 10;
-          animation: flicker 0.15s infinite;
-        }
-        
-        @keyframes flicker {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.95; }
-        }
-        
-        @keyframes pulse {
-          0%, 100% { opacity: 0.5; }
-          50% { opacity: 1; }
-        }
-
-        @keyframes rotate {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-
-        .glass-panel {
-          background: rgba(0, 30, 0, 0.6);
-          border: 2px solid #0f0;
-          border-radius: 8px;
-          backdrop-filter: blur(10px);
-          box-shadow: 0 0 20px rgba(0, 255, 0, 0.1);
-        }
+        .scanlines { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, transparent 50%, rgba(0, 255, 0, 0.03) 50%); background-size: 100% 4px; pointer-events: none; z-index: 100; }
+        .glass-panel { background: rgba(0, 20, 0, 0.8); border: 1px solid #0f0; border-radius: 4px; box-shadow: 0 0 15px rgba(0, 255, 0, 0.1); }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #0f0; }
       `}</style>
-
       <div className="scanlines" />
 
-      {/* Startup Screen */}
+      {/* Startup & Access logic stays largely the same but faster */}
       {screenState === "startup" && (
-        <div className="fixed inset-0 flex flex-col justify-center items-center gap-8 z-50 bg-gradient-to-b from-black via-green-900/10 to-black">
-          <div
-            className="w-40 h-40 rounded-full border-4 border-green-500 flex items-center justify-center animate-spin"
-            style={{ borderColor: '#0f0', animation: 'rotate 8s linear infinite' }}
-          >
-            <div className="w-32 h-32 rounded-full border-2 border-cyan-400 flex items-center justify-center">
-              <div className="text-4xl font-bold text-green-500">◆</div>
-            </div>
+        <div className="fixed inset-0 flex flex-col justify-center items-center gap-8 z-50 bg-black">
+          <div className="w-24 h-24 border-2 border-green-500 animate-spin flex items-center justify-center">
+            <div className="w-16 h-16 border border-cyan-400" />
           </div>
-
-          <div className="text-5xl font-bold text-green-500 text-center" style={{ textShadow: '0 0 30px #0f0', letterSpacing: '3px' }}>
-            CYBER-MATRIX v2.0
-          </div>
-
-          <div className="text-2xl text-cyan-400 text-center" style={{ animation: 'pulse 2s infinite' }}>
-            {lang("[ ACCÈS QUANTIQUE REQUIS ]", "[ QUANTUM ACCESS REQUIRED ]")}<br />
-            <span className="text-sm">{lang("Système de sécurité niveau 9", "Level 9 Security System")}</span>
-          </div>
-
-          <div className="w-96">
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && checkPassword()}
-              className="w-full px-5 py-4 bg-transparent border-2 border-green-500 text-cyan-400 text-center text-lg font-mono tracking-widest"
-              placeholder={lang("ENTREZ LE CODE D'ACCÈS", "ENTER ACCESS CODE")}
-              autoFocus
-              style={{ color: '#0ff', borderColor: '#0f0', outline: 'none' }}
-            />
-          </div>
-
-          <button
-            onClick={checkPassword}
-            className="w-96 py-4 font-bold text-lg hover:scale-105 transition-transform"
-            style={{ background: 'linear-gradient(45deg, #0a0, #0f0)', color: '#000' }}
-          >
-            {lang("INITIALISER LA CONNEXION", "INITIALIZE CONNECTION")}
-          </button>
-
-          {errorMessage && (
-            <div className="text-red-500 text-lg font-bold" style={{ textShadow: '0 0 15px #f00', animation: 'pulse 0.5s infinite' }}>
-              {errorMessage}
-            </div>
-          )}
-
-          <div className="text-xs text-green-700">
-            {lang("Indice : Le code est \"Motdepasse\" (sensible à la casse)", "Hint: The code is \"Motdepasse\" (case sensitive)")}
-          </div>
-
-          <div style={{ color: '#666', fontSize: '12px', marginTop: '30px' }}>
-            {lang("Chargement des modules quantiques...", "Loading quantum modules...")} [██████░░░░] 60%
-          </div>
+          <h1 className="text-4xl font-bold tracking-tighter text-white uppercase shadow-green-500">Cyber Matrix OS</h1>
+          <input 
+            type="password" 
+            value={password} 
+            onChange={e => setPassword(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && checkPassword()}
+            className="bg-transparent border border-green-500 p-3 text-center outline-none text-cyan-400"
+            placeholder="ACCESS CODE"
+            autoFocus
+          />
+          {errorMessage && <div className="text-red-500 animate-pulse">{errorMessage}</div>}
         </div>
       )}
 
-      {/* Access Granted Screen */}
       {screenState === "access-granted" && (
-        <div className="fixed inset-0 flex flex-col justify-center items-center gap-8 bg-gradient-to-b from-green-900/20 to-black z-50">
-          <div className="text-7xl font-bold text-green-500 animate-pulse" style={{ textShadow: '0 0 50px #0f0', letterSpacing: '2px' }}>
-            {lang("ACCÈS QUANTIQUE AUTORISÉ", "QUANTUM ACCESS GRANTED")}
+        <div className="fixed inset-0 flex flex-col justify-center items-center gap-4 bg-black z-50">
+          <div className="text-2xl font-bold text-green-500 uppercase">System Initializing...</div>
+          <div className="w-64 h-1 bg-green-950 border border-green-500">
+            <div className="h-full bg-green-500 transition-all duration-300" style={{ width: `${initProgress}%` }} />
           </div>
-
-          <div className="text-2xl text-cyan-400 text-center">
-            {lang("Connexion établie avec le réseau CYBER-MATRIX", "Connection established with CYBER-MATRIX network")}<br />
-            <span className="text-base text-green-400">{lang("Identification biométrique : VALIDE", "Biometric identification: VALID")}</span>
-          </div>
-
-          <div className="text-xl text-cyan-400">
-            {lang("Initialisation des systèmes neuronaux...", "Initializing neural systems...")}
-          </div>
-
-          <div className="w-96 h-6 bg-black border-2 border-green-500 rounded overflow-hidden">
-            <div
-              className="h-full transition-all"
-              style={{ width: `${initProgress}%`, background: 'linear-gradient(90deg, #0a0, #0f0, #0ff)' }}
-            />
-          </div>
-
-          <div className="text-sm text-green-700">
-            {lang("Chargement des modules : IA (100%) • 3D (85%) • Audio (70%) • Jeux (60%)", "Loading modules: AI (100%) • 3D (85%) • Audio (70%) • Games (60%)")}
-          </div>
-
-          <button
-            onClick={startTerminal}
-            className="px-12 py-4 mt-8 font-bold text-2xl hover:scale-110 transition-transform"
-            style={{ background: 'linear-gradient(45deg, #0f0, #0ff, #00f)', color: '#000' }}
-          >
-            {lang("ENTRER DANS LA MATRICE", "ENTER THE MATRIX")}
-          </button>
         </div>
       )}
 
-      {/* Terminal Screen */}
+      {/* --- MAIN DASHBOARD --- */}
       {screenState === "terminal" && (
-        <div className="w-full h-screen p-6 overflow-auto" style={{ background: 'linear-gradient(to bottom, #000, #001100)' }}>
-          {/* Header */}
-          <div className="glass-panel p-4 mb-4 flex justify-between items-center">
-            <div className="flex items-center gap-4">
-              <div
-                className="w-12 h-12 rounded-full bg-gradient-to-r from-green-500 to-cyan-400 flex items-center justify-center text-black font-bold"
-              >
-                JD
-              </div>
-              <div>
-                <div className="text-cyan-400 font-bold">AGENT: NEO</div>
-                <div className="text-green-700 text-sm">{lang("Niveau d'accès: QUANTUM • ID: 01101000", "Access Level: QUANTUM • ID: 01101000")}</div>
-              </div>
+        <div className="p-4 grid grid-rows-[auto_1fr] h-screen gap-4">
+          
+          {/* Header Stats */}
+          <div className="grid grid-cols-5 gap-4">
+            <div className="glass-panel p-3 border-cyan-900">
+              <div className="text-[10px] text-green-700 uppercase">System Time</div>
+              <div className="text-xl text-cyan-400">{systemTime}</div>
             </div>
-
-            <div className="text-center">
-              <div className="text-green-500 font-bold">{lang("MISSION: PROTOCOLE CERBÈRE", "MISSION: CERBERUS PROTOCOL")}</div>
-              <div className="w-64 h-2 bg-black border border-green-500 rounded mt-2">
-                <div className="h-full bg-gradient-to-r from-green-500 to-cyan-400" style={{ width: `${stats.missionProgress}%` }} />
-              </div>
+            <div className="glass-panel p-3 border-green-900">
+              <div className="text-[10px] text-green-700 uppercase">Live Visitors</div>
+              <div className="text-xl text-green-400">{stats.uniqueVisitors} <span className="text-[8px] opacity-50">UNQ</span></div>
             </div>
-
-            <div className="text-3xl font-mono" style={{ color: '#0ff' }}>{systemTime}</div>
-          </div>
-
-          <div className="grid grid-cols-4 gap-4 mb-4">
-            {/* Stats Panels */}
-            <div className="glass-panel p-3">
-              <div className="text-green-700 text-xs">{lang("DÉBIT RÉSEAU", "NETWORK SPEED")}</div>
-              <div style={{ color: '#0ff', fontSize: '20px', fontFamily: 'monospace' }}>{stats.networkSpeed} Gb/s</div>
+            <div className="glass-panel p-3 border-green-900">
+              <div className="text-[10px] text-green-700 uppercase">Total Interactions</div>
+              <div className="text-xl text-green-400">{stats.totalClicks}</div>
             </div>
-
-            <div className="glass-panel p-3">
-              <div className="text-green-700 text-xs">{lang("CPU UTILISATION", "CPU USAGE")}</div>
-              <div style={{ color: '#0ff', fontSize: '20px', fontFamily: 'monospace' }}>{stats.cpuUsage}%</div>
+            <div className="glass-panel p-3 border-yellow-900">
+              <div className="text-[10px] text-green-700 uppercase">Conversion Rate</div>
+              <div className="text-xl text-yellow-500">{stats.conversionRate}%</div>
             </div>
-
-            <div className="glass-panel p-3">
-              <div className="text-green-700 text-xs">{lang("MÉMOIRE SYSTÈME", "SYSTEM MEMORY")}</div>
-              <div style={{ color: '#0ff', fontSize: '20px', fontFamily: 'monospace' }}>{stats.memoryUsage}/16 GB</div>
-            </div>
-
-            <div className="glass-panel p-3">
-              <div className="text-green-700 text-xs">{lang("TEMPÉRATURE", "TEMPERATURE")}</div>
-              <div style={{ color: '#0ff', fontSize: '20px', fontFamily: 'monospace' }}>{stats.temperature}°C</div>
+            <div className="glass-panel p-3 border-red-900 overflow-hidden">
+              <div className="text-[10px] text-red-700 uppercase">Network Load</div>
+              <div className="text-sm text-red-400">{stats.networkSpeed} Gbps</div>
+              <div className="h-1 bg-red-900/30 mt-1"><div className="h-full bg-red-500 transition-all" style={{ width: `${(stats.networkSpeed/20)*100}%` }} /></div>
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-4 mb-4" style={{ height: '500px' }}>
-            {/* Terminal */}
-            <div className="col-span-2 glass-panel p-4 flex flex-col">
-              <div className="flex justify-between items-center pb-3 border-b border-green-500/30">
-                <div className="text-cyan-400 font-bold">[root@cyber-matrix] ~ # {lang("TERMINAL QUANTIQUE", "QUANTUM TERMINAL")}</div>
-                <div className="flex gap-2">
-                  <button onClick={() => setCodeLines([])} className="w-8 h-8 bg-green-500/20 border border-green-500 rounded text-xs hover:bg-green-500/40">⌫</button>
-                  <button onClick={() => setAiChatOpen(!aiChatOpen)} className="w-8 h-8 bg-green-500/20 border border-green-500 rounded text-xs hover:bg-green-500/40">AI</button>
+          {/* Main Content View with Tabs */}
+          <div className="grid grid-cols-[1fr_300px] gap-4 overflow-hidden">
+            
+            <div className="glass-panel flex flex-col overflow-hidden">
+              <div className="flex bg-green-950/20 border-b border-green-500/30">
+                <TabButton id="terminal" label="Terminal" />
+                <TabButton id="analytics" label="Analytics" />
+                <TabButton id="logs" label="Live Logs" />
+                <TabButton id="news" label="Tech News" />
+              </div>
+
+              <div className="flex-1 p-4 overflow-hidden relative">
+                
+                {activeTab === "terminal" && (
+                  <div className="h-full flex flex-col">
+                    <div ref={codeOutputRef} className="flex-1 overflow-y-auto custom-scrollbar text-sm space-y-1 mb-4">
+                      {codeLines.map((line, i) => <div key={i} className={i % 2 === 0 ? "text-cyan-700" : "text-green-500 mb-2"}>{line}</div>)}
+                    </div>
+                    <div className="flex gap-2 border-t border-green-500/30 pt-4">
+                      <span className="text-yellow-500 font-bold">[root]#</span>
+                      <input 
+                        className="bg-transparent flex-1 outline-none text-green-400"
+                        value={commandInput}
+                        onChange={e => setCommandInput(e.target.value)}
+                        onKeyDown={e => e.key === 'Enter' && executeCommand()}
+                        autoFocus
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === "analytics" && (
+                  <div className="h-full grid grid-rows-2 gap-8">
+                    <div>
+                      <h4 className="text-xs font-bold text-green-700 uppercase mb-4 tracking-tighter">7-Day Visitor Velocity</h4>
+                      <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart data={chartData}>
+                          <defs>
+                            <linearGradient id="colorVisits" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#0f0" stopOpacity={0.3}/>
+                              <stop offset="95%" stopColor="#0f0" stopOpacity={0}/>
+                            </linearGradient>
+                          </defs>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#030" />
+                          <XAxis dataKey="date" stroke="#060" fontSize={10} />
+                          <YAxis stroke="#060" fontSize={10} />
+                          <Tooltip contentStyle={{ background: '#000', border: '1px solid #0f0', fontSize: '10px' }} />
+                          <Area type="monotone" dataKey="visits" stroke="#0f0" fillOpacity={1} fill="url(#colorVisits)" />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-green-700 uppercase mb-4 tracking-tighter">Top Projects Performance</h4>
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={projectStats} layout="vertical">
+                          <XAxis type="number" hide />
+                          <YAxis dataKey="name" type="category" stroke="#0f0" fontSize={9} width={100} />
+                          <Tooltip cursor={{fill: '#0f02'}} contentStyle={{ background: '#000', border: '1px solid #0f0', fontSize: '10px' }} />
+                          <Bar dataKey="views" fill="#0f0" radius={[0, 4, 4, 0]} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === "logs" && (
+                  <div className="h-full overflow-y-auto custom-scrollbar space-y-2">
+                    <h3 className="text-xs text-red-500 mb-4 animate-pulse uppercase font-black tracking-widest">--- Realtime Intelligence Stream ---</h3>
+                    {realtimeLogs.length === 0 && <div className="text-slate-800 italic">Waiting for incoming telemetry...</div>}
+                    {realtimeLogs.map((log, i) => (
+                      <div key={i} className="text-[11px] border-l-2 border-green-900 pl-3 py-1 bg-green-500/5">
+                        <span className="text-green-700">[{dayjs(log.created_at).format('HH:mm:ss')}]</span>
+                        <span className="text-cyan-600 ml-2 uppercase">{log.event_type}</span>
+                        <span className="text-slate-400 ml-2">→ {log.event_name}</span>
+                        {log.metadata && <span className="text-[9px] text-slate-600 ml-2 truncate inline-block max-w-sm">{JSON.stringify(log.metadata)}</span>}
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {activeTab === "news" && (
+                  <div className="h-full flex flex-col">
+                    <h3 className="text-xs text-blue-500 mb-4 uppercase font-black tracking-widest border-b border-blue-900/30 pb-2">Tech Intelligence Feed</h3>
+                    {newsLoading ? (
+                      <div className="flex-1 flex items-center justify-center animate-pulse text-blue-900 text-3xl font-black">SCANNING THE WEB...</div>
+                    ) : (
+                      <div className="flex-1 overflow-y-auto custom-scrollbar space-y-4 pr-2">
+                        {news.map(item => (
+                          <div key={item.id} className="group glass-panel p-3 border-blue-900/50 hover:border-blue-500 transition-all cursor-pointer" onClick={() => item.url && window.open(item.url, '_blank')}>
+                            <div className="flex justify-between items-start mb-1">
+                              <span className="text-[8px] text-blue-700 bg-blue-500/5 px-2 py-0.5 rounded uppercase font-bold">Priority {Math.min(10, Math.floor(item.score/100))}</span>
+                              <span className="text-[9px] text-slate-600">{dayjs.unix(item.time).format('DD MMM • HH:mm')}</span>
+                            </div>
+                            <h5 className="text-xs font-bold text-blue-400 group-hover:text-blue-200 transition-colors leading-relaxed">{item.title}</h5>
+                            <div className="mt-2 text-[9px] text-slate-600 flex justify-between uppercase tracking-widest">
+                              <span>Source: {item.by}</span>
+                              <span className="group-hover:text-blue-500 transition-colors">Open Link _</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+              </div>
+            </div>
+
+            {/* Sidebar Alerts & Identity */}
+            <div className="flex flex-col gap-4 overflow-hidden">
+              <div className="glass-panel p-4 flex flex-col items-center">
+                <div className="w-24 h-24 rounded-full border border-green-500 p-1 mb-2 bg-black relative">
+                  <div className="absolute inset-0 bg-green-500/10 animate-pulse rounded-full" />
+                  <img src="/profil.png" className="w-full h-full object-cover rounded-full grayscale" />
+                </div>
+                <div className="text-center">
+                  <div className="text-xs font-bold text-white uppercase tracking-tighter">Eucher Abatti</div>
+                  <div className="text-[9px] text-green-700 uppercase">Quant Authority: lvl 9</div>
                 </div>
               </div>
 
-              <div ref={codeOutputRef} className="flex-1 overflow-y-auto bg-black/60 border border-green-500/20 rounded p-3 my-3 text-sm space-y-1" style={{ color: '#0f0' }}>
-                {codeLines.length === 0 ? (
-                  <div style={{ color: '#006600' }}>// {lang("Initialisation du système...", "System initializing...")}</div>
-                ) : (
-                  codeLines.map((line, i) => (
-                    <div key={i} className="whitespace-pre-wrap font-mono text-green-400">
-                      {line}
-                    </div>
-                  ))
-                )}
+              <div className="glass-panel flex-1 p-3 overflow-hidden flex flex-col">
+                <div className="text-[10px] text-red-500 font-bold uppercase mb-2 border-b border-red-900 pb-1">Anomalies & Status</div>
+                <div className="flex-1 overflow-y-auto custom-scrollbar text-[10px] space-y-2">
+                  {hackMessages.map((m, i) => <div key={i} className="text-green-800 italic">• {m}</div>)}
+                  <div className="mt-4 pt-4 border-t border-green-900 flex justify-between items-center">
+                    <span className="text-[8px] opacity-30">ENCRYPT: AES-256</span>
+                    <span className="w-2 h-2 rounded-full bg-green-500 animate-ping" />
+                  </div>
+                </div>
               </div>
 
-              <div className="flex gap-2">
-                <div style={{ color: '#0ff' }} className="font-bold">[root]#</div>
-                <input
-                  type="text"
-                  value={commandInput}
-                  onChange={(e) => setCommandInput(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && executeCommand()}
-                  className="flex-1 bg-transparent border-b border-green-500 outline-none text-green-400"
-                  placeholder={lang("Entrez une commande...", "Enter a command...")}
-                  style={{ color: '#0f0' }}
-                />
-                <button onClick={executeCommand} className="px-3 py-1 bg-green-500/30 border border-green-500 rounded hover:bg-green-500/50">EXEC</button>
-              </div>
+              <button 
+                onClick={() => setAiChatOpen(!aiChatOpen)}
+                className="glass-panel p-3 text-xs font-bold uppercase hover:bg-green-500/20 transition-all text-cyan-500 border-cyan-500/50"
+              >
+                Access Neural AI
+              </button>
             </div>
 
-            {/* Tools Panel */}
-            <div className="glass-panel p-4 space-y-3 overflow-y-auto">
-              <div>
-                <div className="text-cyan-400 text-sm font-bold mb-2">{lang("OUTILS DE HACK", "HACKING TOOLS")}</div>
-                <button className="w-full text-left px-3 py-2 bg-green-500/10 border border-green-500 rounded text-xs hover:bg-green-500/20 mb-1">🔌 {lang("CÂBLAGE RÉSEAU", "NETWORK WIRING")}</button>
-                <button className="w-full text-left px-3 py-2 bg-green-500/10 border border-green-500 rounded text-xs hover:bg-green-500/20 mb-1">🔐 {lang("DÉCRYPTAGE", "DECRYPTION")}</button>
-                <button className="w-full text-left px-3 py-2 bg-green-500/10 border border-green-500 rounded text-xs hover:bg-green-500/20">📡 {lang("SCAN RÉSEAU", "NETWORK SCAN")}</button>
-              </div>
-
-              <div>
-                <div className="text-cyan-400 text-sm font-bold mb-2">{lang("CRYPTOGRAPHIE", "CRYPTOGRAPHY")}</div>
-                <input type="text" value={cryptoInput} onChange={(e) => setCryptoInput(e.target.value)} className="w-full px-2 py-1 bg-black/40 border border-green-500/30 rounded text-xs text-green-400 mb-2" placeholder={lang("Texte à chiffrer", "Text to encrypt")} style={{ color: '#0f0' }} />
-                <button onClick={encryptBase64} className="w-full text-left px-2 py-1 bg-green-500/10 border border-green-500 rounded text-xs hover:bg-green-500/20 mb-1">Base64 Encode</button>
-                <button onClick={decryptBase64} className="w-full text-left px-2 py-1 bg-green-500/10 border border-green-500 rounded text-xs hover:bg-green-500/20 mb-1">Base64 Decode</button>
-                <button onClick={encryptCaesar} className="w-full text-left px-2 py-1 bg-green-500/10 border border-green-500 rounded text-xs hover:bg-green-500/20">{lang("Chiffre César", "Caesar Cipher")}</button>
-                {cryptoResult && <div className="text-green-700 text-xs mt-2">{cryptoResult}</div>}
-              </div>
-
-              <div>
-                <div className="text-cyan-400 text-sm font-bold mb-2">{lang("SYSTÈME", "SYSTEM")}</div>
-                <button onClick={() => setDarkMode(!darkMode)} className="w-full text-left px-2 py-1 bg-green-500/10 border border-green-500 rounded text-xs hover:bg-green-500/20">🌙 {lang("MODE SOMBRE", "DARK MODE")}</button>
-                <button onClick={() => setAudioEnabled(!audioEnabled)} className="w-full text-left px-2 py-1 bg-green-500/10 border border-green-500 rounded text-xs hover:bg-green-500/20">🔊 {lang("SON", "SOUND")}</button>
-              </div>
-            </div>
-          </div>
-
-          {/* Console */}
-          <div className="glass-panel p-4 border-red-500/30" style={{ borderColor: '#f00', background: 'rgba(0, 0, 0, 0.8)' }}>
-            <div className="flex justify-between items-center pb-2 border-b border-red-500/30" style={{ color: '#f00', borderColor: '#f00' }}>
-              <span>⚠️ {lang("CONSOLE DE SURVEILLANCE - ALERTES TEMPS RÉEL", "MONITORING CONSOLE - REAL-TIME ALERTS")}</span>
-              <span>{alerts.length} {lang("ALERTES", "ALERTS")}</span>
-            </div>
-            <div ref={consoleOutputRef} className="text-xs font-mono h-20 overflow-y-auto mt-2 space-y-1" style={{ color: '#f88' }}>
-              {hackMessages.length === 0 ? (
-                <div style={{ color: '#666' }}>// {lang("En attente de messages...", "Waiting for messages...")}</div>
-              ) : (
-                hackMessages.map((msg, i) => <div key={i}>{msg}</div>)
-              )}
-            </div>
           </div>
         </div>
       )}
 
-      {/* AI Chat Popup */}
-      {aiChatOpen && screenState === "terminal" && (
-        <div className="fixed bottom-6 right-6 w-96 h-96 glass-panel flex flex-col z-40" style={{ borderColor: '#0ff' }}>
-          <div className="flex justify-between items-center p-4 border-b border-cyan-400">
-            <div style={{ color: '#0ff' }} className="font-bold">🤖 {lang("IA - CYBER ASSISTANT", "AI - CYBER ASSISTANT")}</div>
-            <button onClick={() => setAiChatOpen(false)} className="text-red-500 font-bold cursor-pointer">✕</button>
-          </div>
-
-          <div ref={aiMessagesRef} className="flex-1 overflow-y-auto p-4 space-y-3">
-            {aiMessages.map((msg, i) => (
-              <div key={i} className={`p-2 rounded max-w-xs ${msg.sender === 'bot' ? 'bg-green-900/40' : 'bg-blue-900/40'} ${msg.sender === 'bot' ? 'mr-auto text-cyan-400' : 'ml-auto text-blue-400'}`}>
-                <div className="text-sm whitespace-pre-wrap">{msg.text}</div>
-              </div>
-            ))}
-          </div>
-
-          <div className="flex gap-2 p-4 border-t border-green-500/30">
-            <input
-              type="text"
-              value={aiInput}
-              onChange={(e) => setAiInput(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && sendAIMessage()}
-              className="flex-1 px-3 py-2 bg-black/40 border border-green-500 rounded text-xs outline-none"
-              placeholder={lang("Parlez à l'IA...", "Talk to AI...")}
-              style={{ color: '#0ff' }}
-            />
-            <button onClick={sendAIMessage} className="px-4 py-2 bg-gradient-to-r from-green-500 to-cyan-400 text-black font-bold rounded hover:scale-105">{lang("ENVOYER", "SEND")}</button>
+      {/* AI Modal - Aesthetic Upgrade */}
+      {aiChatOpen && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-[200] flex items-center justify-center p-4">
+          <div className="w-full max-w-xl glass-panel border-cyan-500 shadow-cyan-500/20 flex flex-col h-[500px]">
+             <div className="p-3 border-b border-cyan-500/50 flex justify-between items-center">
+                <div className="text-cyan-400 font-bold text-sm tracking-widest">NEURAL NETWORK ASSISTANT</div>
+                <button onClick={() => setAiChatOpen(false)} className="text-cyan-900 hover:text-red-500 font-black">X</button>
+             </div>
+             <div ref={aiMessagesRef} className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
+                {aiMessages.map((msg, i) => (
+                  <div key={i} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                    <div className={`max-w-[80%] p-3 rounded text-xs ${
+                      msg.sender === 'user' 
+                        ? 'bg-cyan-500/10 border border-cyan-500/50 text-cyan-200' 
+                        : 'bg-green-500/10 border border-green-500/50 text-green-300'
+                    }`}>
+                      {msg.text}
+                    </div>
+                  </div>
+                ))}
+             </div>
+             <div className="p-4 border-t border-cyan-500/30 flex gap-2">
+                <input 
+                  className="bg-transparent flex-1 border border-cyan-900 p-2 text-xs text-cyan-400 outline-none focus:border-cyan-500"
+                  value={aiInput}
+                  onChange={e => setAiInput(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && sendAIMessage()}
+                  placeholder="Ask the system..."
+                />
+                <button onClick={sendAIMessage} className="px-4 bg-cyan-500/20 text-cyan-400 border border-cyan-500">SEND</button>
+             </div>
           </div>
         </div>
       )}

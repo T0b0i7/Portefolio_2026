@@ -3,6 +3,7 @@ import { Menu, X, Sun, Moon, Terminal, Globe, Layout, Cpu, Briefcase, Mail, Chev
 import { useTheme } from "@/contexts/ThemeContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
+import { useTracking } from "@/hooks/useTracking";
 
 export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -10,6 +11,7 @@ export function Navigation() {
   const [activeTab, setActiveTab] = useState("#accueil");
   const { theme, toggleTheme } = useTheme();
   const { language, toggleLanguage, lang } = useLanguage();
+  const { trackEvent } = useTracking();
 
   const navLinks = [
     { href: "#accueil", label: lang("Accueil", "Home"), icon: Layout },
@@ -87,7 +89,10 @@ export function Navigation() {
               <a
                 key={link.href}
                 href={link.href}
-                onClick={() => setActiveTab(link.href)}
+                onClick={() => {
+                  setActiveTab(link.href);
+                  trackEvent("nav-click", { target: link.href, label: link.label });
+                }}
                 className={cn(
                   "relative px-5 py-2 text-sm font-semibold transition-all duration-300 rounded-full",
                   activeTab === link.href
@@ -121,6 +126,8 @@ export function Navigation() {
             <button
               className="lg:hidden w-11 h-11 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center text-white"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-expanded={mobileMenuOpen}
+              aria-label={mobileMenuOpen ? lang("Fermer le menu", "Close menu") : lang("Ouvrir le menu de navigation", "Open navigation menu")}
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>

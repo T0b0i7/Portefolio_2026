@@ -6,7 +6,7 @@
 
 **Portfolio.OS – Le Système d'Exploitation du Portfolio Authentique. Une plateforme next-gen permettant de voir 10 designs différents en temps réel pour une même expérience.**
 
-[Démo Live](https://portefolio-os-bice.vercel.app/) • [Documentation](#) • [Contribuer](#)
+[Démo Live](https:// https://portefolio-os.netlify.app//) • [Documentation](#) • [Contribuer](#)
 
 </div>
 
