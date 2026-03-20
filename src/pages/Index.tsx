@@ -7,6 +7,7 @@ import { EnigmaSection } from "@/components/EnigmaSection";
 import { Footer } from "@/components/Footer";
 import { Navigation } from "@/components/Navigation";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { AdminAccessHub } from "@/components/AdminAccessHub";
 
 const Index = () => {
   return (
@@ -35,6 +36,9 @@ const Index = () => {
 
         {/* Footer */}
         <Footer />
+
+        {/* Admin Hub Access */}
+        <AdminAccessHub />
       </div>
     </ThemeProvider>
   );

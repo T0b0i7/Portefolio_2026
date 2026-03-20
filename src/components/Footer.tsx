@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Terminal, ShieldCheck, FileText, Globe } from "lucide-react";
+import { Terminal, ShieldCheck, FileText, Globe, Settings } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -109,12 +109,21 @@ export function Footer() {
           {/* Column 3: Tech Status */}
           <div className="flex flex-col gap-4">
             <h4 className="text-sm font-bold text-white uppercase tracking-widest">{lang("État du Système", "System Status")}</h4>
-            <div className="bg-white/5 border border-white/10 rounded-xl p-4 flex items-center gap-4">
-              <div className="w-3 h-3 bg-brand-accent rounded-full animate-pulse shadow-[0_0_10px_rgba(59,130,246,0.5)]" />
-              <div>
-                <p className="text-xs font-mono text-white leading-none uppercase">Deploy: Online</p>
-                <p className="text-[10px] text-slate-500 mt-1 font-mono">v1.2.4-stable | {language}:selected</p>
+            <div className="bg-white/5 border border-white/10 rounded-xl p-4 flex items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <div className="w-3 h-3 bg-brand-accent rounded-full animate-pulse shadow-[0_0_10px_rgba(59,130,246,0.5)]" />
+                <div>
+                  <p className="text-xs font-mono text-white leading-none uppercase">Deploy: Online</p>
+                  <p className="text-[10px] text-slate-500 mt-1 font-mono">v1.2.4-stable | {language}:selected</p>
+                </div>
               </div>
+              <a 
+                href="/dashboard"
+                className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-brand-accent hover:bg-brand-accent/10 transition-all active:scale-95"
+                title={lang("Gestion Portefolio", "Manage Portfolio")}
+              >
+                <Settings className="w-4 h-4" />
+              </a>
             </div>
           </div>
         </div>
