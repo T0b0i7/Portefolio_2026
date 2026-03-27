@@ -117,13 +117,6 @@ export function Footer() {
                   <p className="text-[10px] text-slate-500 mt-1 font-mono">v1.2.4-stable | {language}:selected</p>
                 </div>
               </div>
-              <a 
-                href="/dashboard"
-                className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-brand-accent hover:bg-brand-accent/10 transition-all active:scale-95"
-                title={lang("Gestion Portefolio", "Manage Portfolio")}
-              >
-                <Settings className="w-4 h-4" />
-              </a>
             </div>
           </div>
         </div>

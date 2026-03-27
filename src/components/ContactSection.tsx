@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { ScrollAnimation } from "@/components/ui/ScrollAnimation";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { supabase } from "@/lib/supabase";
 
 export function ContactSection() {
   const { lang } = useLanguage();
@@ -54,18 +55,34 @@ export function ContactSection() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      const { error } = await supabase.from("contact_messages").insert([
+        {
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+        },
+      ]);
 
-    // @ts-ignore
-    if (window.umami) window.umami.track("contact-form-submit", { subject: formData.subject });
+      if (error) throw error;
 
-    toast.success(lang("Message envoyé avec succès!", "Message sent successfully!"), {
-      description: lang("Je vous répondrai dans les plus brefs délais.", "I will get back to you as soon as possible."),
-    });
+      // @ts-ignore
+      if (window.umami) window.umami.track("contact-form-submit", { subject: formData.subject });
 
-    setFormData({ name: "", email: "", subject: "", message: "" });
-    setIsSubmitting(false);
+      toast.success(lang("Message envoyé avec succès!", "Message sent successfully!"), {
+        description: lang("Je vous répondrai dans les plus brefs délais.", "I will get back to you as soon as possible."),
+      });
+
+      setFormData({ name: "", email: "", subject: "", message: "" });
+    } catch (error: any) {
+      console.error("Error submitting contact form:", error);
+      toast.error(lang("Erreur lors de l'envoi", "Error while sending"), {
+        description: lang("Veuillez réessayer plus tard.", "Please try again later."),
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (

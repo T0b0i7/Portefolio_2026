@@ -1,0 +1,111 @@
+[
+    {
+        "id": 1,
+        "type": "work",
+        "title_fr": "Stagiaire Développeur Full-Stack",
+        "title_en": "Full-Stack Developer Intern",
+        "company": "INNOVTECH",
+        "location_fr": "Cotonou, Aidjèdo (Télétravail)",
+        "location_en": "Cotonou, Aidjèdo (Remote)",
+        "period_fr": "Nov 2025 - Fév 2026",
+        "period_en": "Nov 2025 - Feb 2026",
+        "status_fr": "En cours",
+        "status_en": "In Progress",
+        "description_fr": [
+            "Développement front-end et participation au back-end des applications internes",
+            "Création d'interfaces et intégration de fonctionnalités",
+            "Optimisation des outils internes et automatisation des processus"
+        ],
+        "description_en": [
+            "Front-end development and participation in the back-end of internal applications",
+            "Interface creation and feature integration",
+            "Internal tools optimization and process automation"
+        ]
+    },
+    {
+        "id": 2,
+        "type": "work",
+        "title_fr": "Stagiaire Développeur / Technicien Informatique",
+        "title_en": "Developer Intern / IT Technician",
+        "company": "SIAB – Société Industrielle d'Acier du Bénin",
+        "location_fr": "Djeffa",
+        "location_en": "Djeffa",
+        "period_fr": "Juin 2024 - Avril 2025",
+        "period_en": "June 2024 - April 2025",
+        "status_fr": "-30% temps de traitement",
+        "status_en": "-30% processing time",
+        "description_fr": [
+            "Conception, développement et déploiement de systèmes internes",
+            "Outils d'automatisation réduisant le temps de traitement de 30%",
+            "Maintenance des équipements informatiques et support technique"
+        ],
+        "description_en": [
+            "Design, development, and deployment of internal systems",
+            "Automation tools reducing processing time by 30%",
+            "IT equipment maintenance and technical support"
+        ]
+    },
+    {
+        "id": 3,
+        "type": "work",
+        "title_fr": "Freelance / Prestataire",
+        "title_en": "Freelance / Service Provider",
+        "company_fr": "Développeur & Designer Graphique",
+        "company_en": "Developer & Graphic Designer",
+        "location_fr": "Porto-Novo, Bénin",
+        "location_en": "Porto-Novo, Benin",
+        "period_fr": "2024 - Présent",
+        "period_en": "2024 - Present",
+        "status_fr": "En cours",
+        "status_en": "In Progress",
+        "description_fr": [
+            "Création de sites web pour particuliers et entreprises",
+            "Réalisation d'affiches et supports visuels pour la communication digitale",
+            "Maintenance et accompagnement technique de projets clients"
+        ],
+        "description_en": [
+            "Creation of websites for individuals and companies",
+            "Creation of posters and visual supports for digital communication",
+            "Maintenance and technical support for client projects"
+        ]
+    },
+    {
+        "id": 4,
+        "type": "education",
+        "title_fr": "Licence Professionnelle en Système Informatique Logiciel (SIL)",
+        "title_en": "Professional License in Software Computer Systems (SIL)",
+        "company": "HECM - Haute École de Commerce et de Management",
+        "location_fr": "Porto Novo, Bénin",
+        "location_en": "Porto Novo, Benin",
+        "period_fr": "Terminé",
+        "period_en": "Completed",
+        "status_fr": "Très Bien",
+        "status_en": "Very Good",
+        "description_fr": [
+            "Spécialisation en développement logiciel et systèmes d'information"
+        ],
+        "description_en": [
+            "Specialization in software development and information systems"
+        ]
+    },
+    {
+        "id": 5,
+        "type": "education",
+        "title_fr": "Baccalauréat Série D (scientifique)",
+        "title_en": "High School Diploma - Scientific Stream (D)",
+        "company_fr": "Collège Catholique Notre-Dame de Lourdes",
+        "company_en": "Notre-Dame de Lourdes Catholic College",
+        "location_fr": "Porto-Novo",
+        "location_en": "Porto-Novo",
+        "period_fr": "2021 - 2022",
+        "period_en": "2021 - 2022",
+        "status_fr": "",
+        "status_en": "",
+        "description_fr": [
+            "Formation scientifique"
+        ],
+        "description_en": [
+            "Scientific training"
+        ]
+    }
+]

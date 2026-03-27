@@ -31,7 +31,7 @@ Voici une sélection de trois projets phares issus du portfolio, chacun illustra
 **Technologies :** TypeScript, Supabase  
 **Statut :** Terminé  
 **Description :** Vigilance BJ est une application web pour la surveillance et la gestion de la sécurité au Bénin. Développée avec TypeScript pour une meilleure robustesse et Supabase pour l'authentification et la base de données, cette plateforme permet aux utilisateurs de signaler des incidents et de suivre les alertes en temps réel.  
-**Lien :** [Vigilance BJ](https://vigilance-bj.vercel.app/)  
+**Lien :** [Vigilance BJ](https://vigilance-bj.netlify.app/)  
 **Image :** ![Vigilance BJ](public/design/vigilancebj.jpg)
 
 ## Conclusion

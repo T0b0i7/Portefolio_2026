@@ -1,6 +1,8 @@
 import { HeroSection } from "@/components/HeroSection";
 import { EvolutionSection } from "@/components/EvolutionSection";
 import { ProjectsSection } from "@/components/ProjectsSection";
+import { DesignGallery } from "@/components/DesignGallery";
+import { AILab } from "@/components/AILab";
 import { ServicesSection } from "@/components/ServicesSection";
 import { ContactSection } from "@/components/ContactSection";
 import { EnigmaSection } from "@/components/EnigmaSection";
@@ -16,16 +18,22 @@ const Index = () => {
         {/* Navigation */}
         <Navigation />
 
-        {/* Hero Section - The Solar System Greeting */}
+        {/* Hero Section */}
         <HeroSection />
 
-        {/* Evolution Section */}
+        {/* Evolution Section (Parcours) */}
         <EvolutionSection />
 
-        {/* Projects Section */}
+        {/* Projects Section (Projets) */}
         <ProjectsSection />
 
-        {/* Services Section */}
+        {/* AI Lab Section */}
+        <AILab />
+
+        {/* Design Gallery Section */}
+        <DesignGallery />
+
+        {/* Services / Expertise Section */}
         <ServicesSection />
 
         {/* Contact Section */}

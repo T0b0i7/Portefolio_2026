@@ -16,6 +16,16 @@ export function HeroSection() {
   const [isLoaded, setIsLoaded] = useState(false);
   const { lang } = useLanguage();
   const { trackEvent } = useTracking();
+  const [btnPos, setBtnPos] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - (rect.left + rect.width / 2)) * 0.3;
+    const y = (e.clientY - (rect.top + rect.height / 2)) * 0.3;
+    setBtnPos({ x, y });
+  };
+
+  const handleMouseLeave = () => setBtnPos({ x: 0, y: 0 });
 
   useEffect(() => {
     setIsLoaded(true);
@@ -70,7 +80,7 @@ export function HeroSection() {
           </div>
 
           {/* Title */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-4 sm:mb-6 text-white tracking-tighter uppercase">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-4 sm:mb-6 text-white tracking-tighter uppercase">
             {lang("Créateur de", "Creator of")} <br className="hidden sm:block" />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent to-blue-400">
               {lang("Solutions Digitales", "Digital Solutions")}
@@ -106,7 +116,10 @@ export function HeroSection() {
             <a
               href="#projects"
               onClick={() => trackEvent("hero-view-projects")}
-              className="px-8 py-4 bg-brand-accent rounded-xl font-bold hover:translate-y-[-2px] transition-all shadow-xl shadow-brand-accent/20 flex items-center justify-center gap-2 uppercase text-sm tracking-wider"
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+              style={{ transform: `translate(${btnPos.x}px, ${btnPos.y}px)` }}
+              className="px-8 py-4 bg-brand-accent rounded-xl font-bold transition-transform shadow-xl shadow-brand-accent/20 flex items-center justify-center gap-2 uppercase text-sm tracking-wider duration-75"
             >
               {lang("Voir mes projets", "View my projects")}
               <ArrowRight className="w-5 h-5" />

@@ -95,17 +95,11 @@ export function ServicesSection() {
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mt-3 sm:mt-4">
               {lang("Compétences &", "Skills &")} <span className="text-brand-accent">{lang("Services", "Services")}</span>
             </h2>
-            <p className="text-muted-foreground mt-3 sm:mt-4 max-w-2xl mx-auto text-sm sm:text-base px-4 sm:px-0">
-              {lang(
-                "Des compétences techniques approfondies pour répondre à tous vos besoins de développement.",
-                "Deep technical skills to meet all your development needs."
-              )}
-            </p>
           </div>
         </ScrollAnimation>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-10 sm:mb-12 md:mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-16">
           {services.map((service, index) => {
             const color = colors[service.color as keyof typeof colors];
             return (
@@ -115,7 +109,7 @@ export function ServicesSection() {
                 delay={index * 100}
               >
                 <div
-                  className={`glass-card p-6 rounded-3xl border-t-4 ${color.border} transition-all duration-300 hover:-translate-y-2 hover:shadow-xl`}
+                  className={`glass-card p-6 rounded-3xl border-t-4 ${color.border} transition-all duration-300 hover:-translate-y-2 hover:shadow-xl h-full flex flex-col`}
                 >
                   {/* Icon */}
                   <div
@@ -127,19 +121,39 @@ export function ServicesSection() {
                   {/* Title */}
                   <h4 className="font-bold text-lg mb-4">{service.title}</h4>
 
-                  {/* Skills */}
-                  <ul className="text-muted-foreground text-xs sm:text-sm space-y-1.5 sm:space-y-2">
+                  {/* Skills as Badges */}
+                  <div className="flex flex-wrap gap-2 mt-auto">
                     {service.skills.map((skill) => (
-                      <li key={skill} className="flex items-start gap-2">
-                        <div className={`w-1.5 h-1.5 rounded-full ${color.dot} mt-1.5 sm:mt-2 flex-shrink-0`} />
-                        <span className="line-clamp-2">{skill}</span>
-                      </li>
+                      <span 
+                        key={skill} 
+                        className={`px-2 py-1 ${color.bg} ${color.text} border border-${service.color}-500/10 rounded-md text-[10px] font-bold uppercase tracking-tight`}
+                      >
+                        {skill}
+                      </span>
                     ))}
-                  </ul>
+                  </div>
                 </div>
               </ScrollAnimation>
             );
           })}
+        </div>
+
+        {/* Statistics / Metrics Section */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
+          {[
+            { label: lang("Projets Livrés", "Projects Delivered"), value: "30+", sub: "Success" },
+            { label: lang("Clients Heureux", "Happy Clients"), value: "100%", sub: "Reviews" },
+            { label: lang("Années Expérience", "Years Experience"), value: "4+", sub: "Dev" },
+            { label: lang("Cafés Consommés", "Coffee Drunk"), value: "800+", sub: "Energy" },
+          ].map((stat, i) => (
+            <ScrollAnimation key={i} delay={i * 100} animation="fade-up">
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-6 text-center hover:border-brand-accent/50 transition-colors group">
+                <div className="text-3xl font-black text-white mb-1 group-hover:scale-110 transition-transform">{stat.value}</div>
+                <div className="text-[10px] text-brand-accent font-bold uppercase tracking-widest mb-1">{stat.label}</div>
+                <div className="text-[8px] text-slate-500 uppercase">{stat.sub}</div>
+              </div>
+            </ScrollAnimation>
+          ))}
         </div>
 
         {/* CTA Banner */}

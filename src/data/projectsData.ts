@@ -15,6 +15,8 @@ export const getProjects = (lang: (fr: string, en: string) => string): Project[]
         image: "/design/siab.png",
         locked: true,
         featured: true,
+        ai_model: "Logiciel d'automatisation (Node.js)",
+        automation_benefit: lang("Optimisation des flux ferroviaires", "Railway flow optimization"),
     },
     {
         id: 2,
@@ -33,7 +35,7 @@ export const getProjects = (lang: (fr: string, en: string) => string): Project[]
     {
         id: 3,
         title: lang("Design Graphique DK", "DK Graphic Design"),
-        category: "Design",
+        category: "Design Graphique",
         description: lang(
             "Réalisation d'affiches, logos et supports visuels pour la communication digitale de diverses organisations.",
             "Creation of posters, logos and visual supports for digital communication for various organizations."
@@ -49,11 +51,13 @@ export const getProjects = (lang: (fr: string, en: string) => string): Project[]
             "/design/DK (3).png",
             "/design/DK (2).png",
         ],
+        design_aspect_ratio: "square",
+        subcategory: lang("Branding & Logo", "Branding & Logo"),
     },
     {
         id: 4,
         title: lang("Plateforme E-commerce Haute Performance", "High Performance E-commerce Platform"),
-        category: "E-commerce",
+        category: "Prototypage",
         description: lang(
             "Développement d'une plateforme e-commerce moderne avec paiement intégré et gestion d'inventaire en temps réel.",
             "Development of a modern e-commerce platform with integrated payment and real-time inventory management."
@@ -66,6 +70,7 @@ export const getProjects = (lang: (fr: string, en: string) => string): Project[]
             "/design/Luxe.PNG",
             "/design/Luxe1.PNG",
         ],
+        subcategory: "E-commerce UI",
     },
     {
         id: 5,
@@ -98,7 +103,7 @@ export const getProjects = (lang: (fr: string, en: string) => string): Project[]
     {
         id: 7,
         title: "BitoLab Studio",
-        category: "IA & ML",
+        category: "Design Graphique",
         description: lang(
             "BitoLab – L'Exception Générative. Suite créative pilotée par l'IA (Gemini 2.5 & 3).",
             "BitoLab – The Generative Exception. AI-driven creative suite (Gemini 2.5 & 3)."
@@ -110,6 +115,9 @@ export const getProjects = (lang: (fr: string, en: string) => string): Project[]
         images: [
             "/design/bitolab1.PNG",
         ],
+        ai_model: "Gemini 2.5 & 3",
+        automation_benefit: lang("Génération créative instantanée", "Instant creative generation"),
+        subcategory: lang("IA Art", "AI Art"),
     },
     {
         id: 8,
@@ -152,12 +160,14 @@ export const getProjects = (lang: (fr: string, en: string) => string): Project[]
         metrics: { impact: lang("Sécurité civique", "Civic security"), type: "Civic Tech" },
         color: "primary",
         image: "/design/vigilancebj.jpg",
-        url: "https://vigilance-bj.vercel.app/",
+        url: "https://vigilance-bj.netlify.app/",
+        ai_model: "Gemini API (Classification)",
+        automation_benefit: lang("Modération automatique", "Automated moderation"),
     },
     {
         id: 11,
         title: lang("Portefeuille InnovTech", "InnovTech Portfolio"),
-        category: "Web Design",
+        category: "Prototypage",
         description: lang(
             "Vitrine numérique d'InnovTech SAS : développement web & mobile, UI/UX, conseil digital et maintenance IT.",
             "Digital showcase for InnovTech SAS: web & mobile development, UI/UX, digital consulting and IT maintenance."
@@ -167,6 +177,7 @@ export const getProjects = (lang: (fr: string, en: string) => string): Project[]
         color: "accent",
         image: "/design/Pinnovetech.PNG",
         url: "https://innovtechportefolio01.netlify.app/",
+        subcategory: "Web UI/UX",
     },
     {
         id: 12,
@@ -200,7 +211,7 @@ export const getProjects = (lang: (fr: string, en: string) => string): Project[]
     {
         id: 14,
         title: "CREACOM",
-        category: "Portfolio",
+        category: "Design Graphique",
         description: lang(
             "Portefolio professionnel CREACOM : vitrine digitale présentant les créations en communication visuelle.",
             "CREACOM professional portfolio: digital showcase presenting visual communication creations."
@@ -210,6 +221,7 @@ export const getProjects = (lang: (fr: string, en: string) => string): Project[]
         color: "accent",
         image: "/design/CREACOM.PNG",
         url: "https://grace-branco-portfolio.netlify.app/",
+        subcategory: lang("Branding", "Branding"),
     },
     {
         id: 15,
@@ -270,6 +282,7 @@ export const getProjects = (lang: (fr: string, en: string) => string): Project[]
         status: lang("Publié", "Published"),
         image: "/design/Annif_jumelle3.png",
         url: "https://hbdjumelles-lawani.netlify.app/",
+        design_aspect_ratio: "video",
     },
     {
         id: 19,
@@ -318,7 +331,7 @@ export const getProjects = (lang: (fr: string, en: string) => string): Project[]
     {
         id: 22,
         title: "Portfolio.OS",
-        category: "Portfolio",
+        category: "Prototypage",
         description: lang(
             "Portfolio.OS – Le Système d'Exploitation du Portfolio Authentique. Une plateforme next-gen permettant de voir 16 designs différents en temps réel pour une même expérience.",
             "Portfolio.OS – The Authentic Portfolio Operating System. A next-gen platform allowing to see 10 different designs in real-time for the same experience."
@@ -341,11 +354,12 @@ export const getProjects = (lang: (fr: string, en: string) => string): Project[]
             "/design/P10.PNG",
             "/design/P11.PNG",
         ],
+        subcategory: "Design UI",
     },
     {
         id: 23,
         title: lang("Participation au challenge de création d’affiche – Concert “10 ans du Gang”", "Participation in the poster creation challenge – Concert “10 years of the Gang”"),
-        category: "Design",
+        category: "Design Graphique",
         description: lang(
             "Conception et réalisation de plusieurs affiches promotionnelles pour le concert anniversaire « 10 ans du Gang » de Vano Baby. Création de visuels destinés à la promotion sur les réseaux sociaux, en appliquant les principes de design graphique, typographie et communication visuelle.",
             "Design and creation of several promotional posters for the anniversary concert “10 years of the Gang” by Vano Baby. Creation of visuals intended for promotion on social networks, applying the principles of graphic design, typography and visual communication."
@@ -371,5 +385,7 @@ export const getProjects = (lang: (fr: string, en: string) => string): Project[]
             "/design/M (4).jpg",
             "/design/M (5).jpg",
         ],
+        design_aspect_ratio: "portrait",
+        subcategory: lang("Print & Affiches", "Print & Posters"),
     },
 ];

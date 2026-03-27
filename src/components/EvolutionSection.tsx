@@ -3,10 +3,22 @@ import { ScrollAnimation } from "@/components/ui/ScrollAnimation";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getExperiences } from "@/data/experienceData";
+import { experienceService, Experience } from "@/services/experienceService";
+import { useEffect, useState } from "react";
 
 export function EvolutionSection() {
-  const { lang } = useLanguage();
-  const timelineItems = getExperiences(lang);
+  const { lang, language } = useLanguage();
+  const [timelineItems, setTimelineItems] = useState<any[]>(getExperiences(lang));
+
+  useEffect(() => {
+    const fetchDBExperiences = async () => {
+      const dbExps = await experienceService.getAllExperiences(language);
+      if (dbExps && dbExps.length > 0) {
+        setTimelineItems(dbExps);
+      }
+    };
+    fetchDBExperiences();
+  }, [language]);
 
   return (
     <section id="parcours" className="py-16 sm:py-20 md:py-24 bg-brand-dark/50">

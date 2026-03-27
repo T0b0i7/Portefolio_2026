@@ -6,18 +6,28 @@ import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useOptimizedImages } from "@/hooks/use-optimized-images";
 import { useTracking } from "@/hooks/useTracking";
-import { getProjects } from "@/data/projectsData";
-
+import { projectService } from "@/services/projectService";
 import { Project } from "@/types/project";
+import { getProjects } from "@/data/projectsData";
 
 const ITEMS_PER_PAGE_DESKTOP = 9;
 const ITEMS_PER_PAGE_MOBILE = 1;
 
 export function ProjectsSection() {
   const { lang, language } = useLanguage();
-  const projects = getProjects(lang);
+  const [projects, setProjects] = useState<Project[]>(getProjects(lang));
   const { getOptimizedImage } = useOptimizedImages();
   const { trackEvent } = useTracking();
+
+  useEffect(() => {
+    const fetchDBProjects = async () => {
+      const dbProjects = await projectService.getAllProjects(language);
+      if (dbProjects && dbProjects.length > 0) {
+        setProjects(dbProjects);
+      }
+    };
+    fetchDBProjects();
+  }, [language]);
 
   const getCategoryCount = (categoryId: string) => {
     if (categoryId === "all") return projects.filter(p => !p.locked).length;

@@ -12,4 +12,8 @@ export interface Project {
     status?: string;
     locked?: boolean;
     featured?: boolean;
+    ai_model?: string;
+    automation_benefit?: string;
+    design_aspect_ratio?: "square" | "video" | "portrait";
+    subcategory?: string;
 }

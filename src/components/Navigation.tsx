@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Menu, X, Sun, Moon, Terminal, Globe, Layout, Cpu, Briefcase, Mail, ChevronDown } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -15,8 +16,26 @@ export function Navigation() {
 
   const navLinks = [
     { href: "#accueil", label: lang("Accueil", "Home"), icon: Layout },
-    { href: "#parcours", label: lang("Parcours", "Journey"), icon: Cpu },
-    { href: "#projects", label: lang("Projets", "Projects"), icon: Briefcase },
+    {
+      label: lang("Parcours", "Timeline"),
+      href: "#parcours",
+      icon: Cpu
+    },
+    {
+      label: lang("Projets", "Projects"),
+      href: "#projects",
+      icon: Briefcase
+    },
+    {
+      label: lang("Lab IA", "AI Lab"),
+      href: "#ai-lab",
+      icon: Terminal
+    },
+    {
+      label: lang("Design", "Design"),
+      href: "#design",
+      icon: Layout
+    },
     { href: "#services", label: lang("Services", "Services"), icon: Globe },
     { href: "#contact", label: lang("Contact", "Contact"), icon: Mail },
   ];
@@ -57,7 +76,6 @@ export function Navigation() {
         )}
       >
         <div className="h-full flex items-center justify-between">
-          {/* ══════════ LOGO SECTION ══════════ */}
           <a
             href="#accueil"
             className="group flex items-center gap-3 relative overflow-hidden"
@@ -82,6 +100,7 @@ export function Navigation() {
               </div>
             </div>
           </a>
+
 
           {/* ══════════ CENTER NAVIGATION ══════════ */}
           <div className="hidden lg:flex items-center bg-white/5 border border-white/5 rounded-full p-1.5 px-2 backdrop-blur-sm">

@@ -1,0 +1,466 @@
+[
+    {
+        "id": 1,
+        "title_fr": "Système d'Automatisation SIAB",
+        "title_en": "SIAB Automation System",
+        "category": "Automatisation",
+        "description_fr": "Informations confidentielles — pour en savoir plus, veuillez contacter la référence : Chef service Informatique, Mr EPIPHANE KOUTANGNI, +229 01 97 27 90 33.",
+        "description_en": "Confidential information — for more details, please contact: IT Service Manager, Mr. EPIPHANE KOUTANGNI, +229 01 97 27 90 33.",
+        "tags": [
+            "HTML",
+            "Node.js",
+            "SQL Server",
+            "Automatisation",
+            "CSS",
+            "PHP"
+        ],
+        "impact": "-30% temps",
+        "metrics_type": "Productivité",
+        "color": "primary",
+        "image_url": "/design/siab.png",
+        "is_locked": true,
+        "is_featured": true
+    },
+    {
+        "id": 2,
+        "title_fr": "Applications Internes INNOVTECH",
+        "title_en": "INNOVTECH Internal Apps",
+        "category": "Full-Stack",
+        "description_fr": "Plateforme complète pour la gestion interne des processus métier, avec tableaux de bord interactifs et automatisation des tâches répétitives.",
+        "description_en": "Complete platform for internal business process management, with interactive dashboards and automation of repetitive tasks.",
+        "tags": [
+            "React",
+            "Node.js",
+            "MySQL",
+            "Express",
+            "TypeScript"
+        ],
+        "impact": "+45% efficacité",
+        "metrics_type": "Entreprise",
+        "color": "secondary",
+        "image_url": "/design/gestiloc.PNG",
+        "status_fr": "Terminé",
+        "status_en": "Completed"
+    },
+    {
+        "id": 3,
+        "title_fr": "Design Graphique DK",
+        "title_en": "DK Graphic Design",
+        "category": "Design",
+        "description_fr": "Réalisation d'affiches, logos et supports visuels pour la communication digitale de diverses organisations.",
+        "description_en": "Creation of posters, logos and visual supports for digital communication for various organizations.",
+        "tags": [
+            "Figma",
+            "Canva",
+            "Branding",
+            "Print"
+        ],
+        "impact": "Multiple",
+        "metrics_type": "Créatif",
+        "color": "warning",
+        "gallery_urls": [
+            "/design/DK (7).png",
+            "/design/DK (6).png",
+            "/design/DK (5).png",
+            "/design/DK (4).png",
+            "/design/DK (3).png",
+            "/design/DK (2).png"
+        ]
+    },
+    {
+        "id": 4,
+        "title_fr": "Plateforme E-commerce Haute Performance",
+        "title_en": "High Performance E-commerce Platform",
+        "category": "E-commerce",
+        "description_fr": "Développement d'une plateforme e-commerce moderne avec paiement intégré et gestion d'inventaire en temps réel.",
+        "description_en": "Development of a modern e-commerce platform with integrated payment and real-time inventory management.",
+        "tags": [
+            "Next.js",
+            "Stripe",
+            "MongoDB",
+            "Vercel"
+        ],
+        "impact": "+100k users",
+        "metrics_type": "Startup",
+        "color": "primary",
+        "status_fr": "En cours",
+        "status_en": "In Progress",
+        "gallery_urls": [
+            "/design/Luxe.PNG",
+            "/design/Luxe1.PNG"
+        ]
+    },
+    {
+        "id": 5,
+        "title_fr": "Afrimemorie",
+        "title_en": "Afrimemorie",
+        "category": "Web Design",
+        "description_fr": "La mémoire de nos noms, la voix de nos peuples. Plateforme dédiée à la préservation et à la transmission de l'héritage culturel africain.",
+        "description_en": "The memory of our names, the voice of our peoples. Platform dedicated to the preservation and transmission of African cultural heritage.",
+        "tags": [
+            "React",
+            "Node.js",
+            "MongoDB"
+        ],
+        "impact": "Conservation culturelle",
+        "metrics_type": "Société",
+        "color": "accent",
+        "image_url": "/design/Afrimemorie.PNG",
+        "project_url": "https://afri-memory.netlify.app/"
+    },
+    {
+        "id": 6,
+        "title_fr": "Toile d'Hiver",
+        "title_en": "Winter Canvas",
+        "category": "Landing Pages",
+        "description_fr": "Application web festive offrant une aventure personnalisée de Noël : entrez votre nom pour découvrir un voyage poétique.",
+        "description_en": "Festive web application offering a personalized Christmas adventure: enter your name to discover a poetic journey.",
+        "tags": [
+            "HTML",
+            "CSS",
+            "JavaScript"
+        ],
+        "impact": "Expérience festive",
+        "metrics_type": "Loisir",
+        "color": "primary",
+        "image_url": "/design/AnimNoel.jpg",
+        "project_url": "https://merry-chritmas.netlify.app/"
+    },
+    {
+        "id": 7,
+        "title_fr": "BitoLab Studio",
+        "title_en": "BitoLab Studio",
+        "category": "IA & ML",
+        "description_fr": "BitoLab – L'Exception Générative. Suite créative pilotée par l'IA (Gemini 2.5 & 3).",
+        "description_en": "BitoLab – The Generative Exception. AI-driven creative suite (Gemini 2.5 & 3).",
+        "tags": [
+            "IA",
+            "Design",
+            "Generative"
+        ],
+        "impact": "R&D",
+        "metrics_type": "Innovation",
+        "color": "warning",
+        "status_fr": "En cours",
+        "status_en": "In Progress",
+        "gallery_urls": [
+            "/design/bitolab1.PNG"
+        ]
+    },
+    {
+        "id": 8,
+        "title_fr": "UNO – Jeu de cartes",
+        "title_en": "UNO – Card Game",
+        "category": "Gaming",
+        "description_fr": "Une version numérique du célèbre jeu de cartes UNO en 1v1 contre l'ordinateur.",
+        "description_en": "A digital version of the famous UNO card game in 1v1 against the computer.",
+        "tags": [
+            "HTML",
+            "CSS",
+            "JavaScript"
+        ],
+        "impact": "Divertissement",
+        "metrics_type": "Jeu",
+        "color": "secondary",
+        "image_url": "/design/uno.JPG",
+        "project_url": "https://unog-ame.netlify.app/"
+    },
+    {
+        "id": 9,
+        "title_fr": "Portfolio 3D - Victoria Ahouéfa Camillia",
+        "title_en": "Portfolio 3D - Victoria Ahouéfa Camillia",
+        "category": "Portfolio",
+        "description_fr": "Portfolio 3D interactif pour une développeuse Full-stack spécialisée en IA, Cybersécurité et IoT.",
+        "description_en": "Interactive 3D portfolio for a Full-stack developer specialized in AI, Cybersecurity and IoT.",
+        "tags": [
+            "React",
+            "CSS",
+            "JavaScript",
+            "HTML",
+            "Three.js",
+            "WebGL"
+        ],
+        "impact": "Excellence technique",
+        "metrics_type": "Portfolio 3D",
+        "color": "primary",
+        "status_fr": "Publié",
+        "status_en": "Published",
+        "image_url": "/design/Portefolio_Victoria Ahouéfa Camillia.png",
+        "project_url": "https://portfoliovictoire.netlify.app/"
+    },
+    {
+        "id": 10,
+        "title_fr": "Vigilance BJ",
+        "title_en": "Vigilance BJ",
+        "category": "Full-Stack",
+        "description_fr": "Plateforme citoyenne pour signaler anonymement arnaques, harcèlement et hameçonnage au Bénin.",
+        "description_en": "Citizen platform to anonymously report scams, harassment and phishing in Benin.",
+        "tags": [
+            "TypeScript",
+            "Supabase",
+            "HTML",
+            "CSS"
+        ],
+        "impact": "Sécurité civique",
+        "metrics_type": "Civic Tech",
+        "color": "primary",
+        "image_url": "/design/vigilancebj.jpg",
+        "project_url": "https://vigilance-bj.netlify.app/"
+    },
+    {
+        "id": 11,
+        "title_fr": "Portefeuille InnovTech",
+        "title_en": "InnovTech Portfolio",
+        "category": "Web Design",
+        "description_fr": "Vitrine numérique d'InnovTech SAS : développement web & mobile, UI/UX, conseil digital et maintenance IT.",
+        "description_en": "Digital showcase for InnovTech SAS: web & mobile development, UI/UX, digital consulting and IT maintenance.",
+        "tags": [
+            "React",
+            "TypeScript",
+            "Tailwind CSS"
+        ],
+        "impact": "Agence",
+        "metrics_type": "Portefeuille",
+        "color": "accent",
+        "image_url": "/design/Pinnovetech.PNG",
+        "project_url": "https://innovtechportefolio01.netlify.app/"
+    },
+    {
+        "id": 12,
+        "title_fr": "Emotilist",
+        "title_en": "Emotilist",
+        "category": "Web Design",
+        "description_fr": "Application ToDoList interactive et festive : thèmes personnalisables, animations saisonnières.",
+        "description_en": "Interactive and festive ToDoList application: customizable themes, seasonal animations.",
+        "tags": [
+            "JavaScript",
+            "HTML",
+            "CSS"
+        ],
+        "impact": "Productivité ludique",
+        "metrics_type": "App",
+        "color": "secondary",
+        "image_url": "/design/emotilist.PNG",
+        "project_url": "https://emotilist.netlify.app/"
+    },
+    {
+        "id": 13,
+        "title_fr": "Communio",
+        "title_en": "Communio",
+        "category": "Full-Stack",
+        "description_fr": "Application web et mobile pour la communauté chrétienne : géolocalisation des paroisses, Bible interactive.",
+        "description_en": "Web and mobile application for the Christian community: geolocation of parishes, interactive Bible.",
+        "tags": [
+            "TypeScript",
+            "React Native",
+            "Node.js"
+        ],
+        "impact": "Communauté",
+        "metrics_type": "Social",
+        "color": "primary",
+        "image_url": "/design/communio.PNG",
+        "project_url": "https://communio-christian.netlify.app/",
+        "status_fr": "En cours",
+        "status_en": "In Progress"
+    },
+    {
+        "id": 14,
+        "title_fr": "CREACOM",
+        "title_en": "CREACOM",
+        "category": "Portfolio",
+        "description_fr": "Portefolio professionnel CREACOM : vitrine digitale présentant les créations en communication visuelle.",
+        "description_en": "CREACOM professional portfolio: digital showcase presenting visual communication creations.",
+        "tags": [
+            "React",
+            "TypeScript",
+            "Tailwind CSS",
+            "Design"
+        ],
+        "impact": "Portefolio",
+        "metrics_type": "Professionnel",
+        "color": "accent",
+        "image_url": "/design/CREACOM.PNG",
+        "project_url": "https://grace-branco-portfolio.netlify.app/"
+    },
+    {
+        "id": 15,
+        "title_fr": "Fête d'anniversaire de Peace Bloodness",
+        "title_en": "Peace Bloodness Birthday Party",
+        "category": "Anniversaire",
+        "description_fr": "Une application web interactive et émotionnelle créée pour célébrer l'anniversaire de Peace Bloodness.",
+        "description_en": "An interactive and emotional web application created to celebrate Peace Bloodness's birthday.",
+        "tags": [
+            "React",
+            "TypeScript",
+            "JavaScript",
+            "HTML",
+            "CSS"
+        ],
+        "impact": "Célébration interactive",
+        "metrics_type": "Anniversaire",
+        "color": "primary",
+        "status_fr": "Publié",
+        "status_en": "Published",
+        "image_url": "/design/Fête d'anniversaire de Peace Bloodness.png",
+        "project_url": "https://peace-bloodnesshbd.netlify.app/"
+    },
+    {
+        "id": 16,
+        "title_fr": "Site d'anniversaire pour Précieuse Empire",
+        "title_en": "Birthday Site for Precious Empire",
+        "category": "Anniversaire",
+        "description_fr": "Ce site a été créé avec amour pour célébrer l'anniversaire de Précieuse.",
+        "description_en": "This site was created with love to celebrate Precious's birthday.",
+        "tags": [
+            "HTML",
+            "CSS",
+            "JavaScript"
+        ],
+        "impact": "Expérience émotionnelle",
+        "metrics_type": "Anniversaire",
+        "color": "secondary",
+        "status_fr": "Publié",
+        "status_en": "Published",
+        "image_url": "/design/Site d'anniversaire pour Précieuse Empire .jpg",
+        "project_url": "https://precious-empire-hbd.netlify.app/"
+    },
+    {
+        "id": 17,
+        "title_fr": "Joyeux Anniversaire Ursule",
+        "title_en": "Happy Birthday Ursule",
+        "category": "Anniversaire",
+        "description_fr": "Une expérience web immersive et émotionnelle créée spécialement pour célébrer Ursule OWOLABI.",
+        "description_en": "An immersive and emotional web experience created specifically to celebrate Ursule OWOLABI.",
+        "tags": [
+            "React",
+            "JavaScript",
+            "CSS"
+        ],
+        "impact": "Célébration personnalisée",
+        "metrics_type": "Anniversaire",
+        "color": "primary",
+        "status_fr": "Publié",
+        "status_en": "Published",
+        "image_url": "/design/Owolabi.png",
+        "project_url": "https://ursulesowolabi-hbd.netlify.app/"
+    },
+    {
+        "id": 18,
+        "title_fr": "Twin Blessings - Site d'Anniversaire des Jumelles",
+        "title_en": "Twin Blessings - Twins' Birthday Site",
+        "category": "Anniversaire",
+        "description_fr": "Bienvenue sur le site d'anniversaire céleste pour les jumelles Lawani - Rahimath et Ramanath.",
+        "description_en": "Welcome to the celestial birthday site for the Lawani twins - Rahimath and Ramanath.",
+        "tags": [
+            "React",
+            "JavaScript",
+            "CSS",
+            "HTML"
+        ],
+        "impact": "Célébration spirituelle",
+        "metrics_type": "Anniversaire",
+        "color": "primary",
+        "status_fr": "Publié",
+        "status_en": "Published",
+        "image_url": "/design/Annif_jumelle3.png",
+        "project_url": "https://hbdjumelles-lawani.netlify.app/"
+    },
+    {
+        "id": 19,
+        "title_fr": "Huggy Love - Landing Page Saint-Valentin",
+        "title_en": "Huggy Love - Valentine's Day Landing Page",
+        "category": "Landing Pages",
+        "description_fr": "Une landing page romantique et moderne pour offrir la peluche 'Étreinte Éternelle'.",
+        "description_en": "A romantic and modern landing page to offer the 'Eternal Embrace' plush.",
+        "tags": [
+            "React 18",
+            "TypeScript",
+            "Vite",
+            "Tailwind CSS",
+            "Framer Motion"
+        ],
+        "impact": "Conversion émotionnelle",
+        "metrics_type": "E-commerce",
+        "color": "primary",
+        "status_fr": "Publié",
+        "status_en": "Published",
+        "image_url": "/design/love1.png",
+        "project_url": "https://huggylove.netlify.app/"
+    },
+    {
+        "id": 20,
+        "title_fr": "Savékari",
+        "title_en": "Savékari",
+        "category": "E-commerce",
+        "description_fr": "Fabriqués avec du pur beurre de karité béninois et des ingrédients naturels.",
+        "description_en": "Made with pure Beninese shea butter and natural ingredients.",
+        "tags": [
+            "HTML",
+            "CSS",
+            "JavaScript",
+            "E-commerce"
+        ],
+        "impact": "Produits naturels",
+        "metrics_type": "E-commerce",
+        "color": "primary",
+        "image_url": "/design/Savékari.PNG",
+        "project_url": "https://savekari.netlify.app/"
+    },
+    {
+        "id": 21,
+        "title_fr": "Owofinance - Gestion Financière Mobile",
+        "title_en": "Owofinance - Mobile Financial Management",
+        "category": "Mobile",
+        "description_fr": "Application mobile-first de gestion financière avec support multilingue et système de tontine.",
+        "description_en": "Mobile-first financial management application with multilingual support and tontine system.",
+        "tags": [
+            "React Native",
+            "Node.js",
+            "Supabase",
+            "Multilingue",
+            "Fintech"
+        ],
+        "impact": "Finance inclusive",
+        "metrics_type": "Mobile App",
+        "color": "primary",
+        "status_fr": "Publié",
+        "status_en": "Published",
+        "image_url": "/design/owo2.webp",
+        "project_url": "https://owofinance.netlify.app/"
+    },
+    {
+        "id": 22,
+        "title_fr": "Portfolio.OS",
+        "title_en": "Portfolio.OS",
+        "category": "Portfolio",
+        "description_fr": "Portfolio.OS – Le Système d'Exploitation du Portfolio Authentique. Une plateforme next-gen permettant de voir 10 thèmes différents en temps réel pour une même expérience.",
+        "description_en": "Portfolio.OS – The Authentic Portfolio Operating System. A next-gen platform allowing to see 10 different designs in real-time for the same experience.",
+        "tags": [
+            "React 19",
+            "TypeScript",
+            "Tailwind CSS 4",
+            "Framer Motion",
+            "Vite",
+            "IA"
+        ],
+        "impact": "Innovation design",
+        "metrics_type": "Open Source",
+        "color": "primary",
+        "status_fr": "Terminé",
+        "status_en": "Completed",
+        "project_url": "https://portefolio-os.netlify.app/",
+        "gallery_urls": [
+            "/design/P1.PNG",
+            "/design/P2.PNG",
+            "/design/P3.PNG",
+            "/design/P4.PNG",
+            "/design/P5.PNG",
+            "/design/P6.PNG",
+            "/design/P7.PNG",
+            "/design/P8.PNG",
+            "/design/P9.PNG",
+            "/design/P10.PNG",
+            "/design/P11.PNG"
+        ]
+    }
+]
