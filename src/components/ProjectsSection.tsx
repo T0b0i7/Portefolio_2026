@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useOptimizedImages } from "@/hooks/use-optimized-images";
+// import { useOptimizedImages } from "@/hooks/use-optimized-images";
 import { useTracking } from "@/hooks/useTracking";
 import { projectService } from "@/services/projectService";
 import { Project } from "@/types/project";
@@ -16,7 +16,7 @@ const ITEMS_PER_PAGE_MOBILE = 1;
 export function ProjectsSection() {
   const { lang, language } = useLanguage();
   const [projects, setProjects] = useState<Project[]>(getProjects(lang));
-  const { getOptimizedImage } = useOptimizedImages();
+  // const { getOptimizedImage } = useOptimizedImages();
   const { trackEvent } = useTracking();
 
   useEffect(() => {
@@ -445,18 +445,20 @@ export function ProjectsSection() {
                   <div className="relative h-36 sm:h-40 md:h-44 overflow-hidden">
                     {project.image || (project.images && project.images[0]) ? (() => {
                       const imagePath = project.image ?? project.images?.[0] ?? '';
-                      const optimized = getOptimizedImage(imagePath);
+                      // const optimized = getOptimizedImage(imagePath);
 
                       return (
                         <img
-                          src={optimized ? `/design/optimized/${optimized.webp}` : imagePath}
-                          srcSet={optimized ? optimized.srcset.split(', ').map(src => `/design/optimized/${src}`).join(', ') : undefined}
-                          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                          src={imagePath}
                           alt={project.title}
                           loading="lazy"
                           decoding="async"
                           fetchPriority="low"
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                          // {...(optimized ? {
+                          //   srcSet: optimized.srcset,
+                          //   src: optimized.webp
+                          // } : {})}
                         />
                       );
                     })() : (
@@ -746,13 +748,13 @@ export function ProjectsSection() {
 
                     <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
                       {selectedProject.images.map((image, index) => {
-                        const optimized = getOptimizedImage(image);
+                        // const optimized = getOptimizedImage(image);
 
                         return (
                           <div
                             key={index}
                             className="relative group rounded-2xl overflow-hidden aspect-video cursor-zoom-in bg-slate-800 border border-white/5"
-                            onClick={() => setActiveImage(optimized ? `/design/optimized/${optimized.webp}` : image)}
+                            onClick={() => setActiveImage(/*optimized ? optimized.webp : */image)}
                           >
                             {failedImages.has(index) ? (
                               <div className="w-full h-full flex items-center justify-center">
@@ -761,15 +763,17 @@ export function ProjectsSection() {
                             ) : (
                               <>
                                 <img
-                                  src={optimized ? `/design/optimized/${optimized.webp}` : image}
-                                  srcSet={optimized ? optimized.srcset.split(', ').map(src => `/design/optimized/${src}`).join(', ') : undefined}
-                                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                                  src={image}
                                   alt={`${selectedProject.title} - ${lang("Image de la galerie", "Gallery image")} ${index + 1}/${selectedProject.images.length}`}
                                   loading="lazy"
                                   decoding="async"
                                   fetchPriority="low"
                                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 grayscale-[0.3] group-hover:grayscale-0"
                                   onError={() => setFailedImages(prev => new Set([...prev, index]))}
+                                  // {...(optimized ? {
+                                  //   srcSet: optimized.srcset,
+                                  //   src: optimized.webp
+                                  // } : {})}
                                 />
                                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                   <Eye className="w-6 h-6 text-white" />

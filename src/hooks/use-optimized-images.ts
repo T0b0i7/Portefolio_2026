@@ -30,7 +30,18 @@ export function useOptimizedImages() {
   const getOptimizedImage = (originalPath: string) => {
     // Extraire le nom du fichier du chemin
     const filename = originalPath.split('/').pop() || '';
-    return imageMapping[filename];
+    const optimized = imageMapping[filename];
+    if (optimized) {
+      return {
+        ...optimized,
+        webp: `/design/optimized/${optimized.webp}`,
+        srcset: optimized.srcset.split(', ').map(src => {
+          const [filename] = src.split(' ');
+          return filename ? `/design/optimized/${filename}` + (src.includes(' ') ? ' ' + src.split(' ')[1] : '') : src;
+        }).join(', ')
+      };
+    }
+    return null;
   };
 
   return { imageMapping, loading, getOptimizedImage };

@@ -1,38 +1,54 @@
-import React, { useState } from "react";
-import { Palette, Eye, Maximize2, X } from "lucide-react";
+import React, { useState, useMemo, useEffect } from "react";
+import { Palette, Eye, Maximize2, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getProjects } from "@/data/projectsData";
 import { cn } from "@/lib/utils";
+// import { useOptimizedImages } from "@/hooks/use-optimized-images";
 import { ScrollAnimation } from "./ui/ScrollAnimation";
+import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
 
 export function DesignGallery() {
   const { lang } = useLanguage();
   const allProjects = getProjects(lang);
+  // const { getOptimizedImage } = useOptimizedImages();
   
   const [activeCategory, setActiveCategory] = useState<string>("All");
   const [activeSubcategory, setActiveSubcategory] = useState<string>("All");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState<number>(-1);
 
   // Design categories mapping
   const mainCategories = ["All", "Prototypage", "Design Graphique"];
   
   // Filter design projects
-  const designProjects = allProjects.filter(p => 
+  const designProjects = useMemo(() => allProjects.filter(p => 
     (p.category === "Prototypage" || p.category === "Design Graphique") && !p.locked
-  );
+  ), [allProjects]);
 
   // Get filtered projects
-  const filteredProjects = designProjects.filter(p => {
+  const filteredProjects = useMemo(() => designProjects.filter(p => {
     const categoryMatch = activeCategory === "All" || p.category === activeCategory;
     const subcategoryMatch = activeSubcategory === "All" || p.subcategory === activeSubcategory;
     return categoryMatch && subcategoryMatch;
-  });
+  }), [designProjects, activeCategory, activeSubcategory]);
 
   // Get unique subcategories for current main category
   const subcategories = ["All", ...new Set(designProjects
     .filter(p => activeCategory === "All" || p.category === activeCategory)
     .map(p => p.subcategory)
     .filter(Boolean) as string[])];
+
+  // Calculate counts for categories
+  const getCategoryCount = (cat: string) => {
+    if (cat === "All") return designProjects.length;
+    return designProjects.filter(p => p.category === cat).length;
+  };
+
+  // Calculate counts for subcategories
+  const getSubcategoryCount = (sub: string) => {
+    if (sub === "All") return designProjects.filter(p => activeCategory === "All" || p.category === activeCategory).length;
+    return designProjects.filter(p => (activeCategory === "All" || p.category === activeCategory) && p.subcategory === sub).length;
+  };
 
   const getAspectClass = (ratio?: string) => {
     switch (ratio) {
@@ -42,6 +58,47 @@ export function DesignGallery() {
       default: return "aspect-video text-xs";
     }
   };
+
+  const goToPrev = () => {
+    if (selectedIndex > 0) {
+      const prevProject = filteredProjects[selectedIndex - 1];
+      setSelectedImage(prevProject.image || prevProject.images?.[0] || null);
+      setSelectedIndex(selectedIndex - 1);
+    }
+  };
+
+  const goToNext = () => {
+    if (selectedIndex < filteredProjects.length - 1) {
+      const nextProject = filteredProjects[selectedIndex + 1];
+      setSelectedImage(nextProject.image || nextProject.images?.[0] || null);
+      setSelectedIndex(selectedIndex + 1);
+    }
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!selectedImage) return;
+      
+      switch (e.key) {
+        case 'ArrowLeft':
+          e.preventDefault();
+          goToPrev();
+          break;
+        case 'ArrowRight':
+          e.preventDefault();
+          goToNext();
+          break;
+        case 'Escape':
+          e.preventDefault();
+          setSelectedImage(null);
+          setSelectedIndex(-1);
+          break;
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [selectedImage, selectedIndex, filteredProjects]);
 
   return (
     <section id="design" className="py-20 bg-slate-950 relative overflow-hidden">
@@ -77,8 +134,10 @@ export function DesignGallery() {
                       ? "bg-pink-500 border-pink-500 text-white shadow-lg shadow-pink-500/20" 
                       : "bg-white/5 border-white/10 text-slate-400 hover:bg-white/10"
                   )}
+                  aria-selected={activeCategory === cat}
+                  aria-label={`${cat === "All" ? lang("Tout", "All") : cat} (${getCategoryCount(cat)} ${lang("projets", "projects")})`}
                 >
-                  {cat === "All" ? lang("Tout", "All") : cat}
+                  {cat === "All" ? lang("Tout", "All") : cat} ({getCategoryCount(cat)})
                 </button>
               ))}
             </div>
@@ -95,8 +154,10 @@ export function DesignGallery() {
                       ? "bg-white text-slate-950 border-white"
                       : "bg-white/5 border-white/5 text-slate-500 hover:text-white"
                   )}
+                  aria-selected={activeSubcategory === sub}
+                  aria-label={`${sub === "All" ? lang("Tout", "All") : sub} (${getSubcategoryCount(sub)} ${lang("projets", "projects")})`}
                 >
-                  {sub === "All" ? lang("Tout", "All") : sub}
+                  {sub === "All" ? lang("Tout", "All") : sub} ({getSubcategoryCount(sub)})
                 </button>
               ))}
             </div>
@@ -111,12 +172,16 @@ export function DesignGallery() {
                   "group relative rounded-3xl overflow-hidden border border-white/5 bg-slate-900/50 backdrop-blur-sm transition-all duration-500 hover:border-pink-500/30 hover:scale-[1.02] cursor-pointer",
                   getAspectClass(project.design_aspect_ratio)
                 )}
-                onClick={() => setSelectedImage(project.image || project.images?.[0] || null)}
+                onClick={() => {
+                  setSelectedImage(project.image || project.images?.[0] || null);
+                  setSelectedIndex(index);
+                }}
               >
                 <img 
                   src={project.image || project.images?.[0]} 
                   alt={project.title}
                   className="w-full h-full object-cover grayscale-[0.0] transition-all duration-700 hover:scale-110"
+                  loading="lazy"
                 />
                 
                 {/* Overlay */}
@@ -140,30 +205,56 @@ export function DesignGallery() {
               </div>
             </ScrollAnimation>
           ))}
+
+          {filteredProjects.length === 0 && (
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+              <div className="text-pink-500/20 mb-4">
+                <Palette className="w-16 h-16 mx-auto" />
+              </div>
+              <h3 className="text-white text-xl font-bold mb-2">
+                {lang("Aucun projet trouvé", "No projects found")}
+              </h3>
+              <p className="text-slate-400 text-sm">
+                {lang("Essayez de changer les filtres", "Try changing the filters")}
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Lightbox */}
-      {selectedImage && (
-        <div 
-          className="fixed inset-0 z-[100] bg-slate-950/95 backdrop-blur-xl flex items-center justify-center p-4 sm:p-10 transition-all duration-300"
-          onClick={() => setSelectedImage(null)}
-        >
-          <button 
-            className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-white/10 transition-colors"
-            onClick={() => setSelectedImage(null)}
-          >
+      <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
+        <DialogContent className="max-w-[90vw] max-h-[90vh] p-0 bg-transparent border-none shadow-none">
+          <DialogClose className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-white/10 transition-colors z-10">
             <X className="w-6 h-6" />
-          </button>
+          </DialogClose>
+          
+          {selectedIndex > 0 && (
+            <button
+              onClick={goToPrev}
+              className="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-white/10 transition-colors z-10"
+              aria-label={lang("Image précédente", "Previous image")}
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+          )}
+          
+          {selectedIndex < filteredProjects.length - 1 && (
+            <button
+              onClick={goToNext}
+              className="absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-white/10 transition-colors z-10"
+              aria-label={lang("Image suivante", "Next image")}
+            >
+              <ChevronRight className="w-6 h-6" />
+            </button>
+          )}
           
           <img 
-            src={selectedImage} 
+            src={selectedImage || ''} 
             alt="View" 
             className="max-w-full max-h-full rounded-2xl shadow-2xl border border-white/10 object-contain"
-            onClick={(e) => e.stopPropagation()}
           />
-        </div>
-      )}
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }

@@ -2,6 +2,26 @@ import { Project } from "@/types/project";
 
 export const getProjects = (lang: (fr: string, en: string) => string): Project[] => [
     {
+        id: 14,
+        title: "AfriEnhance AI",
+        category: "Full-Stack",
+        description: lang(
+            "AfriEnhance AI est une plateforme de retouche d'image haute performance propulsée par l'intelligence artificielle (Gemini 2.5 Flash). Conçue avec une esthétique 'Bento Grid' moderne et technique, l'application vise à offrir des outils de restauration et de génération d'images de niveau professionnel avec une simplicité d'utilisation extrême.\n\n✨ Fonctionnalités Clés\n• Moteur IA Multimodal : Utilise les derniers modèles de vision pour analyser et transformer les images.\n• 4 Modes de Traitement Spécialisés :\n  - Restauration : Réduction du bruit (DnCNN) et mise à l'échelle (Upscaling).\n  - Génération : Remplissage génératif et extension d'image via des prompts textuels.\n  - Portrait : Retouche cutanée intelligente et mise en valeur des traits du visage.\n  - Document : Optimisation de la lisibilité et suppression des ombres pour les scans.\n• Contrôles Avancés : Ajustements précis de la luminosité, du contraste, de la netteté, et correction colorimétrique.\n• Système de Filigrane : Ajout de texte personnalisé avec choix de police pour protéger les créations.\n• Historique Local : Accès rapide aux 5 dernières versions traitées.\n\n🛠️ Architecture Technique\n• Frontend : React 18 avec TypeScript pour une robustesse maximale.\n• Design & Styles : Tailwind CSS pour une interface fluide et responsive, avec des animations sophistiquées via Motion.\n• Intégration IA : SDK @google/genai pour les appels directs au modèle gemini-2.5-flash-image.\n• Performance : Architecture SPA (Single Page Application) optimisée avec Vite, incluant un support PWA pour une installation sur mobile.\n\n🎨 Expérience Utilisateur (UX)\n• Interface Bento : Un design segmenté et élégant qui organise les fonctionnalités de manière intuitive.\n• Éditeur Dashboard : Une vue comparative 'Avant/Après' avec des indicateurs de statut en temps réel (ENGINE_V2_ACTIVE, 4K_READY).\n• Workflow Fluide : Système de glisser-déposer (Drag & Drop) et fonctions de réinitialisation (Reset) rapides pour itérer sans friction.\n• Feedback Visuel : Effets de particules (confettis) lors des succès et barres de progression animées.\n\nEn résumé, c'est un outil 'All-in-One' qui combine la puissance brute de l'IA générative avec une interface utilisateur digne des meilleurs logiciels de design actuels.",
+            "AfriEnhance AI is a high-performance image editing platform powered by artificial intelligence (Gemini 2.5 Flash). Designed with a modern and technical 'Bento Grid' aesthetic, the application aims to offer professional-level image restoration and generation tools with extreme ease of use.\n\n✨ Key Features\n• Multimodal AI Engine: Uses the latest vision models to analyze and transform images.\n• 4 Specialized Processing Modes:\n  - Restoration: Noise reduction (DnCNN) and upscaling.\n  - Generation: Generative fill and image extension via text prompts.\n  - Portrait: Intelligent skin retouching and facial feature enhancement.\n  - Document: Readability optimization and shadow removal for scans.\n• Advanced Controls: Precise adjustments of brightness, contrast, sharpness, and color correction.\n• Watermark System: Custom text addition with font choice to protect creations.\n• Local History: Quick access to the last 5 processed versions.\n\n🛠️ Technical Architecture\n• Frontend: React 18 with TypeScript for maximum robustness.\n• Design & Styles: Tailwind CSS for smooth and responsive interface, with sophisticated animations via Motion.\n• AI Integration: @google/genai SDK for direct calls to the gemini-2.5-flash-image model.\n• Performance: SPA (Single Page Application) architecture optimized with Vite, including PWA support for mobile installation.\n\n🎨 User Experience (UX)\n• Bento Interface: A segmented and elegant design that organizes features intuitively.\n• Dashboard Editor: A comparative 'Before/After' view with real-time status indicators (ENGINE_V2_ACTIVE, 4K_READY).\n• Fluid Workflow: Drag & Drop system and quick Reset functions to iterate without friction.\n• Visual Feedback: Particle effects (confetti) on successes and animated progress bars.\n\nIn summary, it's an 'All-in-One' tool that combines the raw power of generative AI with a user interface worthy of the best current design software."
+        ),
+        tags: ["React", "TypeScript", "Tailwind CSS", "Gemini AI", "Vite", "PWA", "Motion"],
+        metrics: { impact: lang("IA Générative", "Generative AI"), type: lang("Outil Créatif", "Creative Tool") },
+        color: "primary",
+        status: lang("Terminé", "Completed"),
+        images: [
+            "/design/AfriEnhance AI/AfriEnhance AI_1.PNG",
+            "/design/AfriEnhance AI/AfriEnhance AI_2.PNG",
+        ],
+        featured: true,
+        ai_model: "Gemini 2.5 Flash",
+        automation_benefit: lang("Retouche d'image automatisée", "Automated image editing"),
+    },
+    {
         id: 1,
         title: lang("Système d'Automatisation SIAB", "SIAB Automation System"),
         category: "Automatisation",
@@ -102,25 +122,6 @@ export const getProjects = (lang: (fr: string, en: string) => string): Project[]
     },
     {
         id: 7,
-        title: "BitoLab Studio",
-        category: "Design Graphique",
-        description: lang(
-            "BitoLab – L'Exception Générative. Suite créative pilotée par l'IA (Gemini 2.5 & 3).",
-            "BitoLab – The Generative Exception. AI-driven creative suite (Gemini 2.5 & 3)."
-        ),
-        tags: ["IA", "Design", "Generative"],
-        metrics: { impact: "R&D", type: "Innovation" },
-        color: "warning",
-        status: lang("En cours", "In Progress"),
-        images: [
-            "/design/bitolab1.PNG",
-        ],
-        ai_model: "Gemini 2.5 & 3",
-        automation_benefit: lang("Génération créative instantanée", "Instant creative generation"),
-        subcategory: lang("IA Art", "AI Art"),
-    },
-    {
-        id: 8,
         title: lang("UNO – Jeu de cartes", "UNO – Card Game"),
         category: "Gaming",
         description: lang(
@@ -134,7 +135,7 @@ export const getProjects = (lang: (fr: string, en: string) => string): Project[]
         url: "https://unog-ame.netlify.app/",
     },
     {
-        id: 9,
+        id: 8,
         title: "Portfolio 3D - Victoria Ahouéfa Camillia",
         category: "Portfolio",
         description: lang(
@@ -149,7 +150,7 @@ export const getProjects = (lang: (fr: string, en: string) => string): Project[]
         url: "https://portfoliovictoire.netlify.app/",
     },
     {
-        id: 10,
+        id: 9,
         title: "Vigilance BJ",
         category: "Full-Stack",
         description: lang(
@@ -165,7 +166,7 @@ export const getProjects = (lang: (fr: string, en: string) => string): Project[]
         automation_benefit: lang("Modération automatique", "Automated moderation"),
     },
     {
-        id: 11,
+        id: 10,
         title: lang("Portefeuille InnovTech", "InnovTech Portfolio"),
         category: "Prototypage",
         description: lang(
@@ -180,7 +181,7 @@ export const getProjects = (lang: (fr: string, en: string) => string): Project[]
         subcategory: "Web UI/UX",
     },
     {
-        id: 12,
+        id: 11,
         title: "Emotilist",
         category: "Web Design",
         description: lang(

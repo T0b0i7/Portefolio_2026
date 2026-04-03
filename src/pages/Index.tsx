@@ -1,8 +1,8 @@
 import { HeroSection } from "@/components/HeroSection";
 import { EvolutionSection } from "@/components/EvolutionSection";
+import { FeaturedProject } from "@/components/FeaturedProject";
 import { ProjectsSection } from "@/components/ProjectsSection";
 import { DesignGallery } from "@/components/DesignGallery";
-import { AILab } from "@/components/AILab";
 import { ServicesSection } from "@/components/ServicesSection";
 import { ContactSection } from "@/components/ContactSection";
 import { EnigmaSection } from "@/components/EnigmaSection";
@@ -24,11 +24,16 @@ const Index = () => {
         {/* Evolution Section (Parcours) */}
         <EvolutionSection />
 
+        {/* Featured Project - AfriEnhance AI */}
+        <FeaturedProject 
+          projectUrl="https://afri-enhance-ai.vercel.app"
+          repoUrl="https://github.com/yourusername/afri-enhance-ai"
+          beforeImage="/design/AfriEnhance AI/AfriEnhance AI_1.PNG"
+          afterImage="/design/AfriEnhance AI/AfriEnhance AI_2.PNG"
+        />
+
         {/* Projects Section (Projets) */}
         <ProjectsSection />
-
-        {/* AI Lab Section */}
-        <AILab />
 
         {/* Design Gallery Section */}
         <DesignGallery />
