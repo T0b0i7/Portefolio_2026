@@ -1,16 +1,16 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useCallback } from "react";
 import { Palette, Eye, Maximize2, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getProjects } from "@/data/projectsData";
 import { cn } from "@/lib/utils";
-// import { useOptimizedImages } from "@/hooks/use-optimized-images";
+import { useOptimizedImages } from "@/hooks/use-optimized-images";
 import { ScrollAnimation } from "./ui/ScrollAnimation";
 import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
 
 export function DesignGallery() {
   const { lang } = useLanguage();
   const allProjects = getProjects(lang);
-  // const { getOptimizedImage } = useOptimizedImages();
+  const { getOptimizedImage } = useOptimizedImages();
   
   const [activeCategory, setActiveCategory] = useState<string>("All");
   const [activeSubcategory, setActiveSubcategory] = useState<string>("All");
@@ -59,21 +59,21 @@ export function DesignGallery() {
     }
   };
 
-  const goToPrev = () => {
+  const goToPrev = useCallback(() => {
     if (selectedIndex > 0) {
       const prevProject = filteredProjects[selectedIndex - 1];
       setSelectedImage(prevProject.image || prevProject.images?.[0] || null);
       setSelectedIndex(selectedIndex - 1);
     }
-  };
+  }, [filteredProjects, selectedIndex]);
 
-  const goToNext = () => {
+  const goToNext = useCallback(() => {
     if (selectedIndex < filteredProjects.length - 1) {
       const nextProject = filteredProjects[selectedIndex + 1];
       setSelectedImage(nextProject.image || nextProject.images?.[0] || null);
       setSelectedIndex(selectedIndex + 1);
     }
-  };
+  }, [filteredProjects, selectedIndex]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -98,7 +98,7 @@ export function DesignGallery() {
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [selectedImage, selectedIndex, filteredProjects]);
+  }, [goToNext, goToPrev, selectedImage]);
 
   return (
     <section id="design" className="py-20 bg-slate-950 relative overflow-hidden">
@@ -167,22 +167,36 @@ export function DesignGallery() {
         <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6 min-h-[400px]">
           {filteredProjects.map((project, index) => (
             <ScrollAnimation key={project.id} animation="fade-up" delay={index * 50}>
+              {(() => {
+                const imagePath = project.image || project.images?.[0];
+                const optimized = imagePath ? getOptimizedImage(imagePath) : null;
+                return (
               <div 
                 className={cn(
                   "group relative rounded-3xl overflow-hidden border border-white/5 bg-slate-900/50 backdrop-blur-sm transition-all duration-500 hover:border-pink-500/30 hover:scale-[1.02] cursor-pointer",
                   getAspectClass(project.design_aspect_ratio)
                 )}
                 onClick={() => {
-                  setSelectedImage(project.image || project.images?.[0] || null);
+                  setSelectedImage((optimized?.webp ?? imagePath) || null);
                   setSelectedIndex(index);
                 }}
               >
-                <img 
-                  src={project.image || project.images?.[0]} 
-                  alt={project.title}
-                  className="w-full h-full object-cover grayscale-[0.0] transition-all duration-700 hover:scale-110"
-                  loading="lazy"
-                />
+                <picture>
+                  {optimized ? (
+                    <source
+                      type="image/webp"
+                      srcSet={optimized.srcset}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                    />
+                  ) : null}
+                  <img
+                    src={optimized?.webp ?? imagePath}
+                    alt={`${project.title} - aperçu design`}
+                    className="w-full h-full object-cover grayscale-[0.0] transition-all duration-700 hover:scale-110"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </picture>
                 
                 {/* Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-end p-6">
@@ -203,6 +217,8 @@ export function DesignGallery() {
                   </div>
                 </div>
               </div>
+                );
+              })()}
             </ScrollAnimation>
           ))}
 

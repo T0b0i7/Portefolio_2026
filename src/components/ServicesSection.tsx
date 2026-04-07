@@ -1,4 +1,4 @@
-import { Code, Server, Palette, Brain, Database } from "lucide-react";
+﻿import { Brain, Code2, PenTool, Sparkles, Video } from "lucide-react";
 import { ScrollAnimation } from "@/components/ui/ScrollAnimation";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -7,51 +7,58 @@ export function ServicesSection() {
 
   const services = [
     {
-      icon: Code,
-      title: lang("Frontend & UX", "Frontend & UX"),
+      icon: Code2,
+      title: lang("Developpement Web & Mobile", "Web & Mobile Development"),
       color: "blue",
       skills: [
-        "React, Next.js",
-        "JavaScript (ES6+), HTML5, CSS3",
-        "Tailwind CSS, Bootstrap",
-        "Figma, Canva",
-        lang("Responsive Design, UI/UX, WCAG", "Responsive Design, UI/UX, WCAG"),
+        "React, Next.js, TypeScript",
+        "Node.js, API REST, Supabase",
+        lang("Applications performantes et responsives", "High-performance responsive apps"),
+        lang("Architecture claire et evolutive", "Clear and scalable architecture"),
       ],
     },
     {
-      icon: Server,
-      title: lang("Backend & API", "Backend & API"),
-      color: "green",
-      skills: [
-        "Node.js, PHP",
-        lang("Laravel, Symfony (En apprentissage)", "Laravel, Symfony (Learning)"),
-        lang("API REST, Architecture MVC", "REST API, MVC Architecture"),
-        lang("JWT, Authentification", "JWT, Authentication"),
-        "MySQL, PostgreSQL, SQL Server",
-      ],
-    },
-    {
-      icon: Database,
-      title: lang("Base de données", "Database"),
+      icon: PenTool,
+      title: lang("Design & Identite Visuelle", "Design & Visual Identity"),
       color: "purple",
       skills: [
-        "MySQL, PostgreSQL, SQL Server",
-        "Supabase (BaaS)",
-        "Airtable",
-        "phpMyAdmin, Adminer",
-        lang("Requêtes complexes, Migrations", "Complex Queries, Migrations"),
+        "UI/UX Design, Wireframes",
+        "Figma, Canva, Prototypage",
+        lang("Design social media et supports marketing", "Social media and marketing creatives"),
+        lang("Direction artistique orientee conversion", "Conversion-focused art direction"),
+      ],
+    },
+    {
+      icon: Video,
+      title: lang("Copywriting & Scripts Video", "Copywriting & Video Scripts"),
+      color: "orange",
+      skills: [
+        lang("Copywriting pour pages de vente", "Copywriting for sales pages"),
+        lang("Scripts Reels, Shorts et YouTube", "Reels, Shorts and YouTube scripts"),
+        lang("Storytelling, hook, CTA", "Storytelling, hook, CTA"),
+        lang("Messages de marque percutants", "High-impact brand messaging"),
       ],
     },
     {
       icon: Brain,
-      title: lang("IA & Automation", "AI & Automation"),
-      color: "orange",
+      title: lang("Consultant IA", "AI Consulting"),
+      color: "green",
       skills: [
-        "ChatGPT, DALL·E, Leonardo AI",
-        "Suno, Runway",
-        "Zapier, Make",
-        "Python Scripts",
-        "Webflow, Notion, Uizard",
+        lang("Audit des besoins IA", "AI needs assessment"),
+        lang("Strategie d integration IA", "AI integration strategy"),
+        lang("Automatisation des workflows", "Workflow automation"),
+        lang("Optimisation productivite et couts", "Productivity and cost optimization"),
+      ],
+    },
+    {
+      icon: Sparkles,
+      title: lang("Creation Image & Video IA", "AI Image & Video Creation"),
+      color: "pink",
+      skills: [
+        lang("Generation d images optimisee par IA", "AI-optimized image generation"),
+        lang("Creation de videos optimisees avec l IA", "AI-optimized video creation"),
+        lang("Prompts avances et direction creative", "Advanced prompting and creative direction"),
+        lang("Contenus visuels pour ads et reseaux", "Visual assets for ads and social media"),
       ],
     },
   ];
@@ -59,74 +66,71 @@ export function ServicesSection() {
   const colors = {
     blue: {
       bg: "bg-blue-500/10",
-      text: "text-blue-500",
+      text: "text-blue-400",
       border: "border-t-blue-500",
-      dot: "bg-blue-500",
+      badgeBorder: "border-blue-500/25",
     },
     green: {
-      bg: "bg-green-500/10",
-      text: "text-green-500",
-      border: "border-t-green-500",
-      dot: "bg-green-500",
+      bg: "bg-emerald-500/10",
+      text: "text-emerald-400",
+      border: "border-t-emerald-500",
+      badgeBorder: "border-emerald-500/25",
     },
     purple: {
-      bg: "bg-purple-500/10",
-      text: "text-purple-500",
-      border: "border-t-purple-500",
-      dot: "bg-purple-500",
+      bg: "bg-violet-500/10",
+      text: "text-violet-300",
+      border: "border-t-violet-500",
+      badgeBorder: "border-violet-500/25",
     },
     orange: {
       bg: "bg-orange-500/10",
-      text: "text-orange-500",
+      text: "text-orange-300",
       border: "border-t-orange-500",
-      dot: "bg-orange-500",
+      badgeBorder: "border-orange-500/25",
     },
-  };
+    pink: {
+      bg: "bg-pink-500/10",
+      text: "text-pink-300",
+      border: "border-t-pink-500",
+      badgeBorder: "border-pink-500/25",
+    },
+  } as const;
 
   return (
-    <section id="services" className="py-16 sm:py-20 md:py-24 bg-brand-dark relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative">
-        {/* Section Header */}
+    <section id="services" className="relative bg-slate-950 py-12 sm:py-14 md:py-16">
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6">
         <ScrollAnimation>
-          <div className="text-center mb-10 sm:mb-12 md:mb-16">
-            <span className="text-brand-accent font-bold tracking-[0.2em] text-xs sm:text-sm uppercase">
+          <div className="mb-8 text-center sm:mb-10 md:mb-12">
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-accent sm:text-sm">
               {lang("Mon Expertise", "My Expertise")}
             </span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mt-3 sm:mt-4">
-              {lang("Compétences &", "Skills &")} <span className="text-brand-accent">{lang("Services", "Services")}</span>
+            <h2 className="mt-3 text-3xl font-extrabold sm:mt-4 sm:text-4xl md:text-5xl">
+              {lang("Competences &", "Skills &")} <span className="text-brand-accent">{lang("Services", "Services")}</span>
             </h2>
           </div>
         </ScrollAnimation>
 
-        {/* Services Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-16">
+        <div className="mb-10 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 xl:mb-12 xl:grid-cols-5">
           {services.map((service, index) => {
             const color = colors[service.color as keyof typeof colors];
             return (
-              <ScrollAnimation
-                key={service.title}
-                animation="fade-up"
-                delay={index * 100}
-              >
+              <ScrollAnimation key={service.title} animation="fade-up" delay={index * 80}>
                 <div
-                  className={`glass-card p-6 rounded-3xl border-t-4 ${color.border} transition-all duration-300 hover:-translate-y-2 hover:shadow-xl h-full flex flex-col`}
+                  className={`glass-card flex h-full flex-col rounded-2xl border-t-4 p-5 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl ${color.border}`}
                 >
-                  {/* Icon */}
                   <div
-                    className={`w-12 h-12 ${color.bg} rounded-xl flex items-center justify-center ${color.text} mb-4 transition-transform duration-300 hover:scale-110`}
+                    className={`mb-3 flex h-11 w-11 items-center justify-center rounded-xl transition-transform duration-300 hover:scale-110 ${color.bg} ${color.text}`}
                   >
-                    <service.icon className="w-6 h-6" />
+                    <service.icon className="h-6 w-6" />
                   </div>
 
-                  {/* Title */}
-                  <h4 className="font-bold text-lg mb-4">{service.title}</h4>
+                  <h4 className="mb-3 text-lg font-bold">{service.title}</h4>
 
-                  {/* Skills as Badges */}
-                  <div className="flex flex-wrap gap-2 mt-auto">
+                  <div className="mt-auto flex flex-wrap gap-2">
                     {service.skills.map((skill) => (
-                      <span 
-                        key={skill} 
-                        className={`px-2 py-1 ${color.bg} ${color.text} border border-${service.color}-500/10 rounded-md text-[10px] font-bold uppercase tracking-tight`}
+                      <span
+                        key={skill}
+                        className={`rounded-md border px-2 py-1 text-[10px] font-bold uppercase tracking-tight ${color.bg} ${color.text} ${color.badgeBorder}`}
                       >
                         {skill}
                       </span>
@@ -138,43 +142,41 @@ export function ServicesSection() {
           })}
         </div>
 
-        {/* Statistics / Metrics Section */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
+        <div className="mb-10 grid grid-cols-2 gap-4 md:grid-cols-4 xl:mb-12">
           {[
-            { label: lang("Projets Livrés", "Projects Delivered"), value: "30+", sub: "Success" },
-            { label: lang("Clients Heureux", "Happy Clients"), value: "100%", sub: "Reviews" },
-            { label: lang("Années Expérience", "Years Experience"), value: "4+", sub: "Dev" },
-            { label: lang("Cafés Consommés", "Coffee Drunk"), value: "800+", sub: "Energy" },
+            { label: lang("Projets livres", "Projects Delivered"), value: "30+", sub: "Build" },
+            { label: lang("Scripts et contenus", "Scripts and Content"), value: "120+", sub: "Media" },
+            { label: lang("Automatisations IA", "AI Automations"), value: "40+", sub: "Workflow" },
+            { label: lang("Temps de reponse", "Response Time"), value: "24h", sub: "Contact" },
           ].map((stat, i) => (
-            <ScrollAnimation key={i} delay={i * 100} animation="fade-up">
-              <div className="bg-white/5 border border-white/10 rounded-2xl p-6 text-center hover:border-brand-accent/50 transition-colors group">
-                <div className="text-3xl font-black text-white mb-1 group-hover:scale-110 transition-transform">{stat.value}</div>
-                <div className="text-[10px] text-brand-accent font-bold uppercase tracking-widest mb-1">{stat.label}</div>
-                <div className="text-[8px] text-slate-500 uppercase">{stat.sub}</div>
+            <ScrollAnimation key={stat.label} delay={i * 100} animation="fade-up">
+              <div className="group rounded-2xl border border-white/10 bg-white/5 p-4 text-center transition-colors hover:border-brand-accent/50 sm:p-5">
+                <div className="mb-1 text-2xl font-black text-white transition-transform group-hover:scale-110 sm:text-3xl">{stat.value}</div>
+                <div className="mb-1 text-[10px] font-bold uppercase tracking-widest text-brand-accent">{stat.label}</div>
+                <div className="text-[8px] uppercase text-slate-500">{stat.sub}</div>
               </div>
             </ScrollAnimation>
           ))}
         </div>
 
-        {/* CTA Banner */}
         <ScrollAnimation delay={400}>
-          <div className="bg-gradient-to-r from-brand-accent/20 to-blue-600/20 border border-brand-accent/30 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-8">
+          <div className="flex flex-col items-center justify-between gap-5 rounded-2xl border border-brand-accent/30 bg-gradient-to-r from-brand-accent/20 to-blue-600/20 p-5 sm:gap-6 sm:rounded-3xl sm:p-6 md:flex-row md:p-8">
             <div className="text-center md:text-left">
-              <h3 className="text-2xl sm:text-3xl font-bold mb-2">
-                {lang("Prêt à donner vie à votre projet ?", "Ready to bring your project to life?")}
+              <h3 className="mb-2 text-2xl font-bold sm:text-3xl">
+                {lang("Pret a booster votre projet ?", "Ready to boost your project?")}
               </h3>
-              <p className="text-muted-foreground text-sm sm:text-base">
+              <p className="text-sm text-muted-foreground sm:text-base">
                 {lang(
-                  "Disponible pour de nouvelles opportunités en freelance ou CDI.",
-                  "Available for new freelance or full-time opportunities."
+                  "Design, contenu et IA reunis pour livrer un rendu pro et performant.",
+                  "Design, content, and AI combined to deliver a professional high-performance result."
                 )}
               </p>
             </div>
             <a
               href="#contact"
-              className="bg-brand-accent whitespace-nowrap px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold hover:bg-blue-600 transition-all duration-300 shadow-xl shadow-brand-accent/20 hover:shadow-2xl hover:scale-105 w-full sm:w-auto text-center uppercase tracking-wider text-sm"
+              className="w-full whitespace-nowrap rounded-xl bg-brand-accent px-6 py-3 text-center text-sm font-bold uppercase tracking-wider shadow-xl shadow-brand-accent/20 transition-all duration-300 hover:scale-105 hover:bg-blue-600 hover:shadow-2xl sm:w-auto sm:px-8 sm:py-4"
             >
-              {lang("Démarrer un projet", "Start a project")}
+              {lang("Demarrer un projet", "Start a project")}
             </a>
           </div>
         </ScrollAnimation>
@@ -182,4 +184,3 @@ export function ServicesSection() {
     </section>
   );
 }
-

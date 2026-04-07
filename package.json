@@ -1,6 +1,6 @@
 {
   "name": "portfolio-os",
-  "description": "Le Système d'Exploitation du Portfolio Authentique - Une plateforme next-gen permettant de voir 10 designs différents en temps réel",
+  "description": "Portfolio professionnel React/TypeScript avec projets et etudes de cas",
   "keywords": [
     "portfolio",
     "react",
@@ -97,3 +97,4 @@
     "vite": "^5.4.19"
   }
 }
+

@@ -1,8 +1,20 @@
-import { useCallback, useRef, useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { readTrackingConsent } from "@/hooks/use-tracking-consent";
+
+interface GeoInfo {
+  city: string;
+  country: string;
+  device: "Mobile" | "Desktop";
+}
+
+const GEO_CACHE_KEY = "portfolio_geo_info";
+let geoInfoPromise: Promise<GeoInfo> | null = null;
 
 // Generate a stable session ID for the current browser tab
 function getSessionId(): string {
+  if (typeof window === "undefined") return "server-session";
+
   const key = "portfolio_session_id";
   let id = sessionStorage.getItem(key);
   if (!id) {
@@ -12,28 +24,77 @@ function getSessionId(): string {
   return id;
 }
 
+async function fetchGeoInfo(): Promise<GeoInfo> {
+  if (typeof window === "undefined") {
+    return { city: "Unknown", country: "Unknown", device: "Desktop" };
+  }
+
+  const fromSession = sessionStorage.getItem(GEO_CACHE_KEY);
+  if (fromSession) {
+    try {
+      return JSON.parse(fromSession) as GeoInfo;
+    } catch {
+      // ignore malformed cache
+    }
+  }
+
+  if (!geoInfoPromise) {
+    geoInfoPromise = (async () => {
+      const controller = new AbortController();
+      const timeout = window.setTimeout(() => controller.abort(), 1600);
+
+      try {
+        const response = await fetch("https://ipapi.co/json/", {
+          signal: controller.signal,
+        });
+
+        if (!response.ok) {
+          throw new Error("geo fetch failed");
+        }
+
+        const data = await response.json();
+        const info: GeoInfo = {
+          city: data.city || "Unknown",
+          country: data.country_name || "Unknown",
+          device: /Mobi|Android/i.test(navigator.userAgent) ? "Mobile" : "Desktop",
+        };
+
+        sessionStorage.setItem(GEO_CACHE_KEY, JSON.stringify(info));
+        return info;
+      } catch {
+        return {
+          city: "Unknown",
+          country: "Unknown",
+          device: /Mobi|Android/i.test(navigator.userAgent) ? "Mobile" : "Desktop",
+        };
+      } finally {
+        clearTimeout(timeout);
+      }
+    })();
+  }
+
+  return geoInfoPromise;
+}
+
 export function useTracking() {
   const sessionId = useRef(getSessionId());
+  const [canTrack, setCanTrack] = useState(() => readTrackingConsent() === "granted");
 
-  // Function to get geo info via free API
-  const getGeoInfo = async () => {
-    try {
-      const response = await fetch('https://ipapi.co/json/');
-      const data = await response.json();
-      return {
-        city: data.city,
-        country: data.country_name,
-        device: /Mobi|Android/i.test(navigator.userAgent) ? "Mobile" : "Desktop"
-      };
-    } catch {
-      return { city: "Unknown", country: "Unknown", device: "Desktop" };
-    }
-  };
+  useEffect(() => {
+    const onConsentChange = () => {
+      setCanTrack(readTrackingConsent() === "granted");
+    };
+
+    window.addEventListener("portfolio:tracking-consent-change", onConsentChange);
+    return () => window.removeEventListener("portfolio:tracking-consent-change", onConsentChange);
+  }, []);
 
   const trackEvent = useCallback(
     async (eventName: string, metadata?: Record<string, unknown>) => {
+      if (!canTrack) return;
+
       try {
-        const geo = await getGeoInfo();
+        const geo = await fetchGeoInfo();
         await supabase.from("visitor_events").insert({
           event_type: "custom",
           event_name: eventName,
@@ -44,22 +105,27 @@ export function useTracking() {
         // Don't crash the app if tracking fails
       }
     },
-    []
+    [canTrack]
   );
 
-  const trackPageView = useCallback(async (pageName: string) => {
-    try {
-      const geo = await getGeoInfo();
-      await supabase.from("visitor_events").insert({
-        event_type: "page_view",
-        event_name: pageName,
-        metadata: geo,
-        session_id: sessionId.current,
-      });
-    } catch {
-      // Silently fail
-    }
-  }, []);
+  const trackPageView = useCallback(
+    async (pageName: string) => {
+      if (!canTrack) return;
+
+      try {
+        const geo = await fetchGeoInfo();
+        await supabase.from("visitor_events").insert({
+          event_type: "page_view",
+          event_name: pageName,
+          metadata: geo,
+          session_id: sessionId.current,
+        });
+      } catch {
+        // Silently fail
+      }
+    },
+    [canTrack]
+  );
 
   return { trackEvent, trackPageView };
 }

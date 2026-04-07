@@ -58,10 +58,10 @@ export function EnigmaSection() {
                         <span className="tracking-widest uppercase">{lang("Mystery Level: Critical", "Mystery Level: Critical")}</span>
                     </div>
 
-                    <h1 className="text-5xl sm:text-6xl font-black leading-tight mb-8 tracking-tighter text-white uppercase">
+                    <h2 className="text-5xl sm:text-6xl font-black leading-tight mb-8 tracking-tighter text-white uppercase">
                         {lang("Le Mystère de", "The Mystery of")} <br />
                         <span className="text-blue-500">{lang("l'Architecture", "Architecture")}</span>
-                    </h1>
+                    </h2>
 
                     <div className="flex flex-wrap gap-2 mb-8">
                         <button onClick={() => { setActiveTab("triangle"); trackEvent("enigma-tab", { tab: "triangle" }); }} className={cn("px-4 py-2 rounded-lg text-xs font-bold border transition-all uppercase tracking-widest", activeTab === "triangle" ? "bg-blue-600 border-blue-400 text-white" : "bg-white/5 border-white/10 text-slate-500")}>

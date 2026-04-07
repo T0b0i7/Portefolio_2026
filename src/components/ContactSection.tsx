@@ -9,6 +9,14 @@ import { ScrollAnimation } from "@/components/ui/ScrollAnimation";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/lib/supabase";
 
+declare global {
+  interface Window {
+    umami?: {
+      track: (eventName: string, payload?: Record<string, unknown>) => void;
+    };
+  }
+}
+
 export function ContactSection() {
   const { lang } = useLanguage();
   const [formData, setFormData] = useState({
@@ -16,8 +24,10 @@ export function ContactSection() {
     email: "",
     subject: "",
     message: "",
+    website: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const MIN_SECONDS_BETWEEN_SUBMISSIONS = 45;
 
   const contactInfo = [
     {
@@ -47,7 +57,7 @@ export function ContactSection() {
     },
     {
       icon: Github,
-      href: "https://github.com/ton-T0b0i7/",
+      href: "https://github.com/T0b0i7/",
     },
   ];
 
@@ -56,26 +66,64 @@ export function ContactSection() {
     setIsSubmitting(true);
 
     try {
+      if (formData.website.trim()) {
+        setIsSubmitting(false);
+        return;
+      }
+
+      const now = Date.now();
+      const lastSubmission = Number(localStorage.getItem("contact_last_submit_at") ?? "0");
+      if (lastSubmission && now - lastSubmission < MIN_SECONDS_BETWEEN_SUBMISSIONS * 1000) {
+        toast.error(lang("Envoi trop rapproché", "Too many requests"), {
+          description: lang(
+            `Merci de patienter ${MIN_SECONDS_BETWEEN_SUBMISSIONS} secondes avant un nouvel envoi.`,
+            `Please wait ${MIN_SECONDS_BETWEEN_SUBMISSIONS} seconds before sending another message.`
+          ),
+        });
+        setIsSubmitting(false);
+        return;
+      }
+
+      const sanitizedData = {
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        subject: formData.subject.trim(),
+        message: formData.message.trim(),
+      };
+
+      if (sanitizedData.message.length < 20) {
+        toast.error(lang("Message trop court", "Message too short"), {
+          description: lang(
+            "Ajoutez plus de contexte pour obtenir une réponse utile.",
+            "Please add more context to get a useful response."
+          ),
+        });
+        setIsSubmitting(false);
+        return;
+      }
+
       const { error } = await supabase.from("contact_messages").insert([
         {
-          name: formData.name,
-          email: formData.email,
-          subject: formData.subject,
-          message: formData.message,
+          name: sanitizedData.name,
+          email: sanitizedData.email,
+          subject: sanitizedData.subject,
+          message: sanitizedData.message,
         },
       ]);
 
       if (error) throw error;
+      localStorage.setItem("contact_last_submit_at", String(now));
 
-      // @ts-ignore
-      if (window.umami) window.umami.track("contact-form-submit", { subject: formData.subject });
+      if (window.umami) {
+        window.umami.track("contact-form-submit", { subject: sanitizedData.subject });
+      }
 
       toast.success(lang("Message envoyé avec succès!", "Message sent successfully!"), {
         description: lang("Je vous répondrai dans les plus brefs délais.", "I will get back to you as soon as possible."),
       });
 
-      setFormData({ name: "", email: "", subject: "", message: "" });
-    } catch (error: any) {
+      setFormData({ name: "", email: "", subject: "", message: "", website: "" });
+    } catch (error: unknown) {
       console.error("Error submitting contact form:", error);
       toast.error(lang("Erreur lors de l'envoi", "Error while sending"), {
         description: lang("Veuillez réessayer plus tard.", "Please try again later."),
@@ -95,19 +143,19 @@ export function ContactSection() {
   };
 
   return (
-    <section id="contact" className="py-16 sm:py-20 md:py-24 bg-brand-dark">
+    <section id="contact" className="py-12 sm:py-14 md:py-16 bg-slate-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="grid lg:grid-cols-2 gap-16">
+        <div className="grid lg:grid-cols-2 gap-10 sm:gap-12">
           {/* Contact Info */}
           <ScrollAnimation>
             <div>
               <span className="text-brand-accent font-bold tracking-[0.2em] text-sm uppercase">
                 Contact
               </span>
-              <h2 className="text-4xl md:text-5xl font-extrabold mt-4 mb-8 uppercase">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mt-3 mb-6 uppercase">
                 {lang("Commençons une", "Start a")} <span className="text-brand-accent">{lang("Collaboration", "Collaboration")}</span>
               </h2>
-              <p className="text-muted-foreground mb-12 max-w-md">
+              <p className="text-muted-foreground mb-8 max-w-md">
                 {lang(
                   "Une idée ? Un projet ? Je suis à votre écoute pour concrétiser vos besoins technologiques.",
                   "An idea? A project? I am at your service to materialize your technological needs."
@@ -146,7 +194,7 @@ export function ContactSection() {
               </div>
 
               {/* Social Links */}
-              <div className="mt-12">
+              <div className="mt-8">
                 <p className="text-sm font-bold text-muted-foreground mb-4">
                   {lang("SUIVEZ-MOI", "FOLLOW ME")}
                 </p>
@@ -169,9 +217,19 @@ export function ContactSection() {
 
           {/* Contact Form */}
           <ScrollAnimation delay={200}>
-            <div className="glass-card p-6 sm:p-8 md:p-10 rounded-3xl border border-white/5">
-              <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            <div className="glass-card p-5 sm:p-6 md:p-7 rounded-3xl border border-white/5">
+              <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+                  <input
+                    type="text"
+                    name="website"
+                    value={formData.website}
+                    onChange={handleChange}
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                    className="hidden"
+                  />
                   <div className="space-y-2">
                     <Label htmlFor="name" className="text-[10px] sm:text-xs font-bold uppercase text-muted-foreground tracking-widest">
                       {lang("Nom complet", "Full Name")}
@@ -182,6 +240,7 @@ export function ContactSection() {
                       value={formData.name}
                       onChange={handleChange}
                       placeholder="John Doe"
+                      maxLength={80}
                       required
                       className="bg-brand-dark/50 border-white/10 rounded-xl px-4 py-3 sm:px-5 sm:py-4 focus:border-brand-accent focus:ring-0 transition-all placeholder:text-slate-600 text-sm sm:text-base"
                     />
@@ -197,6 +256,7 @@ export function ContactSection() {
                       value={formData.email}
                       onChange={handleChange}
                       placeholder="john@example.com"
+                      maxLength={120}
                       required
                       className="bg-brand-dark/50 border-white/10 rounded-xl px-4 py-3 sm:px-5 sm:py-4 focus:border-brand-accent focus:ring-0 transition-all placeholder:text-slate-600 text-sm sm:text-base"
                     />
@@ -212,6 +272,7 @@ export function ContactSection() {
                     value={formData.subject}
                     onChange={handleChange}
                     placeholder={lang("Collaboration Web", "Web Collaboration")}
+                    maxLength={120}
                     required
                     className="bg-brand-dark/50 border-white/10 rounded-xl px-4 py-3 sm:px-5 sm:py-4 focus:border-brand-accent focus:ring-0 transition-all placeholder:text-slate-600 text-sm sm:text-base"
                   />
@@ -227,6 +288,8 @@ export function ContactSection() {
                     onChange={handleChange}
                     placeholder={lang("Décrivez votre projet...", "Describe your project...")}
                     rows={4}
+                    minLength={20}
+                    maxLength={2000}
                     required
                     className="bg-brand-dark/50 border-white/10 rounded-xl px-4 py-3 sm:px-5 sm:py-4 focus:border-brand-accent focus:ring-0 transition-all placeholder:text-slate-600 resize-none text-sm sm:text-base"
                   />
@@ -234,7 +297,7 @@ export function ContactSection() {
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-brand-accent py-3 sm:py-5 rounded-xl font-bold hover:bg-blue-600 transition-all duration-300 shadow-xl shadow-brand-accent/20 hover:shadow-2xl flex items-center justify-center gap-2 sm:gap-3 text-sm sm:text-base uppercase tracking-widest"
+                  className="w-full bg-brand-accent py-3 sm:py-4 rounded-xl font-bold hover:bg-blue-600 transition-all duration-300 shadow-xl shadow-brand-accent/20 hover:shadow-2xl flex items-center justify-center gap-2 sm:gap-3 text-sm sm:text-base uppercase tracking-widest"
                 >
                   {isSubmitting ? lang("Envoi en cours...", "Sending...") : lang("Envoyer le message", "Send message")}
                   <Send className="w-4 h-4 sm:w-5 sm:h-5" />

@@ -1,7 +1,5 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Menu, X, Sun, Moon, Terminal, Globe, Layout, Cpu, Briefcase, Mail, ChevronDown } from "lucide-react";
-import { useTheme } from "@/contexts/ThemeContext";
+import { useState, useEffect, useMemo } from "react";
+import { Menu, X, Terminal, Globe, Layout, Cpu, Briefcase, Mail, ChevronDown, UserRound } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
 import { useTracking } from "@/hooks/useTracking";
@@ -10,35 +8,20 @@ export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("#accueil");
-  const { theme, toggleTheme } = useTheme();
   const { language, toggleLanguage, lang } = useLanguage();
   const { trackEvent } = useTracking();
 
-  const navLinks = [
-    { href: "#accueil", label: lang("Accueil", "Home"), icon: Layout },
-    {
-      label: lang("Parcours", "Timeline"),
-      href: "#parcours",
-      icon: Cpu
-    },
-    {
-      label: lang("Projets", "Projects"),
-      href: "#projects",
-      icon: Briefcase
-    },
-    {
-      label: lang("Lab IA", "AI Lab"),
-      href: "#ai-lab",
-      icon: Terminal
-    },
-    {
-      label: lang("Design", "Design"),
-      href: "#design",
-      icon: Layout
-    },
-    { href: "#services", label: lang("Services", "Services"), icon: Globe },
-    { href: "#contact", label: lang("Contact", "Contact"), icon: Mail },
-  ];
+  const navLinks = useMemo(
+    () => [
+      { href: "#accueil", label: lang("Accueil", "Home"), icon: Layout },
+      { href: "#apropos", label: lang("À propos", "About"), icon: UserRound },
+      { label: lang("Parcours", "Timeline"), href: "#parcours", icon: Cpu },
+      { label: lang("Projets", "Projects"), href: "#projects", icon: Briefcase },
+      { href: "#services", label: lang("Services", "Services"), icon: Globe },
+      { href: "#contact", label: lang("Contact", "Contact"), icon: Mail },
+    ],
+    [lang]
+  );
 
   useEffect(() => {
     const handleScroll = () => {
@@ -56,7 +39,7 @@ export function Navigation() {
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [navLinks]);
 
   return (
     <header
@@ -90,8 +73,8 @@ export function Navigation() {
 
             <div className="flex flex-col">
               <div className="flex items-center gap-1.5 leading-none">
-                <span className="text-lg font-black tracking-tight text-white uppercase sm:text-xl">Eucher</span>
-                <span className="text-lg font-light tracking-widest text-brand-accent uppercase sm:text-xl opacity-80">Abatti</span>
+                <span className="text-lg font-black tracking-tight text-white uppercase sm:text-xl">Tobi</span>
+                <span className="text-lg font-light tracking-widest text-brand-accent uppercase sm:text-xl opacity-80">Dev</span>
               </div>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <span className="px-1.5 py-0.5 rounded-md bg-white/5 text-[9px] font-mono text-slate-400 border border-white/5">

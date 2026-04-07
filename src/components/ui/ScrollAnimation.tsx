@@ -5,66 +5,79 @@ interface ScrollAnimationProps {
     className?: string;
     animation?: "fade-up" | "fade-left" | "fade-right" | "scale-up";
     delay?: number;
+    once?: boolean;
 }
 
 export function ScrollAnimation({
     children,
     className = "",
     animation = "fade-up",
-    delay = 0
+    delay = 0,
+    once = true
 }: ScrollAnimationProps) {
     const [isVisible, setIsVisible] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        const node = ref.current;
+        if (!node) return;
+
         const observer = new IntersectionObserver(
             ([entry]) => {
                 if (entry.isIntersecting) {
-                    setTimeout(() => {
-                        setIsVisible(true);
-                    }, delay);
-                    observer.unobserve(entry.target);
+                    setIsVisible(true);
+                    if (once) {
+                        observer.unobserve(entry.target);
+                    }
+                } else if (!once) {
+                    setIsVisible(false);
                 }
             },
             {
-                threshold: 0.1,
-                rootMargin: "0px 0px -50px 0px"
+                threshold: 0.15,
+                rootMargin: "0px 0px -12% 0px"
             }
         );
 
-        if (ref.current) {
-            observer.observe(ref.current);
-        }
+        observer.observe(node);
 
         return () => {
-            if (ref.current) {
-                observer.unobserve(ref.current);
-            }
+            observer.disconnect();
         };
-    }, [delay]);
+    }, [once]);
 
-    const getAnimationClass = () => {
-        if (!isVisible) {
-            switch (animation) {
-                case "fade-up":
-                    return "opacity-0 translate-y-10";
-                case "fade-left":
-                    return "opacity-0 -translate-x-10";
-                case "fade-right":
-                    return "opacity-0 translate-x-10";
-                case "scale-up":
-                    return "opacity-0 scale-95";
-                default:
-                    return "opacity-0 translate-y-10";
-            }
+    const getHiddenState = () => {
+        switch (animation) {
+            case "fade-up":
+                return { opacity: 0, transform: "translate3d(0, 32px, 0) scale(0.99)", filter: "blur(6px)" };
+            case "fade-left":
+                return { opacity: 0, transform: "translate3d(-28px, 0, 0) scale(0.99)", filter: "blur(6px)" };
+            case "fade-right":
+                return { opacity: 0, transform: "translate3d(28px, 0, 0) scale(0.99)", filter: "blur(6px)" };
+            case "scale-up":
+                return { opacity: 0, transform: "translate3d(0, 20px, 0) scale(0.94)", filter: "blur(6px)" };
+            default:
+                return { opacity: 0, transform: "translate3d(0, 32px, 0) scale(0.99)", filter: "blur(6px)" };
         }
-        return "opacity-100 translate-y-0 translate-x-0 scale-100";
+    };
+
+    const visibleState = {
+        opacity: 1,
+        transform: "translate3d(0, 0, 0) scale(1)",
+        filter: "blur(0px)",
     };
 
     return (
         <div
             ref={ref}
-            className={`transition-all duration-700 ease-out ${getAnimationClass()} ${className}`}
+            className={`will-change-transform ${className}`}
+            style={{
+                ...(isVisible ? visibleState : getHiddenState()),
+                transitionProperty: "opacity, transform, filter",
+                transitionDuration: "760ms",
+                transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
+                transitionDelay: `${delay}ms`,
+            }}
         >
             {children}
         </div>
@@ -77,6 +90,7 @@ export function useScrollAnimation(threshold = 0.1) {
     const ref = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        const node = ref.current;
         const observer = new IntersectionObserver(
             ([entry]) => {
                 if (entry.isIntersecting) {
@@ -87,13 +101,13 @@ export function useScrollAnimation(threshold = 0.1) {
             { threshold }
         );
 
-        if (ref.current) {
-            observer.observe(ref.current);
+        if (node) {
+            observer.observe(node);
         }
 
         return () => {
-            if (ref.current) {
-                observer.unobserve(ref.current);
+            if (node) {
+                observer.unobserve(node);
             }
         };
     }, [threshold]);

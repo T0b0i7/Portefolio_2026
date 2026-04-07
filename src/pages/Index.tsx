@@ -1,15 +1,14 @@
 import { HeroSection } from "@/components/HeroSection";
+import { AboutSection } from "@/components/AboutSection";
 import { EvolutionSection } from "@/components/EvolutionSection";
 import { FeaturedProject } from "@/components/FeaturedProject";
 import { ProjectsSection } from "@/components/ProjectsSection";
-import { DesignGallery } from "@/components/DesignGallery";
 import { ServicesSection } from "@/components/ServicesSection";
 import { ContactSection } from "@/components/ContactSection";
-import { EnigmaSection } from "@/components/EnigmaSection";
 import { Footer } from "@/components/Footer";
 import { Navigation } from "@/components/Navigation";
+import { WhatsAppFloatButton } from "@/components/WhatsAppFloatButton";
 import { ThemeProvider } from "@/contexts/ThemeContext";
-import { AdminAccessHub } from "@/components/AdminAccessHub";
 
 const Index = () => {
   return (
@@ -18,40 +17,40 @@ const Index = () => {
         {/* Navigation */}
         <Navigation />
 
-        {/* Hero Section */}
-        <HeroSection />
+        <main id="main-content">
+          {/* Hero Section */}
+          <HeroSection />
 
-        {/* Evolution Section (Parcours) */}
-        <EvolutionSection />
+          {/* About Section */}
+          <AboutSection />
 
-        {/* Featured Project - AfriEnhance AI */}
-        <FeaturedProject 
-          projectUrl="https://afri-enhance-ai.vercel.app"
-          repoUrl="https://github.com/yourusername/afri-enhance-ai"
-          beforeImage="/design/AfriEnhance AI/AfriEnhance AI_1.PNG"
-          afterImage="/design/AfriEnhance AI/AfriEnhance AI_2.PNG"
-        />
+          {/* Evolution Section (Parcours) */}
+          <EvolutionSection />
 
-        {/* Projects Section (Projets) */}
-        <ProjectsSection />
+          {/* Featured Project - AfriEnhance AI */}
+          <FeaturedProject
+            projectUrl="https://afri-enhance-ai.vercel.app"
+            repoUrl=""
+            beforeImage="/design/AfriEnhance AI/AfriEnhance AI_1.PNG"
+            afterImage="/design/AfriEnhance AI/AfriEnhance AI_2.PNG"
+          />
 
-        {/* Design Gallery Section */}
-        <DesignGallery />
+          {/* Projects Section (Projets) */}
+          <ProjectsSection />
 
-        {/* Services / Expertise Section */}
-        <ServicesSection />
+          {/* Services / Expertise Section */}
+          <ServicesSection />
 
-        {/* Contact Section */}
-        <ContactSection />
-
-        {/* Enigma Section - The Suspended Question */}
-        <EnigmaSection />
+          {/* Contact Section */}
+          <ContactSection />
+        </main>
 
         {/* Footer */}
-        <Footer />
+        <div className="mt-8 sm:mt-10">
+          <Footer />
+        </div>
 
-        {/* Admin Hub Access */}
-        <AdminAccessHub />
+        <WhatsAppFloatButton />
       </div>
     </ThemeProvider>
   );

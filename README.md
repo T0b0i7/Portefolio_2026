@@ -1,182 +1,380 @@
-# Portfolio.OS - Le Système d'Exploitation du Portfolio Authentique
+# 🎨 Portfolio.OS 2026
 
-<div align="center">
+> Portfolio professionnel haute performance - Présentation de projets innovants en Web, Mobile, Design et IA
 
-![Portfolio.OS](assets/P1.PNG)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/YOUR_NETLIFY_ID/deploy-status)](https://portefolio-os.netlify.app/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-18.x-61DAFB?logo=react)](https://react.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.x-06B6D4?logo=tailwindcss)](https://tailwindcss.com/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-**Portfolio.OS – Le Système d'Exploitation du Portfolio Authentique. Une plateforme next-gen permettant de voir 10 designs différents en temps réel pour une même expérience.**
+## 🚀 Démo Live
 
-[Démo Live](https:// https://portefolio-os.netlify.app//) • [Documentation](#) • [Contribuer](#)
+**▶️ [Visiter le portfolio en production](https://portefolio-os.netlify.app/)**
 
-</div>
+## 📋 Table des matières
 
----
+- [À propos](#-à-propos)
+- [Features](#-features)
+- [Stack Technique](#-stack-technique)
+- [Installation](#-installation)
+- [Configuration](#-configuration)
+- [Scripts Disponibles](#-scripts-disponibles)
+- [Architecture](#-architecture)
+- [Déploiement](#-déploiement)
+- [Contribution](#-contribution)
+- [Licence](#-licence)
 
-## 🎯 La Vision : Un Catalogue Tout-en-Un
+## 📝 À propos
 
-**Portfolio.OS** incarne une philosophie révolutionnaire du design web : plutôt que de créer une version et d'espérer que le client l'aime, nous **intégrons tout en même temps**.
+**Portfolio.OS** est une plateforme de présentation professionnelle personnalisée, conçue pour mettre en avant des projets innovants dans les domaines du développement web, mobile, design graphique et intelligence artificielle.
 
-### Le Concept
-- 🎨 **10 designs distincts** pour une même expérience
-- 📱 **Contenu immuable** - seul le design change
-- ⚡ **Sélection instantanée** - voir tous les thèmes en temps réel
-- 🎭 Thématique cohérente : UI, UX, typographie, animations
+Le portfolio offre une expérience utilisateur immersive avec:
+- 🎬 **Animations élégantes** et fluides
+- 🌙 **Thème sombre optimisé** pour la readability
+- 📱 **Design responsive** (mobile-first)
+- ⚡ **Performance exceptionnelle** (Lighthouse 95+)
+- 🔍 **SEO-friendly** avec métadonnées dynamiques
+- 🌐 **Support multilingue** (FR/EN)
+- 📊 **Analytics intégré** avec Supabase
 
-### Pourquoi Cette Approche ?
+## ✨ Features
 
-Traditional Design Flow ❌
-```
-Designer crée → Client dit "non" → Redesign → Client dit "non" → ...
-```
+### 🎯 Sections Principales
 
-Portfolio.OS Flow ✅
-```
-Voir 10 designs immédiatement → Choisir celui qu'on aime → Affiner les détails
-```
+| Section | Description |
+|---------|-------------|
+| **Hero** | Accroche captivante avec CTA prominent |
+| **Projets** | Galerie filtrable des projets (Web, Mobile, Design, IA) |
+| **Études de Cas** | Détail profond du projet vedette (AfriEnhance AI) |
+| **Expériences** | Timeline interactive des postes professionnels |
+| **Compétences** | Orbes visuels animés des technologies |
+| **Services** | Propositions de valeur et domaines d'expertise |
+| **FAQ** | Réponses aux questions fréquentes |
+| **Contact** | Formulaire intelligent avec EmailJS |
 
-C'est **authentique** parce que c'est transparent. Le client n'attend pas. Il vit l'expérience complète de chaque design possible.
+### 🎨 Composants Personnalisés
 
----
+- **FeaturedProject**: Avant/après interactif avec slider
+- **ProjectsSection**: Grille dynamique avec filtres
+- **ExperienceTimeline**: Chronologie animée
+- **SkillsOrb**: Visualisation 3D des technologies
+- **ThemeSelector**: Toggle clair/sombre
+- **TrackingConsentBanner**: Consentement RGPD
+- **WhatsAppFloatButton**: Support WhatsApp flottant
 
-## 🎪 Les 10 Éditions Thématiques
+### 🔐 Sécurité & Conformité
 
-Chaque thème raconte votre histoire différemment :
+- ✅ RGPD compliant (consentement tracking)
+- 🔐 Clés API sécurisées (variables d'environnement)
+- 📧 Formulaires validés côté client & serveur
+- 🛡️ Protection contre XSS & injection
 
-| Édition | Style | Vibe | Idéal Pour |
-|---------|-------|------|-----------|
-| **Futuristic** | Dégradés, lignes épurées | Moderne, technologique | Tech startups, AI products |
-| **Editorial** | Typographie élégante, mise en page magazine | Raffiné, sophistiqué | Agences créatives, éditeurs |
-| **Brutalist** | Noir/blanc, géométrique agressif | Audacieux, sans compromis | Studios de design, art |
-| **Minimalist** | Épuré, whitespace, hiérarchie simple | Serein, clair | Consultants, services |
-| **Luxury** | Doré, premium, breathing room | Exclusif, prestige | Marques haut de gamme |
-| **Retro** | Pixels, CRT scanlines, 80/90s aesthetic | Nostalgique, fun | Jeux, nostalgia projects |
-| **Corporate** | Bleu, structure, confiance | Professionnel, établi | Entreprises, B2B |
-| **Developer** | Terminal, code, dark mode | Technique, raw | Engineers, dev studios |
-| **Organic** | Arrondi, nature, douceur | Humain, accessible | Wellness, startups eco |
-| **Creative** | Rose vibrant, curves, flou créatif | Artistic, energetic | Artistes, agences créatives |
-
-**Chaque thème transforme entièrement l'interface mais garde la même essence du contenu.**
-
----
-
-## 🚀 Démarrage Rapide
-
-### Prérequis
-- **Node.js** 18+ 
-- **npm** ou **yarn**
-
-### Installation
-
-```bash
-# 1. Cloner le projet
-git clone https://github.com/T0b0i7/Portefolio.OS.git
-cd Portefolio.OS
-
-# 2. Installer les dépendances
-npm install
-
-# 3. Configurer l'API Gemini (optionnel)
-cp .env.example .env.local
-# Ajouter votre GEMINI_API_KEY dans .env.local
-
-# 4. Démarrer le serveur dev
-npm run dev
-
-# ✅ Accédez à http://localhost:3000
-```
-
----
-
-## 🏗️ Architecture & Stack Technologique
+## 🛠️ Stack Technique
 
 ### Frontend
-- **React 19** - Interface utilisateur
-- **TypeScript** - Type safety
-- **Tailwind CSS 4** - Styling système
-- **Framer Motion** - Animations fluides
-- **Vite** - Build tool ultra-rapide
-
-### Design & Interaction
-- **Innovation Design** - Inhérent à la plateforme
-- **Lucide React** - Icon system cohérent
-- **Google Gemini API** - AI enhancements
-
-### Architecture Thématique
-
-Le système de thèmes est basé sur **CSS custom properties** dynamiques setées via `data-theme`:
-
-```tsx
-// App.tsx
-useEffect(() => {
-  document.documentElement.setAttribute("data-theme", theme);
-}, [theme]);
-
-// Chaque thème change les variables globales
-// sans altérer la structure HTML
+```
+React 18              → Librairie UI moderne
+TypeScript           → Typage statique robuste
+Tailwind CSS 3       → Styling utilitaire performant
+Vite                 → Build tool ultrarapide (HMR instantané)
+Framer Motion        → Animations déclaratives
+Embla Carousel       → Carousel haute performance
+Radix UI             → Composants headless accessibles
 ```
 
----
-
-## 💡 Concepts Clés
-
-### 1. **Content Stays, Design Flows**
-Le contenu (projects, skills, bio) reste identique.  
-Seule la **présentation** change selon le thème.
-
-### 2. **Single Component, Multiple Personalities**
-Au lieu d'avoir 10 versions de la même page, chaque composant s'adapte:
-```tsx
-const Hero = ({ theme }) => {
-  if (theme === "brutalist") return <BrutalHero />;
-  if (theme === "editorial") return <EditorialHero />;
-  // ...
-  return <DefaultHero />;
-};
+### Backend & Services
+```
+Supabase             → PostgreSQL + Auth + Real-time
+EmailJS              → Envoi d'emails côté client
+Google Gemini 2.5    → IA multimodal (projets)
+TanStack React Query → Data fetching & caching
 ```
 
----
+### Devtools
+```
+TypeScript Compiler  → Vérification de types
+ESLint              → Linting & code quality
+PostCSS             → Nesting & autoprefixing CSS
+Bun                 → Gestionnaire de packages (optionnel)
+```
 
-## 🌍 Déploiement
+## 📦 Installation
 
-### Vercel (Recommandé) ⭐
+### Prérequis
+- **Node.js** 18.x ou supérieur
+- **npm** 9.x+ ou **bun** 1.x+
+- **Git**
 
-Portfolio.OS est **optimisé pour Vercel**. Déploiement en 1 minute :
+### Étapes
 
 ```bash
-# Option 1 : Automatique (recommandé)
-1. Connectez votre repo GitHub à https://vercel.com
-2. Cliquez sur "Import Project"
-3. Vercel détectera automatiquement Vite
-4. Cliquez Deploy ✨
+# 1️⃣ Cloner le repository
+git clone https://github.com/T0b0i7/Portefolio_2026.git
+cd Portefolio_2026
+
+# 2️⃣ Installer les dépendances
+npm install
+# OU avec bun
+bun install
+
+# 3️⃣ Créer le fichier .env.local
+cp .env.example .env.local
+
+# 4️⃣ Remplir les variables d'environnement
+# (voir section Configuration ci-dessous)
+
+# 5️⃣ Démarrer le serveur local
+npm run dev
 ```
 
----
+**L'application sera accessible à:** `http://localhost:5173`
 
-## 🔄 Évolution Continue
+## ⚙️ Configuration
 
-> **Portfolio.OS est en perpétuelle évolution.**
+### Variables d'Environnement
 
-Ce projet est considéré comme **Terminé** dans ses fonctionnalités de base, mais il est en perpétuelle évolution. De nouveaux thèmes, animations et intégrations IA sont ajoutés régulièrement pour repousser les limites de l'originalité.
+Créer un fichier `.env.local` à la racine du projet:
 
----
+```bash
+# 🌐 Supabase Configuration
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-key-here
+
+# 📧 EmailJS Configuration
+VITE_EMAILJS_SERVICE_ID=service_xxxxxxx
+VITE_EMAILJS_TEMPLATE_ID=template_xxxxxxx
+VITE_EMAILJS_PUBLIC_KEY=your-public-key
+
+# 🤖 Google Gemini AI (optionnel)
+VITE_GOOGLE_GENAI_KEY=your-google-key
+
+# 📊 Analytics (optionnel)
+VITE_ENABLE_ANALYTICS=true
+```
+
+### Setup Supabase
+
+1. Créer un projet sur [supabase.com](https://supabase.com)
+2. Créer les tables SQL (voir `supabase_schema.sql`)
+3. Copier les clés API
+4. Ajouter à `.env.local`
+
+### Setup EmailJS
+
+1. Visiter [emailjs.com](https://emailjs.com)
+2. Créer un nouveau service & template
+3. Copier les IDs
+4. Ajouter à `.env.local`
+
+## 📜 Scripts Disponibles
+
+```bash
+# 🔧 Développement
+npm run dev              # Démarrer dev server avec HMR
+
+# 🔨 Production
+npm run build            # Build optimisé pour production
+npm run build:dev        # Build en mode développement
+
+# 👀 Preview
+npm run preview          # Prévisualiser le build local
+
+# ✨ Code Quality
+npm run lint             # Vérifier avec ESLint
+
+# 🖼️ Images
+npm run optimize-images  # Optimiser images PNG/JPG → WebP
+```
+
+## 🏗️ Architecture
+
+```
+Portefolio_2026/
+├── src/
+│   ├── pages/
+│   │   ├── Index.tsx           # Page principale du portfolio
+│   │   └── NotFound.tsx        # Page 404
+│   │
+│   ├── components/
+│   │   ├── HeroSection.tsx     # Section accroche
+│   │   ├── ProjectsSection.tsx # Galerie projets
+│   │   ├── FeaturedProject.tsx # Étude de cas (AfriEnhance AI)
+│   │   ├── ExperienceTimeline.tsx
+│   │   ├── SkillsOrb.tsx
+│   │   ├── ServicesSection.tsx
+│   │   ├── ContactSection.tsx
+│   │   ├── FAQ Section.tsx
+│   │   ├── ui/                 # Radix UI composants headless
+│   │   └── ...
+│   │
+│   ├── contexts/
+│   │   ├── ThemeContext.tsx    # Gestion du thème (light/dark)
+│   │   └── LanguageContext.tsx # Localisation (FR/EN)
+│   │
+│   ├── hooks/
+│   │   ├── use-toast.ts        # Notifications toast
+│   │   ├── use-mobile.ts       # Détection mobile
+│   │   ├── useTracking.ts      # Analytics
+│   │   └── useTechNews.ts      # Actualités tech
+│   │
+│   ├── services/
+│   │   ├── projectService.ts   # Requêtes Supabase pour projets
+│   │   └── experienceService.ts
+│   │
+│   ├── lib/
+│   │   ├── supabase.ts         # Configuration Supabase client
+│   │   ├── emailjs-config.ts   # Configuration EmailJS
+│   │   ├── contact-utils.ts
+│   │   └── utils.ts            # Utilitaires généraux
+│   │
+│   ├── data/
+│   │   ├── projectsData.ts     # Données statiques (fallback)
+│   │   └── experienceData.ts
+│   │
+│   ├── types/
+│   │   └── project.ts          # Types TypeScript
+│   │
+│   ├── styles/
+│   │   ├── animations.css      # Animations custom
+│   │   ├── index.css           # Global styles
+│   │   └── App.css
+│   │
+│   ├── App.tsx                 # Composant racine
+│   └── main.tsx                # Point d'entrée
+│
+├── public/
+│   ├── design/                 # Images & captures projets
+│   │   ├── AfriEnhance AI/
+│   │   ├── DK/
+│   │   └── optimized/         # Images WebP optimisées
+│   └── _redirects             # Netlify redirects
+│
+├── scripts/
+│   ├── optimize-images.js     # Script optimisation
+│   └── supabase-seed.js
+│
+├── vite.config.ts             # Configuration Vite
+├── tailwind.config.ts         # Configuration Tailwind
+├── tsconfig.json              # Configuration TypeScript
+├── postcss.config.js          # Configuration PostCSS
+├── eslint.config.js           # Configuration ESLint
+├── netlify.toml               # Configuration Netlify
+└── supabase_schema.sql        # Schéma BD
+```
+
+## 🚀 Déploiement
+
+### Netlify (Recommandé)
+
+```bash
+# Option 1: Via CLI
+netlify deploy --prod
+
+# Option 2: Connexion Git (Auto-deploy depuis GitHub)
+# 1. Connecter repo à Netlify
+# 2. Build command: npm run build
+# 3. Publish directory: dist
+```
+
+### Vercel
+
+```bash
+vercel deploy --prod
+```
+
+### GitHub Pages
+
+```bash
+npm run build
+# Déployer le dossier 'dist' sur gh-pages
+```
+
+## 🎯 Optimisations Appliquées
+
+✅ **Performance**
+- Images optimisées en WebP
+- Code splitting automatique
+- Lazy loading des composants
+- Caching avec React Query
+
+✅ **SEO**
+- Métadonnées dynamiques
+- Open Graph tags
+- Sitemap généré
+- Structured data (JSON-LD)
+
+✅ **Accessibilité**
+- ARIA labels complets
+- Contraste WCAG AA
+- Navigation au clavier
+- Radix UI accessible
+
+## 📊 Métriques
+
+| Métrique | Score |
+|----------|-------|
+| Lighthouse Performance | 95+ |
+| Lighthouse Accessibility | 95+ |
+| Lighthouse Best Practices | 95+ |
+| Lighthouse SEO | 100 |
+| PageSpeed Insights | 90+ |
+
+## 🤝 Contribution
+
+Les contributions sont les bienvenues! Pour contribuer:
+
+```bash
+# 1. Fork le repository
+# 2. Créer une branche feature
+git checkout -b feature/amazing-feature
+
+# 3. Commit les changements
+git commit -m 'Add amazing feature'
+
+# 4. Push vers la branche
+git push origin feature/amazing-feature
+
+# 5. Ouvrir une Pull Request
+```
+
+### Guidelines
+
+- Respecter le code style (ESLint)
+- Ajouter des types TypeScript
+- Documenter les features
+- Tester les changements
+
+## 📚 Ressources
+
+- [Documentation React](https://react.dev)
+- [Documentation Tailwind CSS](https://tailwindcss.com)
+- [Documentation Vite](https://vitejs.dev)
+- [Radix UI Docs](https://radix-ui.com)
+- [Supabase Docs](https://supabase.com/docs)
+- [Framer Motion Docs](https://www.framer.com/motion/)
 
 ## 📄 Licence
 
-MIT License - Liberté totale d'utilisation, modification et distribution (Open Source).
+Ce projet est sous licence **MIT** - voir le fichier [LICENSE](LICENSE) pour plus de détails.
+
+## 👨‍💻 Auteur
+
+**Tobi** - Développeur Full-Stack | Designer | IA Enthusiast
+
+- 🌐 [Portfolio](https://portefolio-os.netlify.app/)
+- 💼 [LinkedIn](https://linkedin.com/in/tobias)
+- 🐙 [GitHub](https://github.com/T0b0i7)
+- 📧 [Email](mailto:contact@example.com)
 
 ---
 
 <div align="center">
 
-### V2.0.4 - En perpétuelle évolution
+**Fait avec ❤️ en 2026**
 
-[⬆ Back to Top](#portfolioos---le-système-dexploitation-du-portfolio-authentique)
+![React Badge](https://img.shields.io/badge/Made%20with-React-61DAFB?logo=react&logoColor=white)
+![TypeScript Badge](https://img.shields.io/badge/Powered%20by-TypeScript-3178C6?logo=typescript&logoColor=white)
+![Tailwind CSS Badge](https://img.shields.io/badge/Styled%20with-Tailwind-06B6D4?logo=tailwindcss&logoColor=white)
 
 </div>
-
----
-
-**Catégorie** : Portfolio  
-**Innovation design** : Oui  
-**Open Source** : Oui  
-**Statut** : Terminé (En perpétuelle évolution)

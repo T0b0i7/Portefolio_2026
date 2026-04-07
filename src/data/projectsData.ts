@@ -210,7 +210,7 @@ export const getProjects = (lang: (fr: string, en: string) => string): Project[]
         status: lang("En cours", "In Progress"),
     },
     {
-        id: 14,
+        id: 24,
         title: "CREACOM",
         category: "Design Graphique",
         description: lang(
@@ -337,7 +337,7 @@ export const getProjects = (lang: (fr: string, en: string) => string): Project[]
             "Portfolio.OS – Le Système d'Exploitation du Portfolio Authentique. Une plateforme next-gen permettant de voir 16 designs différents en temps réel pour une même expérience.",
             "Portfolio.OS – The Authentic Portfolio Operating System. A next-gen platform allowing to see 10 different designs in real-time for the same experience."
         ),
-        tags: ["React 19", "TypeScript", "Tailwind CSS 4", "Framer Motion", "Vite", "IA"],
+        tags: ["React 18", "TypeScript", "Tailwind CSS 3", "Vite", "IA"],
         metrics: { impact: lang("Innovation design", "Design innovation"), type: "Open Source" },
         color: "primary",
         status: lang("Terminé", "Completed"),

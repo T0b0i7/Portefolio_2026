@@ -7,7 +7,7 @@
 @tailwind utilities;
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   STITCH DESIGN - Portfolio pour Eucher Abatti
+   STITCH DESIGN - Portfolio pour TobiDev
    Développeur Full-Stack & UI/UX Designer
    ═══════════════════════════════════════════════════════════════════════════ */
 
@@ -203,6 +203,41 @@
 
 .animate-spin-slow-reverse {
   animation: spin-slow 15s linear infinite reverse;
+}
+
+@keyframes hero-gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.hero-gradient-flow {
+  background-size: 200% 200%;
+  animation: hero-gradient-shift 6s ease infinite;
+}
+
+@keyframes hero-caret-blink {
+  0%,
+  45% {
+    opacity: 1;
+  }
+
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.hero-type-cursor {
+  animation: hero-caret-blink 1s step-end infinite;
 }
 
 /* ══════════ PLANETARY ORBIT SYSTEM ══════════ */
@@ -406,7 +441,6 @@
   transform-origin: 50% 100%;
   filter: drop-shadow(0 0 15px rgba(59, 130, 246, 1));
   /* Sharper glow */
-  border-left: below 2px linear-gradient(transparent, rgba(255, 255, 255, 0.1));
 }
 
 /* Levitating the central core */
@@ -652,5 +686,19 @@ a,
   50% {
     opacity: 1;
     transform: scale(1.2);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

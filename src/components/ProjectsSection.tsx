@@ -1,22 +1,32 @@
-import React, { useState, useEffect, useRef } from "react";
-import { ExternalLink, Eye, Code, Palette, Smartphone, Globe, Sparkles, ChevronLeft, ChevronRight, Database, Cloud, Camera, Search, Filter, Download, Lock } from "lucide-react";
+import React, { useState, useEffect, useMemo } from "react";
+import { ExternalLink, Eye, Code, Palette, Smartphone, Globe, Sparkles, ChevronLeft, ChevronRight, Database, Camera, Search, Filter, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
-// import { useOptimizedImages } from "@/hooks/use-optimized-images";
+import { useOptimizedImages } from "@/hooks/use-optimized-images";
 import { useTracking } from "@/hooks/useTracking";
 import { projectService } from "@/services/projectService";
 import { Project } from "@/types/project";
 import { getProjects } from "@/data/projectsData";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const ITEMS_PER_PAGE_DESKTOP = 9;
-const ITEMS_PER_PAGE_MOBILE = 1;
+const ITEMS_PER_PAGE_MOBILE = 4;
+const EXCLUDED_CATEGORIES = new Set(["Anniversaire"]);
 
 export function ProjectsSection() {
   const { lang, language } = useLanguage();
   const [projects, setProjects] = useState<Project[]>(getProjects(lang));
-  // const { getOptimizedImage } = useOptimizedImages();
+  const { getOptimizedImage } = useOptimizedImages();
   const { trackEvent } = useTracking();
 
   useEffect(() => {
@@ -29,97 +39,102 @@ export function ProjectsSection() {
     fetchDBProjects();
   }, [language]);
 
-  const getCategoryCount = (categoryId: string) => {
-    if (categoryId === "all") return projects.filter(p => !p.locked).length;
-    return projects.filter(p => p.category === categoryId && !p.locked).length;
-  };
-
   const [activeCategory, setActiveCategory] = useState("all");
 
-  const categories = [
-    { id: "all", name: lang("Tous les projets", "All Projects"), icon: Code },
-    { id: "Full-Stack", name: "Full-Stack", icon: Globe },
-    { id: "Frontend", name: "Frontend", icon: Code },
-    { id: "Backend", name: "Backend", icon: Database },
-    { id: "Mobile", name: "Mobile", icon: Smartphone },
-    { id: "Web Design", name: "Web Design", icon: Globe },
-    { id: "Design", name: "Design", icon: Palette },
-    { id: "Portfolio", name: "Portfolio", icon: Camera },
-    { id: "Gaming", name: "Gaming", icon: Globe },
-    { id: "Anniversaire", name: lang("Anniversaire", "Birthday"), icon: Sparkles },
-    { id: "Landing Pages", name: "Landing Pages", icon: Globe },
-    { id: "SaaS", name: "SaaS", icon: Cloud },
-    { id: "Automatisation", name: lang("Automatisation", "Automation"), icon: Sparkles },
-    { id: "E-commerce", name: "E-commerce", icon: Globe },
-    { id: "API", name: "API", icon: Database },
-    { id: "Data", name: "Data", icon: Database },
-    { id: "Cloud", name: "Cloud", icon: Cloud },
-    { id: "IA & ML", name: "IA & ML", icon: Sparkles },
-    { id: "DevOps", name: "DevOps", icon: Cloud },
-    { id: "Social", name: "Social", icon: Globe },
-    { id: "Education", name: "Education", icon: Code },
-  ];
+  const categories = useMemo(
+    () => [
+      { id: "all", name: lang("Tous les projets", "All Projects"), icon: Code },
+      { id: "Full-Stack", name: "Full-Stack", icon: Globe },
+      { id: "Prototypage", name: lang("Prototypage", "Prototyping"), icon: Code },
+      { id: "Web Design", name: "Web Design", icon: Globe },
+      { id: "Design Graphique", name: lang("Design Graphique", "Graphic Design"), icon: Palette },
+      { id: "Mobile", name: "Mobile", icon: Smartphone },
+      { id: "Landing Pages", name: "Landing Pages", icon: Globe },
+      { id: "E-commerce", name: "E-commerce", icon: Globe },
+      { id: "Gaming", name: "Gaming", icon: Globe },
+      { id: "Portfolio", name: "Portfolio", icon: Camera },
+      { id: "Automatisation", name: lang("Automatisation", "Automation"), icon: Database },
+    ],
+    [lang]
+  );
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [failedImages, setFailedImages] = useState<Set<number>>(new Set());
   const [visibleProjects, setVisibleProjects] = useState<Set<number>>(new Set());
   const [isLoaded, setIsLoaded] = useState(false);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
-  const categoriesRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
 
   // Colors for the design
   const colors = {
     primary: "#3b82f6",
-    secondary: "#8b5cf6",
-    accent: "#10b981",
+    secondary: "#60a5fa",
+    accent: "#60a5fa",
     warning: "#f59e0b",
-    background: "#0f172a",
-    surface: "#1e293b",
-    border: "#334155",
+    background: "#020617",
+    surface: "#0f172a",
+    border: "#1e293b",
     text: "#f8fafc",
     textSecondary: "#94a3b8",
   };
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [isMobile, setIsMobile] = useState(false);
   const [activeImage, setActiveImage] = useState<string | null>(null);
 
-  // Screenshot prevention logic (visual & behavior)
-  useEffect(() => {
-    const handleContextMenu = (e: MouseEvent) => {
-      if (isDialogOpen) e.preventDefault();
-    };
-
-    document.addEventListener('contextmenu', handleContextMenu);
-    return () => document.removeEventListener('contextmenu', handleContextMenu);
-  }, [isDialogOpen]);
-
   const itemsPerPage = isMobile ? ITEMS_PER_PAGE_MOBILE : ITEMS_PER_PAGE_DESKTOP;
+  const projectCardMinHeight = isMobile ? 340 : 370;
 
-  const filteredProjects = projects.filter((project) => {
-    if (project.locked) return false;
-
-    // Category match
-    const matchesCategory = activeCategory === "all" || project.category === activeCategory;
-
-    // Search match
-    const query = searchQuery.toLowerCase();
-    const matchesSearch =
-      project.title.toLowerCase().includes(query) ||
-      project.tags.some(tag => tag.toLowerCase().includes(query)) ||
-      project.description.toLowerCase().includes(query);
-
-    return matchesCategory && matchesSearch;
-  });
-
-  const paginatedProjects = filteredProjects.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+  const searchableProjects = useMemo(
+    () => projects.filter((project) => !project.locked && !EXCLUDED_CATEGORIES.has(project.category)),
+    [projects]
   );
 
-  const totalPages = Math.ceil(filteredProjects.length / itemsPerPage);
+  const searchScopedProjects = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return searchableProjects;
+
+    return searchableProjects.filter((project) => {
+      return (
+        project.title.toLowerCase().includes(query) ||
+        project.tags.some((tag) => tag.toLowerCase().includes(query)) ||
+        project.description.toLowerCase().includes(query)
+      );
+    });
+  }, [searchQuery, searchableProjects]);
+
+  const smartCategories = useMemo(
+    () =>
+      categories
+        .map((category) => ({
+          ...category,
+          count:
+            category.id === "all"
+              ? searchScopedProjects.length
+              : searchScopedProjects.filter((project) => project.category === category.id).length,
+        }))
+        .filter((category) => category.id === "all" || category.count > 0),
+    [categories, searchScopedProjects]
+  );
+
+  const selectedCategory =
+    smartCategories.find((category) => category.id === activeCategory) ??
+    categories.find((category) => category.id === activeCategory) ??
+    categories[0];
+
+  const filteredProjects = useMemo(
+    () =>
+      searchScopedProjects.filter(
+        (project) => activeCategory === "all" || project.category === activeCategory
+      ),
+    [activeCategory, searchScopedProjects]
+  );
+
+  const paginatedProjects = useMemo(() => filteredProjects.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  ), [currentPage, filteredProjects, itemsPerPage]);
+
+  const totalPages = useMemo(() => Math.ceil(filteredProjects.length / itemsPerPage), [filteredProjects.length, itemsPerPage]);
 
   const getCategoryIcon = (category: string) => {
     const categoryConfig = categories.find(cat => cat.id === category);
@@ -174,37 +189,6 @@ export function ProjectsSection() {
     setVisibleProjects(new Set());
   }, [currentPage]);
 
-  const checkScrollPosition = () => {
-    const element = categoriesRef.current;
-    if (element) {
-      setCanScrollLeft(element.scrollLeft > 0);
-      setCanScrollRight(element.scrollLeft < element.scrollWidth - element.clientWidth);
-    }
-  };
-
-  const scrollLeft = () => {
-    const element = categoriesRef.current;
-    if (element) element.scrollBy({ left: -200, behavior: 'smooth' });
-  };
-
-  const scrollRight = () => {
-    const element = categoriesRef.current;
-    if (element) element.scrollBy({ left: 200, behavior: 'smooth' });
-  };
-
-  useEffect(() => {
-    const element = categoriesRef.current;
-    if (element) {
-      element.addEventListener('scroll', checkScrollPosition);
-      checkScrollPosition();
-      return () => element.removeEventListener('scroll', checkScrollPosition);
-    }
-  }, []);
-
-  useEffect(() => {
-    checkScrollPosition();
-  }, [activeCategory]);
-
   const openProjectDialog = (project: Project) => {
     setSelectedProject(project);
     setIsDialogOpen(true);
@@ -223,10 +207,10 @@ export function ProjectsSection() {
   };
 
   return (
-    <section id="projects" className="py-12 sm:py-16 md:py-20" style={{ backgroundColor: colors.background }}>
+    <section id="projects" className="py-10 sm:py-14 md:py-16" style={{ backgroundColor: colors.background }}>
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         {/* Section Header */}
-        <div className={`text-center mb-10 sm:mb-12 md:mb-16 transition-all duration-1000 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        <div className={`text-center mb-8 sm:mb-10 md:mb-12 transition-all duration-1000 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <div
             className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium mb-3 sm:mb-4"
             style={{ backgroundColor: colors.primary + '20', color: colors.primary }}
@@ -246,7 +230,7 @@ export function ProjectsSection() {
         </div>
 
         {/* Search & Filter Bar */}
-        <div className={`flex flex-col sm:flex-row gap-4 mb-8 transition-all duration-1000 delay-300 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        <div className={`flex flex-col sm:flex-row gap-4 mb-6 sm:mb-8 transition-all duration-1000 delay-300 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <div className="relative flex-1 group">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors group-focus-within:text-brand-accent text-slate-500" />
             <input
@@ -266,150 +250,68 @@ export function ProjectsSection() {
             )}
           </div>
 
-          <button
-            className="sm:hidden flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-slate-800/40 border border-slate-700/50 text-slate-100 active:scale-95 transition-all shadow-inner"
-            onClick={() => {
-              const el = document.getElementById('mobile-categories');
-              el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }}
-          >
-            <Filter className="w-4 h-4 text-brand-accent" />
-            <span className="text-sm font-bold uppercase tracking-wider">{lang("Filtrer", "Filter")}</span>
-          </button>
-        </div>
+          <div className="flex items-center gap-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className="h-[54px] px-4 rounded-2xl bg-slate-900/70 border border-slate-700/60 text-slate-100 flex items-center gap-2 hover:border-brand-accent/50 transition-colors"
+                  aria-label={lang("Filtrer les catégories", "Filter categories")}
+                >
+                  <Filter className="w-4 h-4 text-brand-accent" />
+                  <span className="text-sm font-bold">{selectedCategory?.name}</span>
+                  <span className="px-2 py-0.5 rounded-full bg-brand-accent/20 text-brand-accent text-xs font-bold">
+                    {selectedCategory?.id === "all" ? filteredProjects.length : (selectedCategory as { count?: number }).count ?? 0}
+                  </span>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-72 bg-slate-900 border-slate-700 text-slate-100">
+                <p className="px-2 py-1 text-[11px] uppercase tracking-widest text-slate-400 font-bold">
+                  {lang("Filtrage intelligent", "Smart filtering")}
+                </p>
+                <p className="px-2 pb-2 text-xs text-slate-500">
+                  {lang("Les catégories sont adaptées à ta recherche", "Categories adapt to your search query")}
+                </p>
+                <DropdownMenuSeparator className="bg-slate-700" />
+                <DropdownMenuRadioGroup
+                  value={activeCategory}
+                  onValueChange={(value) => {
+                    setActiveCategory(value);
+                    trackEvent("category-filter", { category: value, query: searchQuery || null });
+                  }}
+                >
+                  {smartCategories.map((category) => (
+                    <DropdownMenuRadioItem
+                      key={category.id}
+                      value={category.id}
+                      className="focus:bg-slate-800 focus:text-white cursor-pointer"
+                    >
+                      <div className="flex items-center justify-between w-full gap-3">
+                        <span className="flex items-center gap-2">
+                          <category.icon className="w-3.5 h-3.5 text-brand-accent" />
+                          <span>{category.name}</span>
+                        </span>
+                        <span className="text-xs px-1.5 py-0.5 rounded-md bg-slate-800 text-slate-300 border border-slate-700">
+                          {category.count}
+                        </span>
+                      </div>
+                    </DropdownMenuRadioItem>
+                  ))}
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
-        {/* Category Filter */}
-        <div id="mobile-categories" className={`relative mb-8 transition-all duration-1000 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          {/* Mobile Categories Header */}
-          <div className="sm:hidden flex items-center justify-between mb-3 px-1 text-slate-400">
-            <div className="flex items-center gap-2">
-              <Filter className="w-3 h-3 text-brand-accent" />
-              <span className="text-[10px] font-bold uppercase tracking-widest">Parcourir les types</span>
-            </div>
-            {(activeCategory !== 'all' || searchQuery !== '') && (
+            {(activeCategory !== "all" || searchQuery) && (
               <button
-                onClick={() => { setActiveCategory('all'); setSearchQuery(''); }}
-                className="text-[10px] text-brand-accent font-bold uppercase hover:underline"
+                onClick={() => {
+                  setActiveCategory("all");
+                  setSearchQuery("");
+                }}
+                className="h-[54px] px-4 rounded-2xl border border-slate-700/60 bg-slate-900/40 text-xs font-bold uppercase tracking-wider text-slate-300 hover:text-white hover:border-brand-accent/40 transition-colors"
               >
-                {lang("Tout voir", "See all")}
+                {lang("Reset", "Reset")}
               </button>
             )}
           </div>
-
-          {/* Mobile: Horizontal scrollable buttons (improved) */}
-          <div className="sm:hidden relative">
-            <div
-              className="overflow-x-auto scrollbar-hide pb-2 -mx-4 px-4"
-              style={{ WebkitOverflowScrolling: 'touch' }}
-            >
-              <div className="flex gap-2 min-w-max">
-                {categories.map((category) => {
-                  const count = getCategoryCount(category.id);
-                  if (count === 0 && category.id !== 'all') return null;
-
-                  return (
-                    <button
-                      key={category.id}
-                      onClick={() => {
-                        setActiveCategory(category.id);
-                        trackEvent("category-filter-mobile", { category: category.id });
-                      }}
-                      className={cn(
-                        "flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium transition-all duration-300",
-                        activeCategory === category.id ? "text-white shadow-lg" : "text-slate-400 bg-slate-800/30"
-                      )}
-                      style={{
-                        backgroundColor: activeCategory === category.id ? colors.primary : '',
-                        border: `1px solid ${activeCategory === category.id ? colors.primary : colors.border}`,
-                      }}
-                    >
-                      <category.icon className="w-3.5 h-3.5" />
-                      <span className="text-xs">{category.name}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-
-          {/* Desktop: Horizontal scrollable buttons */}
-          <div className="hidden sm:block relative px-4">
-            {/* Scroll Buttons */}
-            <button
-              onClick={scrollLeft}
-              className={cn(
-                "absolute -left-2 top-1/2 transform -translate-y-1/2 z-20 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95",
-                canScrollLeft ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4 pointer-events-none"
-              )}
-              style={{
-                backgroundColor: colors.surface,
-                color: colors.text,
-                border: `1px solid ${colors.border}`,
-                boxShadow: "0 4px 15px rgba(0, 0, 0, 0.3)"
-              }}
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-
-            <button
-              onClick={scrollRight}
-              className={cn(
-                "absolute -right-2 top-1/2 transform -translate-y-1/2 z-20 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95",
-                canScrollRight ? "opacity-100 translate-x-0" : "opacity-0 translate-x-4 pointer-events-none"
-              )}
-              style={{
-                backgroundColor: colors.surface,
-                color: colors.text,
-                border: `1px solid ${colors.border}`,
-                boxShadow: "0 4px 15px rgba(0, 0, 0, 0.3)"
-              }}
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-
-            <div
-              ref={categoriesRef}
-              className="overflow-x-auto pb-3 scrollbar-hide px-2"
-              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-            >
-              <div className="flex gap-2 sm:gap-3 min-w-max py-2">
-                {categories.map((category, index) => {
-                  const count = getCategoryCount(category.id);
-                  return (
-                    <button
-                      key={category.id}
-                      onClick={() => {
-                        setActiveCategory(category.id);
-                        trackEvent("category-filter-desktop", { category: category.id });
-                      }}
-                      className={cn(
-                        "flex items-center gap-2 px-5 py-3 rounded-full font-medium transition-all duration-300",
-                        activeCategory === category.id ? "text-white shadow-lg shadow-blue-500/20" : ""
-                      )}
-                      style={{
-                        backgroundColor: activeCategory === category.id ? colors.primary : colors.surface,
-                        color: activeCategory === category.id ? '#ffffff' : colors.text,
-                        border: `1px solid ${activeCategory === category.id ? colors.primary : colors.border}`,
-                      }}
-                    >
-                      <category.icon className="w-4 h-4" />
-                      <span>{category.name}</span>
-                      <span
-                        className="text-xs px-2 py-1 rounded-full font-medium"
-                        style={{
-                          backgroundColor: activeCategory === category.id ? 'rgba(255,255,255,0.2)' : colors.border,
-                          color: activeCategory === category.id ? '#ffffff' : colors.textSecondary
-                        }}
-                      >
-                        {count}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-          {/* End of desktop filter */}
         </div>
 
         {/* Projects Grid */}
@@ -427,7 +329,7 @@ export function ProjectsSection() {
                   style={{
                     backgroundColor: colors.surface,
                     borderColor: colors.border,
-                    minHeight: '420px',
+                    minHeight: `${projectCardMinHeight}px`,
                     transform: isVisible ? "translateY(0) scale(1)" : "translateY(30px) scale(0.95)",
                     opacity: isVisible ? 1 : 0,
                     transition: `all 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${animationDelay}`
@@ -445,21 +347,26 @@ export function ProjectsSection() {
                   <div className="relative h-36 sm:h-40 md:h-44 overflow-hidden">
                     {project.image || (project.images && project.images[0]) ? (() => {
                       const imagePath = project.image ?? project.images?.[0] ?? '';
-                      // const optimized = getOptimizedImage(imagePath);
+                      const optimized = getOptimizedImage(imagePath);
 
                       return (
-                        <img
-                          src={imagePath}
-                          alt={project.title}
-                          loading="lazy"
-                          decoding="async"
-                          fetchPriority="low"
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                          // {...(optimized ? {
-                          //   srcSet: optimized.srcset,
-                          //   src: optimized.webp
-                          // } : {})}
-                        />
+                        <picture>
+                          {optimized ? (
+                            <source
+                              type="image/webp"
+                              srcSet={optimized.srcset}
+                              sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                            />
+                          ) : null}
+                          <img
+                            src={optimized?.webp ?? imagePath}
+                            alt={`${project.title} - aperçu principal`}
+                            loading="lazy"
+                            decoding="async"
+                            fetchPriority="low"
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                          />
+                        </picture>
                       );
                     })() : (
                       <div
@@ -552,7 +459,7 @@ export function ProjectsSection() {
             })}
           </div>
         ) : (
-          <div className="text-center py-16 mb-12">
+          <div className="text-center py-12 mb-10">
             <div
               className="inline-flex items-center justify-center w-20 h-20 rounded-full mb-4"
               style={{ backgroundColor: colors.primary + '15' }}
@@ -588,7 +495,7 @@ export function ProjectsSection() {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex justify-center items-center gap-1 sm:gap-2 mb-10 sm:mb-16">
+          <div className="flex justify-center items-center gap-1 sm:gap-2 mb-8 sm:mb-10">
             {/* Previous Button - Compact on mobile */}
             <button
               onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
@@ -672,18 +579,18 @@ export function ProjectsSection() {
         {/* Bottom CTA */}
         <div className={`text-center transition-all duration-1000 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <div
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full mb-6"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full mb-4"
             style={{ backgroundColor: colors.primary + '15' }}
           >
             <Sparkles className="w-5 h-5" style={{ color: colors.primary }} />
             <span style={{ color: colors.text }}>{filteredProjects.length} {lang("projets disponibles", "projects available")}</span>
           </div>
-          <h3 className="text-2xl font-bold mb-4" style={{ color: colors.text }}>
+          <h3 className="text-2xl font-bold mb-3" style={{ color: colors.text }}>
             {lang("Prêt à", "Ready to")} <span style={{ color: colors.primary }}>{lang("collaborer", "collaborate")}</span> ?
           </h3>
           <Button
             size="lg"
-            className="px-10 py-6 text-lg font-semibold text-white"
+            className="px-8 py-4 text-base font-semibold text-white"
             style={{ backgroundColor: colors.primary }}
             onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
           >
@@ -701,11 +608,6 @@ export function ProjectsSection() {
             style={{ borderRadius: '24px' }}
           >
             <div className="relative bg-slate-900 border border-white/10 overflow-hidden rounded-3xl shadow-2xl flex flex-col group/modal">
-
-              {/* Image Protection Layer (Screen Capture prevention attempt) */}
-              <div className="absolute inset-0 pointer-events-none z-[60] mix-blend-overlay opacity-50 select-none overflow-hidden uppercase font-black text-[200px] text-white/5 rotate-12 flex items-center justify-center whitespace-nowrap">
-                {lang("Contenu Protégé", "Protected Content")} • {selectedProject.title} • {lang("Contenu Protégé", "Protected Content")}
-              </div>
 
               {/* Modal Header */}
               <div className="sticky top-0 z-50 px-6 py-4 bg-slate-900/80 backdrop-blur-xl border-b border-white/5 flex items-center justify-between">
@@ -738,23 +640,19 @@ export function ProjectsSection() {
                 {/* Media Gallery */}
                 {selectedProject.images && selectedProject.images.length > 0 && (
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <h4 className="text-slate-400 text-xs font-bold uppercase tracking-widest">{lang("Galerie Sécurisée", "Secure Gallery")}</h4>
-                      <div className="flex items-center gap-2 text-[10px] text-yellow-500 bg-yellow-500/10 px-2 py-1 rounded">
-                        <Lock className="w-3 h-3" />
-                        {lang("CONTENU PROTÉGÉ", "PROTECTED CONTENT")}
-                      </div>
-                    </div>
+                    <h4 className="text-slate-400 text-xs font-bold uppercase tracking-widest">
+                      {lang("Galerie projet", "Project gallery")}
+                    </h4>
 
                     <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
                       {selectedProject.images.map((image, index) => {
-                        // const optimized = getOptimizedImage(image);
+                        const optimized = getOptimizedImage(image);
 
                         return (
                           <div
                             key={index}
                             className="relative group rounded-2xl overflow-hidden aspect-video cursor-zoom-in bg-slate-800 border border-white/5"
-                            onClick={() => setActiveImage(/*optimized ? optimized.webp : */image)}
+                            onClick={() => setActiveImage(optimized?.webp ?? image)}
                           >
                             {failedImages.has(index) ? (
                               <div className="w-full h-full flex items-center justify-center">
@@ -762,19 +660,24 @@ export function ProjectsSection() {
                               </div>
                             ) : (
                               <>
-                                <img
-                                  src={image}
-                                  alt={`${selectedProject.title} - ${lang("Image de la galerie", "Gallery image")} ${index + 1}/${selectedProject.images.length}`}
-                                  loading="lazy"
-                                  decoding="async"
-                                  fetchPriority="low"
-                                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 grayscale-[0.3] group-hover:grayscale-0"
-                                  onError={() => setFailedImages(prev => new Set([...prev, index]))}
-                                  // {...(optimized ? {
-                                  //   srcSet: optimized.srcset,
-                                  //   src: optimized.webp
-                                  // } : {})}
-                                />
+                                <picture>
+                                  {optimized ? (
+                                    <source
+                                      type="image/webp"
+                                      srcSet={optimized.srcset}
+                                      sizes="(max-width: 1024px) 50vw, 33vw"
+                                    />
+                                  ) : null}
+                                  <img
+                                    src={optimized?.webp ?? image}
+                                    alt={`${selectedProject.title} - ${lang("Image de la galerie", "Gallery image")} ${index + 1}/${selectedProject.images.length}`}
+                                    loading="lazy"
+                                    decoding="async"
+                                    fetchPriority="low"
+                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 grayscale-[0.3] group-hover:grayscale-0"
+                                    onError={() => setFailedImages(prev => new Set([...prev, index]))}
+                                  />
+                                </picture>
                                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                   <Eye className="w-6 h-6 text-white" />
                                 </div>
@@ -836,8 +739,8 @@ export function ProjectsSection() {
                       }}
                       className="w-full sm:flex-1 h-12 flex items-center justify-center gap-2 bg-slate-800 text-white font-bold rounded-2xl border border-white/10 hover:bg-slate-700 transition-all hover:scale-[1.02] active:scale-95"
                     >
-                      <Download className="w-4 h-4 text-brand-accent" />
-                      {lang("Télécharger les ressources", "Download Resources")}
+                      <Mail className="w-4 h-4 text-brand-accent" />
+                      {lang("Discuter de ce projet", "Discuss this project")}
                     </button>
                   </div>
                 </div>
@@ -866,10 +769,6 @@ export function ProjectsSection() {
             className="max-w-full max-h-full object-contain shadow-2xl rounded-lg border border-white/5"
             onClick={(e) => e.stopPropagation()}
           />
-          {/* Lightbox overlay protection */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[10vw] font-black text-white/5 pointer-events-none select-none uppercase -rotate-12 whitespace-nowrap">
-            {lang("Contenu Protégé", "Protected Content")}
-          </div>
         </div>
       )}
     </section>
