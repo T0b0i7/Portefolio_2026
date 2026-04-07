@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { Menu, X, Terminal, Globe, Layout, Cpu, Briefcase, Mail, ChevronDown, UserRound } from "lucide-react";
+import { Menu, X, Terminal, Globe, Layout, Cpu, Briefcase, Mail, ChevronDown, UserRound, MessageSquareQuote } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
 import { useTracking } from "@/hooks/useTracking";
@@ -18,6 +18,7 @@ export function Navigation() {
       { label: lang("Parcours", "Timeline"), href: "#parcours", icon: Cpu },
       { label: lang("Projets", "Projects"), href: "#projects", icon: Briefcase },
       { href: "#services", label: lang("Services", "Services"), icon: Globe },
+      { label: lang("Témoignages", "Testimonials"), href: "#temoignages", icon: MessageSquareQuote },
       { href: "#contact", label: lang("Contact", "Contact"), icon: Mail },
     ],
     [lang]

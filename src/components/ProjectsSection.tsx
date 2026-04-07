@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { ExternalLink, Eye, Code, Palette, Smartphone, Globe, Sparkles, ChevronLeft, ChevronRight, Database, Camera, Search, Filter, Mail } from "lucide-react";
+import { ExternalLink, Eye, Code, Palette, Smartphone, Globe, Sparkles, ChevronLeft, ChevronRight, Database, Camera, Search, Filter, Mail, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import {
@@ -22,6 +22,39 @@ import { useIsMobile } from "@/hooks/use-mobile";
 const ITEMS_PER_PAGE_DESKTOP = 9;
 const ITEMS_PER_PAGE_MOBILE = 4;
 const EXCLUDED_CATEGORIES = new Set(["Anniversaire"]);
+const DESCRIPTION_TRUNCATE_LENGTH = 300;
+
+function ProjectDescription({ description }: { description: string }) {
+  const { lang } = useLanguage();
+  const [isExpanded, setIsExpanded] = useState(false);
+  const isLong = description.length > DESCRIPTION_TRUNCATE_LENGTH;
+
+  return (
+    <div className="text-slate-200 text-base leading-relaxed">
+      <p className={isLong && !isExpanded ? "line-clamp-6" : ""}>
+        {isLong && !isExpanded ? description.slice(0, DESCRIPTION_TRUNCATE_LENGTH) + "..." : description}
+      </p>
+      {isLong && (
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="mt-2 inline-flex items-center gap-1 text-sm font-medium text-brand-accent hover:text-blue-400 transition-colors"
+        >
+          {isExpanded ? (
+            <>
+              <ChevronUp className="w-4 h-4" />
+              {lang("Réduire", "Show less")}
+            </>
+          ) : (
+            <>
+              <ChevronDown className="w-4 h-4" />
+              {lang("Lire la suite", "Read more")}
+            </>
+          )}
+        </button>
+      )}
+    </div>
+  );
+}
 
 export function ProjectsSection() {
   const { lang, language } = useLanguage();
@@ -632,9 +665,7 @@ export function ProjectsSection() {
                 {/* DescriptionSection */}
                 <div>
                   <h4 className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-3">{lang("À propos", "About")}</h4>
-                  <p className="text-slate-200 text-base leading-relaxed">
-                    {selectedProject.description}
-                  </p>
+                  <ProjectDescription description={selectedProject.description} />
                 </div>
 
                 {/* Media Gallery */}

@@ -3,6 +3,7 @@ import { AboutSection } from "@/components/AboutSection";
 import { EvolutionSection } from "@/components/EvolutionSection";
 import { FeaturedProject } from "@/components/FeaturedProject";
 import { ProjectsSection } from "@/components/ProjectsSection";
+import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { ServicesSection } from "@/components/ServicesSection";
 import { ContactSection } from "@/components/ContactSection";
 import { Footer } from "@/components/Footer";
@@ -40,6 +41,9 @@ const Index = () => {
 
           {/* Services / Expertise Section */}
           <ServicesSection />
+
+          {/* Testimonials Section */}
+          <TestimonialsSection />
 
           {/* Contact Section */}
           <ContactSection />

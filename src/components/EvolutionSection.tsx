@@ -35,7 +35,11 @@ export function EvolutionSection() {
 
     if (window.location.hash === "#parcours") {
       setIsOpen(true);
+      return;
     }
+
+    // Show parcours by default for better UX
+    setIsOpen(true);
   }, []);
 
   useEffect(() => {

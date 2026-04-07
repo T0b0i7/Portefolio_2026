@@ -16,7 +16,7 @@ export function HeroSection() {
   const [btnPos, setBtnPos] = useState({ x: 0, y: 0 });
   const typingTexts = useMemo(
     () => [
-      lang("expériences qui vendent", "experiences that sell"),
+      lang("solutions numériques qui transforment", "digital solutions that transform"),
       lang("systèmes qui automatisent", "systems that automate"),
       lang("marques qui se démarquent", "brands that stand out"),
     ],
@@ -135,14 +135,21 @@ export function HeroSection() {
 
           <div className="mb-5 h-[3px] w-28 rounded-full bg-gradient-to-r from-brand-accent to-blue-400/60 animate-pulse" />
 
-          <p className="mb-6 max-w-lg text-base leading-relaxed text-muted-foreground sm:text-lg md:text-xl">
+          <p className="mb-4 max-w-lg text-base leading-relaxed text-slate-300 sm:text-lg md:text-xl">
             {lang(
               "Design, copywriting et IA réunis pour transformer tes visiteurs en clients, avec une exécution claire et professionnelle.",
               "Design, copywriting, and AI combined to turn visitors into clients, with clear and professional execution."
             )}
           </p>
 
-          <div className="mb-6 flex flex-col flex-wrap gap-2 text-sm text-muted-foreground sm:flex-row sm:gap-4">
+          <div className="mb-6 flex items-center gap-2">
+            <span className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-emerald-400">
+              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+              {lang("Disponible pour missions", "Available for projects")}
+            </span>
+          </div>
+
+          <div className="mb-6 flex flex-col flex-wrap gap-2 text-sm text-slate-300 sm:flex-row sm:gap-4">
             <a href="tel:+2290157002427" className="flex items-center gap-2 transition-colors hover:text-brand-accent">
               <Phone className="h-4 w-4 shrink-0" />
               <span>+229 0157002427</span>

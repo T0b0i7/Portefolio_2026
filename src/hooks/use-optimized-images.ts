@@ -4,6 +4,7 @@ interface OptimizedImage {
   original: string;
   webp: string;
   srcset: string;
+  blurDataURL?: string;
 }
 
 let mappingCache: Record<string, OptimizedImage> | null = null;
@@ -44,7 +45,7 @@ export function useOptimizedImages() {
       });
   }, []);
 
-  const getOptimizedImage = (originalPath: string) => {
+  const getOptimizedImage = (originalPath: string): OptimizedImage | null => {
     const withoutQuery = originalPath.split("?")[0];
     const filename = decodeURIComponent(withoutQuery.split("/").pop() || "");
     const optimized = imageMapping[filename];
