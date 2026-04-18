@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Sparkles, Users, Zap } from "lucide-react";
 import { ScrollAnimation } from "@/components/ui/ScrollAnimation";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -69,13 +69,22 @@ export function AboutSection() {
                 )}
               </p>
 
-              <div className="flex items-center gap-6 pt-4">
+              <div className="flex items-center gap-4 pt-4">
                 <div className="flex -space-x-3">
-                  {[1, 2, 3].map((i) => (
-                    <div key={i} className="w-12 h-12 rounded-full border-2 border-near-black bg-warm-sand/20" />
+                  {[
+                    { icon: Sparkles, bg: "bg-terracotta/20", text: "text-terracotta" },
+                    { icon: Users, bg: "bg-warm-sand", text: "text-near-black" },
+                    { icon: Zap, bg: "bg-ivory/10", text: "text-ivory" },
+                  ].map((avatar, i) => (
+                    <div 
+                      key={i} 
+                      className={`w-12 h-12 rounded-full border-2 border-near-black ${avatar.bg} ${avatar.text} flex items-center justify-center shadow-lg transform hover:translate-y-[-2px] transition-transform`}
+                    >
+                      <avatar.icon className="w-5 h-5" />
+                    </div>
                   ))}
                 </div>
-                <div className="text-sm font-sans text-stone-gray leading-tight uppercase tracking-wider">
+                <div className="text-sm font-sans text-stone-gray leading-tight uppercase tracking-wider font-medium">
                    {lang("Rejoint par des visionnaires", "Joined by visionaries")}
                 </div>
               </div>
