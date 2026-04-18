@@ -23,24 +23,36 @@
     },
     {
         "id": 2,
-        "title_fr": "Applications Internes INNOVTECH",
-        "title_en": "INNOVTECH Internal Apps",
+        "title_fr": "Imona",
+        "title_en": "Imona",
         "category": "Full-Stack",
         "description_fr": "Plateforme complète pour la gestion interne des processus métier, avec tableaux de bord interactifs et automatisation des tâches répétitives.",
         "description_en": "Complete platform for internal business process management, with interactive dashboards and automation of repetitive tasks.",
         "tags": [
-            "React",
-            "Node.js",
-            "MySQL",
-            "Express",
-            "TypeScript"
+            "Laravel",
+            "TypeScript",
+            "PHP",
+            "Blade",
+            "CSS",
+            "Dockerfile",
+            "HTML"
         ],
         "impact": "+45% efficacité",
         "metrics_type": "Entreprise",
         "color": "secondary",
-        "image_url": "/design/gestiloc.PNG",
+        "image_url": "/design/Imona/I1.PNG",
+        "project_url": "https://imona.app/",
         "status_fr": "Terminé",
-        "status_en": "Completed"
+        "status_en": "Completed",
+        "gallery_urls": [
+            "/design/Imona/I1.PNG",
+            "/design/Imona/I2.PNG",
+            "/design/Imona/I3.PNG",
+            "/design/Imona/I4.PNG",
+            "/design/Imona/I5.PNG",
+            "/design/Imona/I6.PNG",
+            "/design/Imona/I7.PNG"
+        ]
     },
     {
         "id": 3,
@@ -126,27 +138,7 @@
         "image_url": "/design/AnimNoel.jpg",
         "project_url": "https://merry-chritmas.netlify.app/"
     },
-    {
-        "id": 7,
-        "title_fr": "BitoLab Studio",
-        "title_en": "BitoLab Studio",
-        "category": "IA & ML",
-        "description_fr": "BitoLab – L'Exception Générative. Suite créative pilotée par l'IA (Gemini 2.5 & 3).",
-        "description_en": "BitoLab – The Generative Exception. AI-driven creative suite (Gemini 2.5 & 3).",
-        "tags": [
-            "IA",
-            "Design",
-            "Generative"
-        ],
-        "impact": "R&D",
-        "metrics_type": "Innovation",
-        "color": "warning",
-        "status_fr": "En cours",
-        "status_en": "In Progress",
-        "gallery_urls": [
-            "/design/bitolab1.PNG"
-        ]
-    },
+
     {
         "id": 8,
         "title_fr": "UNO – Jeu de cartes",
@@ -448,19 +440,49 @@
         "color": "primary",
         "status_fr": "Terminé",
         "status_en": "Completed",
+        "image_url": "/design/Portfolio.Os/P1.PNG",
         "project_url": "https://portefolio-os.netlify.app/",
         "gallery_urls": [
-            "/design/P1.PNG",
-            "/design/P2.PNG",
-            "/design/P3.PNG",
-            "/design/P4.PNG",
-            "/design/P5.PNG",
-            "/design/P6.PNG",
-            "/design/P7.PNG",
-            "/design/P8.PNG",
-            "/design/P9.PNG",
-            "/design/P10.PNG",
-            "/design/P11.PNG"
+            "/design/Portfolio.Os/P1.PNG",
+            "/design/Portfolio.Os/P2.PNG",
+            "/design/Portfolio.Os/P3.PNG",
+            "/design/Portfolio.Os/P4.PNG",
+            "/design/Portfolio.Os/P5.PNG",
+            "/design/Portfolio.Os/P6.PNG",
+            "/design/Portfolio.Os/P7.PNG",
+            "/design/Portfolio.Os/P8.PNG",
+            "/design/Portfolio.Os/P9.PNG",
+            "/design/Portfolio.Os/P10.PNG",
+            "/design/Portfolio.Os/P11.PNG"
+        ]
+    },
+    {
+        "id": 23,
+        "title_fr": "IPPh",
+        "title_en": "IPPh",
+        "category": "Vitrine & CMS",
+        "description_fr": "IPPh est une plateforme web conçue pour représenter l'Institut Polytechnique Paul Hazoumé en ligne. Elle inclut un site vitrine ainsi qu'un back-office permettant la gestion dynamique des contenus.",
+        "description_en": "IPPh is a web platform designed to represent the Institut Polytechnique Paul Hazoumé online. It includes a showcase site as well as a back-office allowing dynamic content management.",
+        "tags": [
+            "TypeScript",
+            "PHP",
+            "Blade",
+            "CSS",
+            "Dockerfile",
+            "HTML"
+        ],
+        "impact": "Institutionnel",
+        "metrics_type": "Académique",
+        "color": "primary",
+        "image_url": "/design/IUUP/1.PNG",
+        "project_url": "https://ip-ph.netlify.app/",
+        "status_fr": "En cours",
+        "status_en": "In Progress",
+        "gallery_urls": [
+            "/design/IUUP/1.PNG",
+            "/design/IUUP/2.PNG",
+            "/design/IUUP/3.PNG",
+            "/design/IUUP/4.PNG"
         ]
     }
 ]

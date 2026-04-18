@@ -1,121 +1,72 @@
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   STITCH DESIGN - Portfolio pour TobiDev
-   Développeur Full-Stack & UI/UX Designer
-   ═══════════════════════════════════════════════════════════════════════════ */
-
 @layer base {
   :root {
-    /* ══════════ COULEURS BRAND STITCH ══════════ */
-    --background: 222 47% 6%;
-    --foreground: 0 0% 100%;
-    --card: 220 41% 12%;
-    --card-foreground: 0 0% 100%;
-    --popover: 220 41% 12%;
-    --popover-foreground: 0 0% 100%;
-
-    /* ══════════ ACCENT - BLEU ÉLECTRIQUE ══════════ */
-    --primary: 217 91% 60%;
-    --primary-foreground: 0 0% 100%;
-
-    /* ══════════ SECONDARY - SLATE ══════════ */
-    --secondary: 217 41% 18%;
-    --secondary-foreground: 0 0% 100%;
-
-    /* ══════════ SURFACES NEUTRES ══════════ */
-    --muted: 217 41% 18%;
-    --muted-foreground: 215 20% 80%;
-
-    /* ══════════ ACCENT ══════════ */
-    --accent: 217 91% 60%;
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 72% 50%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 217 41% 18%;
-    --input: 217 41% 18%;
-    --ring: 217 91% 60%;
-
-    --radius: 0.75rem;
-
-    /* ══════════ COULEURS ÉTENDUES ══════════ */
-    --warm-orange: 17 100% 60%;
-    --warm-gold: 45 100% 60%;
-    --noble-violet: 260 100% 55%;
-    --noble-purple: 280 100% 40%;
-    --success: 145 80% 42%;
-    --warning: 38 92% 50%;
-
-    /* ══════════ GRADIENTS ══════════ */
-    --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%) 0%, hsl(260 100% 55%) 100%);
-    --gradient-warm: linear-gradient(135deg, hsl(17 100% 60%) 0%, hsl(45 100% 60%) 100%);
-    --gradient-noble: linear-gradient(135deg, hsl(260 100% 55%) 0%, hsl(280 100% 40%) 100%);
-    --gradient-surface: linear-gradient(180deg, hsl(220 41% 12%) 0%, hsl(222 47% 6%) 100%);
-
-    /* ══════════ OMBRES ET EFFETS ══════════ */
-    --shadow-neon-cyan: 0 0 30px hsl(217 91% 60% / 40%);
-    --shadow-neon-orange: 0 0 30px hsl(17 100% 60% / 40%);
-    --shadow-neon-violet: 0 0 30px hsl(260 100% 55% / 40%);
-    --shadow-elevated: 0 25px 50px -12px hsl(0 0% 0% / 50%);
-    --shadow-glow: 0 0 60px hsl(217 91% 60% / 20%);
-
-    /* ══════════ SIDEBAR ══════════ */
-    --sidebar-background: 222 47% 6%;
-    --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 217 91% 60%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 260 100% 55%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 217 41% 18%;
-    --sidebar-ring: 217 91% 60%;
-
-    /* ══════════ CHARTS ══════════ */
-    --chart-1: 217 91% 60%;
-    --chart-2: 17 100% 60%;
-    --chart-3: 260 100% 55%;
-    --chart-4: 45 100% 60%;
-    --chart-5: 145 80% 42%;
-
-    /* ══════════ TYPOGRAPHIE ══════════ */
-    --font-display: 'Space Grotesk', system-ui, sans-serif;
-    --font-sans: 'Sora', 'Inter', system-ui, sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
-
-    /* ══════════ ANIMATIONS ══════════ */
-    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-smooth: 300ms cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
-
-    /* ══════════ SPACING ══════════ */
-    --spacing: 0.25rem;
+    --background: 45 20% 94%; /* #f5f4ed - Parchment */
+    --foreground: 0 0% 8%; /* #141413 - Near Black */
+    
+    --card: 45 20% 98%; /* #faf9f5 - Ivory */
+    --card-foreground: 0 0% 8%;
+    
+    --popover: 45 20% 98%;
+    --popover-foreground: 0 0% 8%;
+    
+    --primary: 15 54% 52%; /* #c96442 - Terracotta */
+    --primary-foreground: 45 20% 98%;
+    
+    --secondary: 45 20% 89%; /* #e8e6dc - Warm Sand */
+    --secondary-foreground: 0 0% 30%; /* #4d4c48 - Charcoal Warm */
+    
+    --muted: 45 5% 45%; /* #73726c - Stone Gray (Lightened for better contrast) */
+    --muted-foreground: 45 5% 30%; /* #4d4c48 - Olive Gray */
+    
+    --accent: 15 54% 60%; /* #d97757 - Coral */
+    --accent-foreground: 45 20% 98%;
+    
+    --destructive: 0 56% 45%; /* #b53333 */
+    --destructive-foreground: 45 20% 98%;
+    
+    --border: 45 20% 92%; /* #f0eee6 - Border Cream */
+    --input: 45 20% 92%;
+    --ring: 15 54% 52%;
+    
+    --radius: 12px;
   }
 
-  /* Mode clair (optionnel) */
-  .light {
-    --background: 45 20% 97%;
-    --foreground: 240 10% 8%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 8%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 8%;
-    --primary: 217 91% 50%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 17 100% 50%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 240 5% 90%;
-    --muted-foreground: 240 5% 40%;
-    --accent: 260 100% 45%;
-    --accent-foreground: 0 0% 100%;
-    --border: 240 5% 85%;
-    --input: 240 5% 85%;
+  .dark {
+    --background: 0 0% 8%; /* #141413 - Near Black */
+    --foreground: 45 10% 80%; /* #b0aea5 - Warm Silver fallback */
+    
+    --card: 0 0% 19%; /* #30302e - Dark Surface */
+    --card-foreground: 45 20% 98%;
+    
+    --popover: 0 0% 19%;
+    --popover-foreground: 45 20% 98%;
+    
+    --primary: 15 54% 52%;
+    --primary-foreground: 45 20% 98%;
+    
+    --secondary: 0 0% 19%;
+    --secondary-foreground: 45 20% 98%;
+    
+    --muted: 45 5% 65%; /* #a6a49c - Lightened for dark mode */
+    --muted-foreground: 45 5% 80%;
+    
+    --accent: 15 54% 60%;
+    --accent-foreground: 45 20% 98%;
+    
+    --destructive: 0 56% 45%;
+    --destructive-foreground: 45 20% 98%;
+    
+    --border: 0 0% 19%;
+    --input: 0 0% 19%;
+    --ring: 15 54% 52%;
   }
 }
 
@@ -123,582 +74,97 @@
   * {
     @apply border-border;
   }
-
+  
   html {
     scroll-behavior: smooth;
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground font-sans selection:bg-terracotta/20;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.6;
   }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif font-medium tracking-tight;
+    /* Explicitly use currentColor to inherit from parent section text color */
+    color: currentColor;
+    line-height: 1.2;
+  }
+
+  h1 { @apply text-4xl md:text-6xl; }
+  h2 { @apply text-3xl md:text-5xl; }
+  h3 { @apply text-2xl md:text-3xl; }
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   CUSTOM STYLES POUR LE DESIGN STITCH
-   ═══════════════════════════════════════════════════════════════════════════ */
+@layer components {
+  .btn-primary {
+    @apply bg-terracotta text-ivory hover:bg-terracotta/90 px-6 py-3 rounded-xl transition-all shadow-ring inline-flex items-center justify-center font-medium;
+    --ring-color: #c96442;
+  }
 
-/* Glassmorphism Card */
-.glass-card {
-  background: rgba(30, 41, 59, 0.7);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
+  .btn-secondary {
+    @apply bg-warm-sand text-charcoal-warm hover:bg-warm-sand/80 px-4 py-2 rounded-lg transition-all shadow-ring inline-flex items-center justify-center font-medium;
+    --ring-color: #d1cfc5;
+  }
 
-/* Gradient Text */
-.text-gradient {
-  background: linear-gradient(135deg, hsl(217 91% 60%) 0%, hsl(217 91% 60% / 0.5) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  .card-editorial {
+    @apply bg-ivory border border-border-cream rounded-xl p-6 shadow-whisper transition-all hover:shadow-ring;
+    --ring-color: #d1cfc5;
+  }
+
+  .section-parchment {
+    @apply bg-parchment text-near-black py-20 md:py-32;
+  }
+
+  .section-dark {
+    @apply bg-near-black text-ivory py-20 md:py-32;
+  }
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: hsl(222 47% 6%);
+  @apply bg-parchment;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(217 41% 18%);
-  border-radius: 4px;
+  @apply bg-warm-sand rounded-full border-2 border-parchment;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(217 91% 60%);
+  @apply bg-stone-gray;
 }
 
-/* Animations */
+/* Living Effects */
+.float-animation {
+  animation: float 6s ease-in-out infinite;
+}
+
 @keyframes float {
-
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-10px);
-  }
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
 }
 
-.animate-float {
-  animation: float 5s ease-in-out infinite;
+.living-gradient {
+  background: linear-gradient(
+    -45deg, 
+    rgba(201, 100, 66, 0.05), 
+    rgba(217, 119, 87, 0.05), 
+    rgba(245, 244, 237, 0.05)
+  );
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
 }
 
-@keyframes spin-slow {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.animate-spin-slow {
-  animation: spin-slow 10s linear infinite;
-}
-
-.animate-spin-slow-reverse {
-  animation: spin-slow 15s linear infinite reverse;
-}
-
-@keyframes hero-gradient-shift {
-  0% {
-    background-position: 0% 50%;
-  }
-
-  50% {
-    background-position: 100% 50%;
-  }
-
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-.hero-gradient-flow {
-  background-size: 200% 200%;
-  animation: hero-gradient-shift 6s ease infinite;
-}
-
-@keyframes hero-caret-blink {
-  0%,
-  45% {
-    opacity: 1;
-  }
-
-  50%,
-  100% {
-    opacity: 0;
-  }
-}
-
-.hero-type-cursor {
-  animation: hero-caret-blink 1s step-end infinite;
-}
-
-/* ══════════ PLANETARY ORBIT SYSTEM ══════════ */
-.orbital-system {
-  perspective: 1200px;
-  transform-style: preserve-3d;
-}
-
-.orbit-wrap {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transform: rotateX(65deg) rotateY(-15deg);
-  transform-style: preserve-3d;
-  transition: all 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-@keyframes orbit-rotate {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.planet-content {
-  transform: rotateY(15deg) rotateX(-65deg);
-  transform-style: preserve-3d;
-}
-
-.animate-orbit-1 {
-  animation: orbit-rotate 20s linear infinite;
-}
-
-.animate-orbit-2 {
-  animation: orbit-rotate 30s linear infinite;
-}
-
-.animate-orbit-3 {
-  animation: orbit-rotate 40s linear infinite;
-}
-
-@keyframes big-bang {
-  0% {
-    transform: scale(0) rotateX(65deg) rotateY(-15deg);
-    opacity: 0;
-  }
-
-  100% {
-    transform: scale(1) rotateX(65deg) rotateY(-15deg);
-    opacity: 1;
-  }
-}
-
-.animate-big-bang {
-  animation: big-bang 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-
-@media (max-width: 640px) {
-  .orbit-wrap {
-    transform: rotateX(60deg) rotateY(-10deg);
-  }
-
-  @keyframes big-bang {
-    0% {
-      transform: scale(0) rotateX(60deg) rotateY(-10deg);
-      opacity: 0;
-    }
-
-    100% {
-      transform: scale(1) rotateX(60deg) rotateY(-10deg);
-      opacity: 1;
-    }
-  }
-}
-
-/* ══════════ 3D NEURAL CUBE SYSTEM (ENIGME) ══════════ */
-.cube-container {
-  width: 300px;
-  height: 300px;
-  perspective: 1200px;
-  position: relative;
-  z-index: 10;
-}
-
-.cube {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  transform-style: preserve-3d;
-  animation: rotate-cube 20s linear infinite;
-}
-
-.cube-face {
-  position: absolute;
-  width: 300px;
-  height: 300px;
-  background: rgba(15, 23, 42, 0.4);
-  border: 1px solid rgba(59, 130, 246, 0.3);
-  backdrop-filter: blur(8px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: inset 0 0 50px rgba(59, 130, 246, 0.1);
-}
-
-.face-front {
-  transform: rotateY(0deg) translateZ(150px);
-}
-
-.face-back {
-  transform: rotateY(180deg) translateZ(150px);
-}
-
-.face-right {
-  transform: rotateY(90deg) translateZ(150px);
-}
-
-.face-left {
-  transform: rotateY(-90deg) translateZ(150px);
-}
-
-.face-top {
-  transform: rotateX(90deg) translateZ(150px);
-}
-
-.face-bottom {
-  transform: rotateX(-90deg) translateZ(150px);
-}
-
-@keyframes rotate-cube {
-  from {
-    transform: rotateX(0deg) rotateY(0deg);
-  }
-
-  to {
-    transform: rotateX(360deg) rotateY(360deg);
-  }
-}
-
-/* Neural Network Simulation */
-.neuron {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  background: #3b82f6;
-  border-radius: 50%;
-  box-shadow: 0 0 15px #3b82f6;
-  animation: brain-pulse 2s infinite ease-in-out;
-}
-
-.network-link {
-  position: absolute;
-  background: linear-gradient(90deg, transparent, #3b82f6, transparent);
-  height: 2px;
-  width: 100%;
-  pointer-events: none;
-  opacity: 0.1;
-  animation: synapse-flow 4s infinite linear;
-}
-
-@keyframes synapse-flow {
-  0% {
-    transform: translateX(-100%) rotate(45deg);
-    opacity: 0;
-  }
-
-  50% {
-    opacity: 0.4;
-  }
-
-  100% {
-    transform: translateX(100%) rotate(45deg);
-    opacity: 0;
-  }
-}
-
-/* 3D Prism (Pyramid) Architecture - Enhanced Visibility */
-.pyramid-container {
-  width: 0;
-  height: 0;
-  transform-style: preserve-3d;
-  animation: rotate-pyramid 15s linear infinite, levitate-core 4s ease-in-out infinite alternate;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.pyramid-face {
-  position: absolute;
-  width: 0;
-  height: 0;
-  border-left: 60px solid transparent;
-  border-right: 60px solid transparent;
-  border-bottom: 104px solid rgba(59, 130, 246, 0.8);
-  /* Higher opacity */
-  transform-origin: 50% 100%;
-  filter: drop-shadow(0 0 15px rgba(59, 130, 246, 1));
-  /* Sharper glow */
-}
-
-/* Levitating the central core */
-@keyframes levitate-core {
-  0% {
-    transform: translateY(-10px);
-  }
-
-  100% {
-    transform: translateY(10px);
-  }
-}
-
-/* Suspended Question Mark style */
-.suspended-question {
-  position: absolute;
-  font-family: serif;
-  font-weight: bold;
-  font-size: 80px;
-  color: white;
-  text-shadow: 0 0 30px #3b82f6, 0 0 60px #3b82f6;
-  opacity: 0.8;
-  z-index: 50;
-  animation: whisper-fade 3s infinite alternate;
-  pointer-events: none;
-}
-
-@keyframes whisper-fade {
-  from {
-    transform: scale(0.9) translateZ(50px);
-    opacity: 0.4;
-    filter: blur(2px);
-  }
-
-  to {
-    transform: scale(1.1) translateZ(80px);
-    opacity: 0.9;
-    filter: blur(0px);
-  }
-}
-
-/* Tetrahedron Angles */
-.p-face-1 {
-  transform: rotateY(0deg) rotateX(20deg);
-}
-
-.p-face-2 {
-  transform: rotateY(120deg) rotateX(20deg);
-}
-
-.p-face-3 {
-  transform: rotateY(240deg) rotateX(20deg);
-}
-
-.p-face-4 {
-  transform: translateY(20px) rotateX(-90deg);
-  border-bottom: 120px solid rgba(59, 130, 246, 0.4);
-  width: 120px;
-  border-left: none;
-  border-right: none;
-  height: 104px;
-  left: -60px;
-}
-
-@keyframes rotate-pyramid {
-  0% {
-    transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
-  }
-
-  100% {
-    transform: rotateX(360deg) rotateY(720deg) rotateZ(360deg);
-  }
-}
-
-.core-origin {
-  position: absolute;
-  width: 30px;
-  height: 30px;
-  background: #fff;
-  border-radius: 50%;
-  filter: blur(15px);
-  box-shadow: 0 0 30px #3b82f6;
-  animation: origin-pulse 1s infinite alternate;
-}
-
-@keyframes origin-pulse {
-  from {
-    transform: scale(0.6);
-    opacity: 0.3;
-  }
-
-  to {
-    transform: scale(1.2);
-    opacity: 1;
-  }
-}
-
-@keyframes brain-pulse {
-
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 0.6;
-    box-shadow: 0 0 10px #3b82f6;
-  }
-
-  50% {
-    transform: scale(1.5);
-    opacity: 1;
-    box-shadow: 0 0 25px #3b82f6;
-  }
-}
-
-@keyframes neural-flicker {
-
-  0%,
-  100% {
-    opacity: 0.2;
-  }
-
-  50% {
-    opacity: 0.8;
-  }
-}
-
-@media (max-width: 640px) {
-
-  .cube-container,
-  .cube-face {
-    width: 200px;
-    height: 200px;
-  }
-
-  .face-front {
-    transform: rotateY(0deg) translateZ(100px);
-  }
-
-  .face-back {
-    transform: rotateY(180deg) translateZ(100px);
-  }
-
-  .face-right {
-    transform: rotateY(90deg) translateZ(100px);
-  }
-
-  .face-left {
-    transform: rotateY(-90deg) translateZ(100px);
-  }
-
-  .face-top {
-    transform: rotateX(90deg) translateZ(100px);
-  }
-
-  .face-bottom {
-    transform: rotateX(-90deg) translateZ(100px);
-  }
-}
-
-/* Slide Down Animation for Mobile Menu */
-@keyframes slide-down {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-slide-down {
-  animation: slide-down 0.3s ease-out forwards;
-}
-
-/* Touch-friendly tap highlight removal for mobile */
-* {
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* Smooth scrolling with momentum for iOS */
-html {
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* Improved touch targets for mobile */
-button,
-a,
-[role="button"] {
-  min-height: 44px;
-  min-width: 44px;
-}
-
-/* Responsive text utilities */
-@media (max-width: 640px) {
-  .text-balance {
-    text-wrap: balance;
-  }
-}
-
-/* Hide scrollbar but keep functionality */
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-
-/* Cosmic Background Utilities */
-.starfield {
-  background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
-  overflow: hidden;
-}
-
-.stars-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.star {
-  position: absolute;
-  background: white;
-  border-radius: 50%;
-  opacity: 0.5;
-  animation: twinkle var(--duration) infinite ease-in-out;
-}
-
-@keyframes twinkle {
-
-  0%,
-  100% {
-    opacity: 0.3;
-    transform: scale(1);
-  }
-
-  50% {
-    opacity: 1;
-    transform: scale(1.2);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }

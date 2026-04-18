@@ -1,21 +1,10 @@
 import { useState } from "react";
-import { Mail, MapPin, Github, Linkedin, Send, Phone } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Mail, MapPin, Github, Linkedin, Send, Phone, ArrowRight } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { ScrollAnimation } from "@/components/ui/ScrollAnimation";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/lib/supabase";
-
-declare global {
-  interface Window {
-    umami?: {
-      track: (eventName: string, payload?: Record<string, unknown>) => void;
-    };
-  }
-}
 
 export function ContactSection() {
   const { lang } = useLanguage();
@@ -39,26 +28,19 @@ export function ContactSection() {
     {
       icon: Phone,
       label: lang("Téléphone", "Phone"),
-      value: "+229 0157002427 / 0143171448",
+      value: "+229 0157002427",
       href: "tel:+2290157002427",
     },
     {
       icon: MapPin,
       label: lang("Localisation", "Location"),
-      value: "Dowa Dédomin, Porto-Novo",
-      subValue: lang("Bénin", "Benin"),
+      value: "Porto-Novo, Bénin",
     },
   ];
 
   const socialLinks = [
-    {
-      icon: Linkedin,
-      href: "https://www.linkedin.com/in/eucher-abatti-7a9472283",
-    },
-    {
-      icon: Github,
-      href: "https://github.com/T0b0i7/",
-    },
+    { icon: Linkedin, href: "https://www.linkedin.com/in/eucher-abatti-7a9472283" },
+    { icon: Github, href: "https://github.com/T0b0i7/" },
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -84,39 +66,17 @@ export function ContactSection() {
         return;
       }
 
-      const sanitizedData = {
-        name: formData.name.trim(),
-        email: formData.email.trim(),
-        subject: formData.subject.trim(),
-        message: formData.message.trim(),
-      };
-
-      if (sanitizedData.message.length < 20) {
-        toast.error(lang("Message trop court", "Message too short"), {
-          description: lang(
-            "Ajoutez plus de contexte pour obtenir une réponse utile.",
-            "Please add more context to get a useful response."
-          ),
-        });
-        setIsSubmitting(false);
-        return;
-      }
-
       const { error } = await supabase.from("contact_messages").insert([
         {
-          name: sanitizedData.name,
-          email: sanitizedData.email,
-          subject: sanitizedData.subject,
-          message: sanitizedData.message,
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          subject: formData.subject.trim(),
+          message: formData.message.trim(),
         },
       ]);
 
       if (error) throw error;
       localStorage.setItem("contact_last_submit_at", String(now));
-
-      if (window.umami) {
-        window.umami.track("contact-form-submit", { subject: sanitizedData.subject });
-      }
 
       toast.success(lang("Message envoyé avec succès!", "Message sent successfully!"), {
         description: lang("Je vous répondrai dans les plus brefs délais.", "I will get back to you as soon as possible."),
@@ -133,81 +93,65 @@ export function ContactSection() {
     }
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   return (
-    <section id="contact" className="py-12 sm:py-14 md:py-16 bg-slate-950">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="grid lg:grid-cols-2 gap-10 sm:gap-12">
-          {/* Contact Info */}
+    <div className="py-24 md:py-40 bg-near-black text-ivory overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="grid lg:grid-cols-2 gap-20">
+          {/* Info Side */}
           <ScrollAnimation>
-            <div>
-              <span className="text-brand-accent font-bold tracking-[0.2em] text-sm uppercase">
-                Contact
-              </span>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mt-3 mb-6 uppercase">
-                {lang("Commençons une", "Start a")} <span className="text-brand-accent">{lang("Collaboration", "Collaboration")}</span>
-              </h2>
-              <p className="text-muted-foreground mb-8 max-w-md">
-                {lang(
-                  "Une idée ? Un projet ? Je suis à votre écoute pour concrétiser vos besoins technologiques.",
-                  "An idea? A project? I am at your service to materialize your technological needs."
-                )}
-              </p>
+            <div className="space-y-12">
+              <div className="space-y-6">
+                <div className="flex items-center gap-3">
+                  <span className="text-[11px] font-sans font-medium uppercase tracking-[0.2em] text-stone-gray">
+                    {lang("Contact & Collaboration", "Contact & Collaboration")}
+                  </span>
+                </div>
+                <h2 className="text-4xl md:text-7xl font-serif font-medium leading-tight text-white italic">
+                  {lang("Initions une", "Let's start a")} <br />
+                  <span className="text-terracotta not-italic">{lang("conversation.", "conversation.")}</span>
+                </h2>
+                <p className="text-xl text-stone-gray font-sans leading-relaxed max-w-lg">
+                  {lang(
+                    "Une idée, un besoin technique ou simplement l'envie de discuter d'une vision ? Ma boîte de réception est toujours ouverte.",
+                    "An idea, a technical need, or simply a desire to discuss a vision? My inbox is always open."
+                  )}
+                </p>
+              </div>
 
-              {/* Contact Details */}
-              <div className="space-y-4 sm:space-y-6">
+              <div className="space-y-8">
                 {contactInfo.map((info) => (
-                  <div key={info.label} className="flex items-center gap-3 sm:gap-6 group">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-brand-secondary rounded-xl sm:rounded-2xl flex items-center justify-center text-brand-accent border border-white/5 transition-all duration-300 group-hover:bg-brand-accent group-hover:text-white flex-shrink-0">
-                      <info.icon className="w-5 h-5 sm:w-6 sm:h-6" />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-xs text-muted-foreground uppercase font-bold">
-                        {info.label}
-                      </p>
-                      {info.href ? (
-                        <a
-                          href={info.href}
-                          className="font-bold hover:text-brand-accent transition-colors text-sm sm:text-base block truncate"
-                        >
-                          {info.value}
-                        </a>
-                      ) : (
-                        <p className="font-bold text-sm sm:text-base truncate">{info.value}</p>
-                      )}
-                      {info.subValue && (
-                        <p className="text-xs sm:text-sm text-muted-foreground">
-                          {info.subValue}
-                        </p>
-                      )}
-                    </div>
+                  <div key={info.label} className="group">
+                    <p className="text-[10px] font-sans font-medium uppercase tracking-widest text-stone-gray mb-2">
+                      {info.label}
+                    </p>
+                    {info.href ? (
+                      <a href={info.href} className="text-2xl font-serif font-medium text-white hover:text-terracotta transition-colors">
+                        {info.value}
+                      </a>
+                    ) : (
+                      <span className="text-2xl font-serif font-medium text-white">{info.value}</span>
+                    )}
                   </div>
                 ))}
               </div>
 
-              {/* Social Links */}
-              <div className="mt-8">
-                <p className="text-sm font-bold text-muted-foreground mb-4">
-                  {lang("SUIVEZ-MOI", "FOLLOW ME")}
+              <div className="pt-8">
+                 <p className="text-[10px] font-sans font-medium uppercase tracking-widest text-stone-gray mb-6">
+                  {lang("Suivez mon travail", "Follow my work")}
                 </p>
-                <div className="flex gap-4">
-                  {socialLinks.map((social) => (
-                    <a
-                      key={social.href}
-                      href={social.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-10 h-10 rounded-lg bg-brand-secondary border border-white/5 flex items-center justify-center hover:bg-brand-accent transition-all duration-300 hover:scale-110"
+                <div className="flex gap-6">
+                  {socialLinks.map((social, i) => (
+                    <a 
+                      key={i} 
+                      href={social.href} 
+                      target="_blank" 
+                      className="text-stone-gray hover:text-terracotta transition-colors"
                     >
-                      <social.icon className="w-5 h-5" />
+                      <social.icon className="w-6 h-6" />
                     </a>
                   ))}
                 </div>
@@ -215,99 +159,88 @@ export function ContactSection() {
             </div>
           </ScrollAnimation>
 
-          {/* Contact Form */}
+          {/* Form Side */}
           <ScrollAnimation delay={200}>
-            <div className="glass-card p-5 sm:p-6 md:p-7 rounded-3xl border border-white/5">
-              <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
-                  <input
-                    type="text"
-                    name="website"
-                    value={formData.website}
-                    onChange={handleChange}
-                    tabIndex={-1}
-                    autoComplete="off"
-                    aria-hidden="true"
-                    className="hidden"
-                  />
-                  <div className="space-y-2">
-                    <Label htmlFor="name" className="text-[10px] sm:text-xs font-bold uppercase text-muted-foreground tracking-widest">
-                      {lang("Nom complet", "Full Name")}
+            <div className="bg-white/[0.03] border border-white/5 rounded-[40px] p-8 md:p-12">
+              <form onSubmit={handleSubmit} className="space-y-8">
+                <input type="text" name="website" value={formData.website} onChange={handleChange} className="hidden" />
+                
+                <div className="grid md:grid-cols-2 gap-8">
+                  <div className="space-y-3">
+                    <Label htmlFor="name" className="text-[10px] font-sans font-medium uppercase tracking-widest text-stone-gray">
+                      {lang("Votre Nom", "Your Name")}
                     </Label>
-                    <Input
+                    <input
                       id="name"
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
-                      placeholder="John Doe"
-                      maxLength={80}
                       required
-                      className="bg-brand-dark/50 border-white/10 rounded-xl px-4 py-3 sm:px-5 sm:py-4 focus:border-brand-accent focus:ring-0 transition-all placeholder:text-slate-600 text-sm sm:text-base"
+                      className="w-full bg-transparent border-b border-white/10 py-3 text-ivory focus:outline-none focus:border-terracotta transition-colors font-sans"
+                      placeholder="Jean Dupont"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email" className="text-[10px] sm:text-xs font-bold uppercase text-muted-foreground tracking-widest">
-                      {lang("Adresse Email", "Email Address")}
+                  <div className="space-y-3">
+                    <Label htmlFor="email" className="text-[10px] font-sans font-medium uppercase tracking-widest text-stone-gray">
+                      {lang("Votre Email", "Your Email")}
                     </Label>
-                    <Input
+                    <input
                       id="email"
                       name="email"
                       type="email"
                       value={formData.email}
                       onChange={handleChange}
-                      placeholder="john@example.com"
-                      maxLength={120}
                       required
-                      className="bg-brand-dark/50 border-white/10 rounded-xl px-4 py-3 sm:px-5 sm:py-4 focus:border-brand-accent focus:ring-0 transition-all placeholder:text-slate-600 text-sm sm:text-base"
+                      className="w-full bg-transparent border-b border-white/10 py-3 text-ivory focus:outline-none focus:border-terracotta transition-colors font-sans"
+                      placeholder="jean@exemple.com"
                     />
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="subject" className="text-[10px] sm:text-xs font-bold uppercase text-muted-foreground tracking-widest">
-                    {lang("Sujet", "Subject")}
+
+                <div className="space-y-3">
+                  <Label htmlFor="subject" className="text-[10px] font-sans font-medium uppercase tracking-widest text-stone-gray">
+                    {lang("Sujet du Message", "Subject")}
                   </Label>
-                  <Input
+                  <input
                     id="subject"
                     name="subject"
                     value={formData.subject}
                     onChange={handleChange}
-                    placeholder={lang("Collaboration Web", "Web Collaboration")}
-                    maxLength={120}
                     required
-                    className="bg-brand-dark/50 border-white/10 rounded-xl px-4 py-3 sm:px-5 sm:py-4 focus:border-brand-accent focus:ring-0 transition-all placeholder:text-slate-600 text-sm sm:text-base"
+                    className="w-full bg-transparent border-b border-white/10 py-3 text-ivory focus:outline-none focus:border-terracotta transition-colors font-sans"
+                    placeholder={lang("Une opportunité de projet", "A project opportunity")}
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="message" className="text-[10px] sm:text-xs font-bold uppercase text-muted-foreground tracking-widest">
-                    {lang("Votre message", "Your message")}
+
+                <div className="space-y-3">
+                  <Label htmlFor="message" className="text-[10px] font-sans font-medium uppercase tracking-widest text-stone-gray">
+                    {lang("Votre Message", "Message")}
                   </Label>
-                  <Textarea
+                  <textarea
                     id="message"
                     name="message"
+                    rows={4}
                     value={formData.message}
                     onChange={handleChange}
-                    placeholder={lang("Décrivez votre projet...", "Describe your project...")}
-                    rows={4}
-                    minLength={20}
-                    maxLength={2000}
                     required
-                    className="bg-brand-dark/50 border-white/10 rounded-xl px-4 py-3 sm:px-5 sm:py-4 focus:border-brand-accent focus:ring-0 transition-all placeholder:text-slate-600 resize-none text-sm sm:text-base"
+                    className="w-full bg-transparent border border-white/10 rounded-2xl p-6 text-ivory focus:outline-none focus:border-terracotta transition-colors font-sans resize-none"
+                    placeholder={lang("Décrivez votre vision...", "Tell me about your vision...")}
                   />
                 </div>
-                <Button
+
+                <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-brand-accent py-3 sm:py-4 rounded-xl font-bold hover:bg-blue-600 transition-all duration-300 shadow-xl shadow-brand-accent/20 hover:shadow-2xl flex items-center justify-center gap-2 sm:gap-3 text-sm sm:text-base uppercase tracking-widest"
+                  className="btn-primary w-full justify-center !py-5"
                 >
                   {isSubmitting ? lang("Envoi en cours...", "Sending...") : lang("Envoyer le message", "Send message")}
-                  <Send className="w-4 h-4 sm:w-5 sm:h-5" />
-                </Button>
+                  {!isSubmitting && <ArrowRight className="ml-2 w-5 h-5" />}
+                </button>
               </form>
             </div>
           </ScrollAnimation>
         </div>
       </div>
-    </section>
+    </div>
   );
 }
-

@@ -9,55 +9,119 @@ import { ContactSection } from "@/components/ContactSection";
 import { Footer } from "@/components/Footer";
 import { Navigation } from "@/components/Navigation";
 import { WhatsAppFloatButton } from "@/components/WhatsAppFloatButton";
-import { ThemeProvider } from "@/contexts/ThemeContext";
+import { Layout, ShieldCheck, Zap, GraduationCap, FileText, Monitor } from "lucide-react";
 
 const Index = () => {
   return (
-    <ThemeProvider>
-      <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
+    <div className="min-h-screen bg-parchment text-near-black overflow-x-hidden selection:bg-terracotta/20 selection:text-near-black">
         {/* Navigation */}
         <Navigation />
 
         <main id="main-content">
-          {/* Hero Section */}
-          <HeroSection />
+          {/* Hero Section - Light */}
+          <section id="accueil" className="bg-parchment">
+            <HeroSection />
+          </section>
 
-          {/* About Section */}
-          <AboutSection />
+          {/* About Section - Dark */}
+          <section id="apropos" className="bg-near-black text-ivory">
+            <AboutSection />
+          </section>
 
-          {/* Evolution Section (Parcours) */}
-          <EvolutionSection />
+          {/* Evolution Section - Light */}
+          <section id="parcours" className="bg-parchment">
+            <EvolutionSection />
+          </section>
 
-          {/* Featured Project - AfriEnhance AI */}
-          <FeaturedProject
-            projectUrl="https://afri-enhance-ai.vercel.app"
-            repoUrl=""
-            beforeImage="/design/AfriEnhance AI/AfriEnhance AI_1.PNG"
-            afterImage="/design/AfriEnhance AI/AfriEnhance AI_2.PNG"
-          />
+          {/* Featured Project - Dark */}
+          <section id="portfolio-os" className="bg-near-black text-ivory">
+            <FeaturedProject
+              projectUrl="https://portefolio-os.netlify.app/"
+              repoUrl="https://github.com/T0b0i7/Portefolio_2026"
+            />
+          </section>
 
-          {/* Projects Section (Projets) */}
-          <ProjectsSection />
+          {/* Imona Featured Project - Dark */}
+          <section id="imona-featured" className="bg-near-black text-ivory">
+            <FeaturedProject
+              title_fr="Imona"
+              title_en="Imona"
+              description_fr="Plateforme complète pour la gestion interne des processus métier, avec tableaux de bord interactifs et automatisation des tâches répétitives."
+              description_en="Complete platform for internal business process management, with interactive dashboards and automation of repetitive tasks."
+              projectUrl="https://imona.app/"
+              techStack={["Laravel", "TypeScript", "PHP", "Blade", "CSS", "Dockerfile", "HTML"]}
+              cta_fr="Explorer Imona"
+              cta_en="Launch Imona"
+              capabilities={[
+                { icon: Layout, label: "Tableau de Bord" },
+                { icon: ShieldCheck, label: "Accès Sécurisé" },
+                { icon: Zap, label: "Optimisé" }
+              ]}
+              images={[
+                "/design/Imona/I1.PNG",
+                "/design/Imona/I2.PNG",
+                "/design/Imona/I3.PNG",
+                "/design/Imona/I4.PNG",
+                "/design/Imona/I5.PNG",
+                "/design/Imona/I6.PNG",
+                "/design/Imona/I7.PNG"
+              ]}
+            />
+          </section>
 
-          {/* Services / Expertise Section */}
-          <ServicesSection />
+          {/* IPPh Featured Project - Dark */}
+          <section id="ipph-featured" className="bg-near-black text-ivory border-t border-white/5">
+            <FeaturedProject
+              title_fr="IPPh"
+              title_en="IPPh"
+              description_fr="IPPh est une plateforme web conçue pour représenter l'Institut Polytechnique Paul Hazoumé en ligne. Elle inclut un site vitrine ainsi qu'un back-office permettant la gestion dynamique des contenus."
+              description_en="IPPh is a web platform designed to represent the Institut Polytechnique Paul Hazoumé online. It includes a showcase site as well as a back-office allowing dynamic content management."
+              projectUrl="https://ip-ph.netlify.app/"
+              techStack={["TypeScript", "PHP", "Blade", "CSS", "Dockerfile", "HTML"]}
+              cta_fr="Explorer l'IUUP"
+              cta_en="Launch IUUP"
+              capabilities={[
+                { icon: GraduationCap, label: "Portail Académique" },
+                { icon: FileText, label: "Gestion CMS" },
+                { icon: Monitor, label: "Interface Vitrine" }
+              ]}
+              images={[
+                "/design/IUUP/1.PNG",
+                "/design/IUUP/2.PNG",
+                "/design/IUUP/3.PNG",
+                "/design/IUUP/4.PNG"
+              ]}
+            />
+          </section>
 
-          {/* Testimonials Section */}
-          <TestimonialsSection />
+          {/* Projects Section - Light */}
+          <section id="projects" className="bg-parchment">
+            <ProjectsSection />
+          </section>
 
-          {/* Contact Section */}
-          <ContactSection />
+          {/* Services Section - Dark */}
+          <section id="services" className="bg-near-black text-ivory">
+            <ServicesSection />
+          </section>
+
+          {/* Testimonials Section - Light */}
+          <section id="temoignages" className="bg-parchment">
+            <TestimonialsSection />
+          </section>
+
+          {/* Contact Section - Dark */}
+          <section id="contact" className="bg-near-black text-ivory border-t border-white/5">
+            <ContactSection />
+          </section>
         </main>
 
-        {/* Footer */}
-        <div className="mt-8 sm:mt-10">
-          <Footer />
-        </div>
+        {/* Footer - Light/Warm */}
+        <Footer />
 
-        <WhatsAppFloatButton />
+        {/* <WhatsAppFloatButton /> - Temporarily hidden for redesign check */}
       </div>
-    </ThemeProvider>
   );
 };
+
 
 export default Index;

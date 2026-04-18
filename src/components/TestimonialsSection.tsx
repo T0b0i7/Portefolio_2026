@@ -18,7 +18,7 @@ const testimonials: Testimonial[] = [
     id: 1,
     name: "Epiphane Koutangni",
     role: "Chef Service Informatique",
-    company: "SIAB - Société Industrielle d'Acier du Benin",
+    company: "SIAB",
     text: "TobiDev a transformé nos processus internes avec une automatisation remarquable. Une réduction de 30% du temps de traitement, c'est exceptionnel. Un vrai professionnel à l'écoute.",
     rating: 5,
   },
@@ -34,24 +34,8 @@ const testimonials: Testimonial[] = [
     id: 3,
     name: "Vano Baby",
     role: "Artiste Musicien",
-    company: "Concert 10 ans du Gang",
+    company: "Gang",
     text: "Les affiches promotionnelles étaient incroyables. Une vraie compréhension de ma vision artistique et un résultat qui a marqué les esprits. Travail exceptionnel!",
-    rating: 5,
-  },
-  {
-    id: 4,
-    name: "InnovTech SAS",
-    role: "Agence Digitale",
-    company: "Entreprise",
-    text: "Collaboration excellente. TobiDev comprend vite les besoins et livre toujours dans les délais. Un partenaire de confiance pour tous nos projets web.",
-    rating: 5,
-  },
-  {
-    id: 5,
-    name: "Ahouéfa Camillia",
-    role: "Développeuse Full-Stack",
-    company: "Portfolio 3D",
-    text: "Mon portfolio 3D est devenu une vraie œuvre d'art. Les visiteurs sont impressionnés par la qualité et l'originalité du design. Exactement ce que je voulais !",
     rating: 5,
   },
 ];
@@ -65,7 +49,7 @@ export function TestimonialsSection() {
     if (!isAutoPlaying) return;
     const interval = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % testimonials.length);
-    }, 6000);
+    }, 8000);
     return () => clearInterval(interval);
   }, [isAutoPlaying]);
 
@@ -80,141 +64,70 @@ export function TestimonialsSection() {
   };
 
   return (
-    <section id="temoignages" className="py-14 sm:py-16 md:py-20 bg-slate-950 relative overflow-hidden">
-      <div className="pointer-events-none absolute top-0 left-1/4 w-96 h-96 rounded-full bg-brand-accent/5 blur-[100px]" />
-      <div className="pointer-events-none absolute bottom-0 right-1/4 w-80 h-80 rounded-full bg-blue-500/5 blur-[80px]" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+    <div className="py-24 md:py-40 bg-parchment text-near-black overflow-hidden border-t border-border-cream">
+      <div className="max-w-7xl mx-auto px-6">
         <ScrollAnimation>
-          <div className="text-center mb-10 sm:mb-12">
-            <span className="inline-flex items-center gap-2 rounded-full border border-brand-accent/30 bg-brand-accent/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-brand-accent">
-              <Quote className="h-3.5 w-3.5" />
-              {lang("Témoignages", "Testimonials")}
-            </span>
-            <h2 className="mt-4 text-3xl sm:text-4xl md:text-5xl font-extrabold text-white">
-              {lang("Témoignages clients", "Client Testimonials")}
+          <div className="max-w-3xl mb-16 md:mb-24">
+            <div className="flex items-center gap-3 mb-6">
+              <Quote className="w-5 h-5 text-terracotta" />
+              <span className="text-[11px] font-sans font-medium uppercase tracking-[0.2em] text-stone-gray">
+                {lang("Témoignages & Éloges", "Testimonials & Praise")}
+              </span>
+            </div>
+            <h2 className="text-4xl md:text-6xl font-serif font-medium leading-[1.15] mb-8">
+              {lang("Ceux qui ont fait confiance à ma plume et mon code.", "Those who trusted my pen and my code.")}
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-base text-slate-400">
-              {lang(
-                "Retours authentiques de clients satisfaits par mes réalisations numériques.",
-                "Authentic feedback from clients who are satisfied with my digital work."
-              )}
-            </p>
           </div>
         </ScrollAnimation>
 
-        <div className="relative max-w-5xl mx-auto">
-          <ScrollAnimation delay={100}>
-            <div className="relative bg-gradient-to-br from-slate-900 via-slate-900/95 to-slate-800 border border-white/10 rounded-3xl p-6 sm:p-8 md:p-10 backdrop-blur-sm overflow-hidden">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-brand-accent/5 rounded-full blur-3xl" />
-              <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-500/5 rounded-full blur-3xl" />
-
-              <div className="relative">
-                <div className="flex justify-start mb-6">
-                  <div className="flex gap-1">
-                    {Array.from({ length: testimonials[activeIndex].rating }).map((_, i) => (
-                      <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                    ))}
-                  </div>
-                </div>
-
-                <blockquote className="text-lg sm:text-xl md:text-2xl text-slate-200 leading-relaxed font-medium min-h-[80px]">
-                  "{testimonials[activeIndex].text}"
+        <div className="relative">
+          <ScrollAnimation animation="fade-up">
+            <div className="relative min-h-[400px] flex flex-col justify-center">
+              <div className="absolute -top-10 -left-10 text-[200px] font-serif text-terracotta/10 leading-none select-none">
+                “
+              </div>
+              
+              <div className="relative z-10 transition-all duration-700">
+                <blockquote className="text-2xl md:text-4xl lg:text-5xl font-serif font-medium leading-tight mb-12 max-w-5xl">
+                  {testimonials[activeIndex].text}
                 </blockquote>
 
-                <div className="flex items-center gap-4 mt-8 pt-6 border-t border-white/10">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-brand-accent to-blue-500 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-brand-accent/20">
-                    {testimonials[activeIndex].name.split(" ").map(n => n[0]).join("").slice(0, 2)}
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 pt-12 border-t border-border-cream">
+                  <div className="flex items-center gap-6">
+                    <div className="w-16 h-16 rounded-2xl bg-warm-sand flex items-center justify-center font-serif text-2xl font-medium text-terracotta border border-border-cream">
+                      {testimonials[activeIndex].name[0]}
+                    </div>
+                    <div>
+                      <h4 className="text-xl font-serif font-medium text-near-black">{testimonials[activeIndex].name}</h4>
+                      <p className="text-sm font-sans text-stone-gray uppercase tracking-widest mt-1">
+                        {testimonials[activeIndex].role} — {testimonials[activeIndex].company}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <p className="font-bold text-white text-lg">{testimonials[activeIndex].name}</p>
-                    <p className="text-sm text-slate-400">
-                      {testimonials[activeIndex].role} {lang("chez", "at")} <span className="text-brand-accent">{testimonials[activeIndex].company}</span>
-                    </p>
+
+                  <div className="flex items-center gap-4">
+                    <button 
+                      onClick={goToPrev}
+                      className="w-12 h-12 rounded-full border border-border-cream flex items-center justify-center hover:bg-near-black hover:text-ivory transition-all group"
+                    >
+                      <ChevronLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
+                    </button>
+                    <div className="text-sm font-sans font-medium text-olive-gray tracking-widest">
+                      {activeIndex + 1} / {testimonials.length}
+                    </div>
+                    <button 
+                      onClick={goToNext}
+                      className="w-12 h-12 rounded-full border border-border-cream flex items-center justify-center hover:bg-near-black hover:text-ivory transition-all group"
+                    >
+                      <ChevronRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
+                    </button>
                   </div>
                 </div>
               </div>
-
-              <button
-                onClick={goToPrev}
-                className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:bg-white/10 hover:text-white transition-all"
-                aria-label={lang("Témoignage précédent", "Previous testimonial")}
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </button>
-              <button
-                onClick={goToNext}
-                className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:bg-white/10 hover:text-white transition-all"
-                aria-label={lang("Témoignage suivant", "Next testimonial")}
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
             </div>
           </ScrollAnimation>
-
-          <div className="flex justify-center gap-3 mt-8">
-            {testimonials.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => {
-                  setActiveIndex(index);
-                  setIsAutoPlaying(false);
-                }}
-                className={cn(
-                  "h-2 rounded-full transition-all duration-300",
-                  index === activeIndex
-                    ? "w-8 bg-brand-accent"
-                    : "w-2 bg-slate-700 hover:bg-slate-600"
-                )}
-                aria-label={`${lang("Témoignage", "Testimonial")} ${index + 1}`}
-              />
-            ))}
-          </div>
-
-          <div className="flex justify-center gap-4 mt-6">
-            {testimonials.map((testimonial, index) => (
-              <button
-                key={testimonial.id}
-                onClick={() => {
-                  setActiveIndex(index);
-                  setIsAutoPlaying(false);
-                }}
-                className={cn(
-                  "flex items-center gap-3 px-4 py-3 rounded-xl border transition-all duration-300",
-                  index === activeIndex
-                    ? "bg-brand-accent/10 border-brand-accent/30"
-                    : "bg-transparent border-white/5 hover:border-white/20"
-                )}
-              >
-                <div className={cn(
-                  "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold",
-                  index === activeIndex
-                    ? "bg-brand-accent text-white"
-                    : "bg-slate-800 text-slate-400"
-                )}>
-                  {testimonial.name.split(" ").map(n => n[0]).join("").slice(0, 2)}
-                </div>
-                <div className="text-left hidden sm:block">
-                  <p className={cn(
-                    "text-sm font-medium",
-                    index === activeIndex ? "text-white" : "text-slate-400"
-                  )}>
-                    {testimonial.name.split(" ")[0]}
-                  </p>
-                  <div className="flex gap-0.5">
-                    {Array.from({ length: testimonial.rating }).map((_, i) => (
-                      <Star key={i} className={cn(
-                        "w-3 h-3",
-                        index === activeIndex ? "fill-yellow-400 text-yellow-400" : "fill-slate-600 text-slate-600"
-                      )} />
-                    ))}
-                  </div>
-                </div>
-              </button>
-            ))}
-          </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

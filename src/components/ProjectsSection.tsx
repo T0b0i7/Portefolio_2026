@@ -1,807 +1,468 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { ExternalLink, Eye, Code, Palette, Smartphone, Globe, Sparkles, ChevronLeft, ChevronRight, Database, Camera, Search, Filter, Mail, ChevronDown, ChevronUp } from "lucide-react";
+import {
+  ExternalLink,
+  Eye,
+  Code,
+  Palette,
+  Smartphone,
+  Globe,
+  Search,
+  Filter,
+  Camera,
+  ChevronUp,
+  ChevronDown,
+  Github,
+  Mail,
+  Database,
+  Lock,
+  ArrowRight,
+  Maximize2,
+  Cpu,
+  Sparkles,
+  ChevronLeft,
+  ChevronRight
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useOptimizedImages } from "@/hooks/use-optimized-images";
-import { useTracking } from "@/hooks/useTracking";
-import { projectService } from "@/services/projectService";
-import { Project } from "@/types/project";
-import { getProjects } from "@/data/projectsData";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { ScrollAnimation } from "@/components/ui/ScrollAnimation";
+import { ProjectRating } from "@/components/ui/ProjectRating";
+import projectsData from "../../projects_seed.json";
+import { motion, AnimatePresence } from "framer-motion";
 
-const ITEMS_PER_PAGE_DESKTOP = 9;
-const ITEMS_PER_PAGE_MOBILE = 4;
-const EXCLUDED_CATEGORIES = new Set(["Anniversaire"]);
-const DESCRIPTION_TRUNCATE_LENGTH = 300;
-
-function ProjectDescription({ description }: { description: string }) {
-  const { lang } = useLanguage();
-  const [isExpanded, setIsExpanded] = useState(false);
-  const isLong = description.length > DESCRIPTION_TRUNCATE_LENGTH;
-
-  return (
-    <div className="text-slate-200 text-base leading-relaxed">
-      <p className={isLong && !isExpanded ? "line-clamp-6" : ""}>
-        {isLong && !isExpanded ? description.slice(0, DESCRIPTION_TRUNCATE_LENGTH) + "..." : description}
-      </p>
-      {isLong && (
-        <button
-          onClick={() => setIsExpanded(!isExpanded)}
-          className="mt-2 inline-flex items-center gap-1 text-sm font-medium text-brand-accent hover:text-blue-400 transition-colors"
-        >
-          {isExpanded ? (
-            <>
-              <ChevronUp className="w-4 h-4" />
-              {lang("Réduire", "Show less")}
-            </>
-          ) : (
-            <>
-              <ChevronDown className="w-4 h-4" />
-              {lang("Lire la suite", "Read more")}
-            </>
-          )}
-        </button>
-      )}
-    </div>
-  );
+interface Project {
+  id: number;
+  title_fr: string;
+  title_en: string;
+  category: string;
+  description_fr: string;
+  description_en: string;
+  tags: string[];
+  impact?: string;
+  metrics_type?: string;
+  color?: string;
+  image_url?: string;
+  gallery_urls?: string[];
+  project_url?: string;
+  is_locked?: boolean;
+  is_featured?: boolean;
+  status_fr?: string;
+  status_en?: string;
 }
 
 export function ProjectsSection() {
-  const { lang, language } = useLanguage();
-  const [projects, setProjects] = useState<Project[]>(getProjects(lang));
-  const { getOptimizedImage } = useOptimizedImages();
-  const { trackEvent } = useTracking();
-
-  useEffect(() => {
-    const fetchDBProjects = async () => {
-      const dbProjects = await projectService.getAllProjects(language);
-      if (dbProjects && dbProjects.length > 0) {
-        setProjects(dbProjects);
-      }
-    };
-    fetchDBProjects();
-  }, [language]);
-
+  const { lang } = useLanguage();
   const [activeCategory, setActiveCategory] = useState("all");
-
-  const categories = useMemo(
-    () => [
-      { id: "all", name: lang("Tous les projets", "All Projects"), icon: Code },
-      { id: "Full-Stack", name: "Full-Stack", icon: Globe },
-      { id: "Prototypage", name: lang("Prototypage", "Prototyping"), icon: Code },
-      { id: "Web Design", name: "Web Design", icon: Globe },
-      { id: "Design Graphique", name: lang("Design Graphique", "Graphic Design"), icon: Palette },
-      { id: "Mobile", name: "Mobile", icon: Smartphone },
-      { id: "Landing Pages", name: "Landing Pages", icon: Globe },
-      { id: "E-commerce", name: "E-commerce", icon: Globe },
-      { id: "Gaming", name: "Gaming", icon: Globe },
-      { id: "Portfolio", name: "Portfolio", icon: Camera },
-      { id: "Automatisation", name: lang("Automatisation", "Automation"), icon: Database },
-    ],
-    [lang]
-  );
-  const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [failedImages, setFailedImages] = useState<Set<number>>(new Set());
-  const [visibleProjects, setVisibleProjects] = useState<Set<number>>(new Set());
-  const [isLoaded, setIsLoaded] = useState(false);
-  const isMobile = useIsMobile();
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const filterContainerRef = React.useRef<HTMLDivElement>(null);
+  const projectsPerPage = 6;
 
-  // Colors for the design
-  const colors = {
-    primary: "#3b82f6",
-    secondary: "#60a5fa",
-    accent: "#60a5fa",
-    warning: "#f59e0b",
-    background: "#020617",
-    surface: "#0f172a",
-    border: "#1e293b",
-    text: "#f8fafc",
-    textSecondary: "#94a3b8",
-  };
+  const typedProjects = projectsData as Project[];
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const [activeImage, setActiveImage] = useState<string | null>(null);
-
-  const itemsPerPage = isMobile ? ITEMS_PER_PAGE_MOBILE : ITEMS_PER_PAGE_DESKTOP;
-  const projectCardMinHeight = isMobile ? 340 : 370;
-
-  const searchableProjects = useMemo(
-    () => projects.filter((project) => !project.locked && !EXCLUDED_CATEGORIES.has(project.category)),
-    [projects]
-  );
-
-  const searchScopedProjects = useMemo(() => {
-    const query = searchQuery.trim().toLowerCase();
-    if (!query) return searchableProjects;
-
-    return searchableProjects.filter((project) => {
-      return (
-        project.title.toLowerCase().includes(query) ||
-        project.tags.some((tag) => tag.toLowerCase().includes(query)) ||
-        project.description.toLowerCase().includes(query)
-      );
-    });
-  }, [searchQuery, searchableProjects]);
-
-  const smartCategories = useMemo(
-    () =>
-      categories
-        .map((category) => ({
-          ...category,
-          count:
-            category.id === "all"
-              ? searchScopedProjects.length
-              : searchScopedProjects.filter((project) => project.category === category.id).length,
-        }))
-        .filter((category) => category.id === "all" || category.count > 0),
-    [categories, searchScopedProjects]
-  );
-
-  const selectedCategory =
-    smartCategories.find((category) => category.id === activeCategory) ??
-    categories.find((category) => category.id === activeCategory) ??
-    categories[0];
-
-  const filteredProjects = useMemo(
-    () =>
-      searchScopedProjects.filter(
-        (project) => activeCategory === "all" || project.category === activeCategory
-      ),
-    [activeCategory, searchScopedProjects]
-  );
-
-  const paginatedProjects = useMemo(() => filteredProjects.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  ), [currentPage, filteredProjects, itemsPerPage]);
-
-  const totalPages = useMemo(() => Math.ceil(filteredProjects.length / itemsPerPage), [filteredProjects.length, itemsPerPage]);
-
-  const getCategoryIcon = (category: string) => {
-    const categoryConfig = categories.find(cat => cat.id === category);
-    if (categoryConfig) {
-      const IconComponent = categoryConfig.icon;
-      return <IconComponent className="w-4 h-4" />;
-    }
-    return <Code className="w-4 h-4" />;
-  };
-
-  // Reset page when category or search changes
-  React.useEffect(() => {
+  // Reset to first page when filters change
+  useEffect(() => {
     setCurrentPage(1);
-    setVisibleProjects(new Set());
+    
+    // Auto-scroll to center the active category
+    if (filterContainerRef.current && activeCategory !== "all") {
+      const container = filterContainerRef.current;
+      const activeButton = container.querySelector(`[data-category="${activeCategory}"]`) as HTMLElement;
+      if (activeButton) {
+        const scrollLeft = activeButton.offsetLeft - (container.offsetWidth / 2) + (activeButton.offsetWidth / 2);
+        container.scrollTo({ left: scrollLeft, behavior: "smooth" });
+      }
+    } else if (filterContainerRef.current && activeCategory === "all") {
+      filterContainerRef.current.scrollTo({ left: 0, behavior: "smooth" });
+    }
   }, [activeCategory, searchQuery]);
 
-  // Initial animation
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoaded(true);
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
+  const scrollFilters = (direction: "left" | "right") => {
+    if (filterContainerRef.current) {
+      const scrollAmount = direction === "left" ? -200 : 200;
+      filterContainerRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    }
+  };
 
-  // Intersection Observer for animations
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const projectId = parseInt(entry.target.getAttribute('data-project-id') || '0');
-            setTimeout(() => {
-              setVisibleProjects((prev) => new Set([...prev, projectId]));
-            }, 100);
-          }
-        });
-      },
-      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
-    );
+  const filteredProjects = useMemo(() => {
+    return typedProjects.filter(p => {
+      const matchesCategory = activeCategory === "all" || p.category === activeCategory;
+      const title = lang(p.title_fr, p.title_en);
+      const desc = lang(p.description_fr, p.description_en);
+      const matchesSearch = 
+        title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+        desc.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.tags.some(t => t.toLowerCase().includes(searchQuery.toLowerCase()));
+      return matchesCategory && matchesSearch;
+    });
+  }, [activeCategory, searchQuery, lang]);
 
-    const container = document.getElementById('projects');
-    const projectElements = container ? container.querySelectorAll('[data-project-id]') : [];
-    projectElements.forEach((el) => observer.observe(el));
+  const totalPages = Math.ceil(filteredProjects.length / projectsPerPage);
+  const currentProjects = useMemo(() => {
+    const indexOfLastProject = currentPage * projectsPerPage;
+    const indexOfFirstProject = indexOfLastProject - projectsPerPage;
+    return filteredProjects.slice(indexOfFirstProject, indexOfLastProject);
+  }, [filteredProjects, currentPage]);
 
-    return () => {
-      projectElements.forEach((el) => observer.unobserve(el));
-    };
-  }, [paginatedProjects, searchQuery]);
+  const categories = useMemo(() => {
+    const counts: Record<string, number> = { all: typedProjects.length };
+    typedProjects.forEach(p => {
+      counts[p.category] = (counts[p.category] || 0) + 1;
+    });
+    
+    const availableCategories = [
+      { id: "all", name: lang("Tous les projets", "All Projects"), icon: Code },
+      { id: "Full-Stack", name: "Full-Stack", icon: Globe },
+      { id: "Web Design", name: "Web Design", icon: Palette },
+      { id: "Mobile", name: "Mobile", icon: Smartphone },
+      { id: "Automatisation", name: lang("Automatisation", "Automation"), icon: Database },
+      { id: "E-commerce", name: "E-commerce", icon: Globe },
+      { id: "Gaming", name: "Gaming", icon: Smartphone },
+      { id: "Portfolio", name: "Portfolio", icon: Code },
+    ];
 
-  // Reset animations when page changes
-  useEffect(() => {
-    setVisibleProjects(new Set());
-  }, [currentPage]);
+    return availableCategories.filter(cat => cat.id === "all" || (counts[cat.id] || 0) > 0);
+  }, [lang]);
 
   const openProjectDialog = (project: Project) => {
     setSelectedProject(project);
     setIsDialogOpen(true);
-    trackEvent("project-view", { id: project.id, title: project.title });
-    // Focus management for accessibility
-    setTimeout(() => {
-      const modal = document.querySelector('[role="dialog"]') as HTMLElement;
-      if (modal) modal.focus();
-    }, 100);
+    setActiveImageIndex(0);
   };
 
-  const closeDialog = () => {
-    setIsDialogOpen(false);
-    setSelectedProject(null);
-    setFailedImages(new Set());
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <section id="projects" className="py-10 sm:py-14 md:py-16" style={{ backgroundColor: colors.background }}>
-      <div className="container mx-auto px-4 sm:px-6 relative z-10">
-        {/* Section Header */}
-        <div className={`text-center mb-8 sm:mb-10 md:mb-12 transition-all duration-1000 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <div
-            className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium mb-3 sm:mb-4"
-            style={{ backgroundColor: colors.primary + '20', color: colors.primary }}
-          >
-            <Code className="w-3 h-3 sm:w-4 sm:h-4" />
-            {lang("Projets Réalisés", "Past Projects")}
-          </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4 px-4 sm:px-0" style={{ color: colors.text }}>
-            {lang("Mes", "My")} <span style={{ color: colors.primary }}>{lang("Réalisations", "Works")}</span>
-          </h2>
-          <p className="text-base sm:text-lg max-w-3xl mx-auto leading-relaxed px-4 sm:px-0" style={{ color: colors.textSecondary }}>
-            {lang(
-              "Découvrez mes projets les plus significatifs, de la conception à la mise en production.",
-              "Discover my most significant projects, from design to production."
-            )}
-          </p>
-        </div>
-
-        {/* Search & Filter Bar */}
-        <div className={`flex flex-col sm:flex-row gap-4 mb-6 sm:mb-8 transition-all duration-1000 delay-300 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <div className="relative flex-1 group">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors group-focus-within:text-brand-accent text-slate-500" />
-            <input
-              type="text"
-              placeholder={lang("Rechercher (ex: React, IA, Mobile)...", "Search (e.g. React, AI, Mobile)...")}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-slate-800/40 border border-slate-700/50 rounded-2xl py-3.5 pl-12 pr-12 text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent transition-all duration-300"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery("")}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
-              >
-                <span className="text-xl">×</span>
-              </button>
-            )}
-          </div>
-
-          <div className="flex items-center gap-2">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button
-                  className="h-[54px] px-4 rounded-2xl bg-slate-900/70 border border-slate-700/60 text-slate-100 flex items-center gap-2 hover:border-brand-accent/50 transition-colors"
-                  aria-label={lang("Filtrer les catégories", "Filter categories")}
-                >
-                  <Filter className="w-4 h-4 text-brand-accent" />
-                  <span className="text-sm font-bold">{selectedCategory?.name}</span>
-                  <span className="px-2 py-0.5 rounded-full bg-brand-accent/20 text-brand-accent text-xs font-bold">
-                    {selectedCategory?.id === "all" ? filteredProjects.length : (selectedCategory as { count?: number }).count ?? 0}
-                  </span>
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-72 bg-slate-900 border-slate-700 text-slate-100">
-                <p className="px-2 py-1 text-[11px] uppercase tracking-widest text-slate-400 font-bold">
-                  {lang("Filtrage intelligent", "Smart filtering")}
-                </p>
-                <p className="px-2 pb-2 text-xs text-slate-500">
-                  {lang("Les catégories sont adaptées à ta recherche", "Categories adapt to your search query")}
-                </p>
-                <DropdownMenuSeparator className="bg-slate-700" />
-                <DropdownMenuRadioGroup
-                  value={activeCategory}
-                  onValueChange={(value) => {
-                    setActiveCategory(value);
-                    trackEvent("category-filter", { category: value, query: searchQuery || null });
-                  }}
-                >
-                  {smartCategories.map((category) => (
-                    <DropdownMenuRadioItem
-                      key={category.id}
-                      value={category.id}
-                      className="focus:bg-slate-800 focus:text-white cursor-pointer"
-                    >
-                      <div className="flex items-center justify-between w-full gap-3">
-                        <span className="flex items-center gap-2">
-                          <category.icon className="w-3.5 h-3.5 text-brand-accent" />
-                          <span>{category.name}</span>
-                        </span>
-                        <span className="text-xs px-1.5 py-0.5 rounded-md bg-slate-800 text-slate-300 border border-slate-700">
-                          {category.count}
-                        </span>
-                      </div>
-                    </DropdownMenuRadioItem>
-                  ))}
-                </DropdownMenuRadioGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {(activeCategory !== "all" || searchQuery) && (
-              <button
-                onClick={() => {
-                  setActiveCategory("all");
-                  setSearchQuery("");
-                }}
-                className="h-[54px] px-4 rounded-2xl border border-slate-700/60 bg-slate-900/40 text-xs font-bold uppercase tracking-wider text-slate-300 hover:text-white hover:border-brand-accent/40 transition-colors"
-              >
-                {lang("Reset", "Reset")}
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* Projects Grid */}
-        {paginatedProjects.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12">
-            {paginatedProjects.map((project, index) => {
-              const isVisible = visibleProjects.has(project.id);
-              const animationDelay = `${index * 80}ms`;
-
-              return (
-                <div
-                  key={project.id}
-                  data-project-id={project.id}
-                  className="group relative rounded-2xl overflow-hidden border transition-all duration-500"
-                  style={{
-                    backgroundColor: colors.surface,
-                    borderColor: colors.border,
-                    minHeight: `${projectCardMinHeight}px`,
-                    transform: isVisible ? "translateY(0) scale(1)" : "translateY(30px) scale(0.95)",
-                    opacity: isVisible ? 1 : 0,
-                    transition: `all 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${animationDelay}`
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = colors.primary;
-                    e.currentTarget.style.transform = "translateY(-5px) scale(1.02)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = colors.border;
-                    e.currentTarget.style.transform = "translateY(0) scale(1)";
-                  }}
-                >
-                  {/* Project Image */}
-                  <div className="relative h-36 sm:h-40 md:h-44 overflow-hidden">
-                    {project.image || (project.images && project.images[0]) ? (() => {
-                      const imagePath = project.image ?? project.images?.[0] ?? '';
-                      const optimized = getOptimizedImage(imagePath);
-
-                      return (
-                        <picture>
-                          {optimized ? (
-                            <source
-                              type="image/webp"
-                              srcSet={optimized.srcset}
-                              sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
-                            />
-                          ) : null}
-                          <img
-                            src={optimized?.webp ?? imagePath}
-                            alt={`${project.title} - aperçu principal`}
-                            loading="lazy"
-                            decoding="async"
-                            fetchPriority="low"
-                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                          />
-                        </picture>
-                      );
-                    })() : (
-                      <div
-                        className="w-full h-full flex items-center justify-center"
-                        style={{ backgroundColor: colors.primary + '20' }}
-                      >
-                        {getCategoryIcon(project.category)}
-                      </div>
-                    )}
-
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-
-                    {/* Quick Actions */}
-                    <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
-                      <button
-                        onClick={() => openProjectDialog(project)}
-                        className="h-9 w-9 rounded-lg flex items-center justify-center backdrop-blur-sm"
-                        style={{ backgroundColor: colors.surface + '90', border: `1px solid ${colors.border}` }}
-                      >
-                        <Eye className="w-4 h-4" style={{ color: colors.text }} />
-                      </button>
-                      {project.url && (
-                        <button
-                          onClick={() => {
-                            window.open(project.url, "_blank");
-                            trackEvent("project-external-link", { id: project.id, title: project.title });
-                          }}
-                          className="h-9 w-9 rounded-lg flex items-center justify-center backdrop-blur-sm"
-                          style={{ backgroundColor: colors.surface + '90', border: `1px solid ${colors.border}` }}
-                        >
-                          <ExternalLink className="w-4 h-4" style={{ color: colors.text }} />
-                        </button>
-                      )}
-                    </div>
-
-                    {/* Category Badge */}
-                    <div
-                      className="absolute bottom-3 left-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium"
-                      style={{ backgroundColor: colors.primary + '90', color: '#ffffff' }}
-                    >
-                      {getCategoryIcon(project.category)}
-                      <span>{project.category}</span>
-                    </div>
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-5">
-                    <h3 className="text-base sm:text-lg font-bold mb-1.5 sm:mb-2 line-clamp-1" style={{ color: colors.text }}>
-                      {project.title}
-                    </h3>
-
-                    <p className="text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2" style={{ color: colors.textSecondary }}>
-                      {project.description}
-                    </p>
-
-                    {/* Tags */}
-                    <div className="flex flex-wrap gap-1.5 mb-4">
-                      {project.tags.slice(0, 4).map((tag) => (
-                        <span
-                          key={tag}
-                          className="px-2 py-1 rounded-md text-xs font-medium"
-                          style={{ backgroundColor: colors.primary + '15', color: colors.primary }}
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* Metrics & Status */}
-                    <div className="flex items-center justify-between pt-3 border-t" style={{ borderColor: colors.border }}>
-                      <div className="flex items-center gap-1.5 text-xs" style={{ color: colors.textSecondary }}>
-                        <span className="font-semibold" style={{ color: colors.accent }}>{project.metrics.impact}</span>
-                        <span>({project.metrics.type})</span>
-                      </div>
-                      {project.status && (
-                        <span
-                          className="px-2 py-1 text-xs rounded-full font-medium"
-                          style={{
-                            backgroundColor: project.status === 'En cours' ? colors.warning + '20' : project.status === 'Publié' ? colors.accent + '20' : colors.primary + '20',
-                            color: project.status === 'En cours' ? colors.warning : project.status === 'Publié' ? colors.accent : colors.primary
-                          }}
-                        >
-                          {project.status}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="text-center py-12 mb-10">
-            <div
-              className="inline-flex items-center justify-center w-20 h-20 rounded-full mb-4"
-              style={{ backgroundColor: colors.primary + '15' }}
-            >
-              <Search className="w-10 h-10" style={{ color: colors.primary }} />
+    <div id="projects" className="py-24 md:py-40 bg-parchment text-near-black">
+      <div className="max-w-7xl mx-auto px-6">
+        <ScrollAnimation>
+          <div className="max-w-3xl mb-16 md:mb-24">
+            <div className="flex items-center gap-3 mb-6">
+              <Code className="w-5 h-5 text-terracotta" />
+              <span className="text-[11px] font-sans font-medium uppercase tracking-[0.2em] text-stone-gray">
+                {lang("Portfolio & Travaux", "Portfolio & Works")}
+              </span>
             </div>
-            <h3 className="text-2xl font-bold mb-4" style={{ color: colors.text }}>
-              {lang("Aucun résultat trouvé", "No results found")}
-            </h3>
-            <p className="text-slate-400 mb-8 max-w-md mx-auto">
+            <h2 className="text-4xl md:text-6xl font-serif font-medium leading-[1.15] mb-8">
+              {lang("Sélection de réalisations.", "Selected works.")}
+            </h2>
+            <p className="text-lg md:text-xl text-stone-gray font-sans leading-relaxed">
               {lang(
-                `Nous n'avons trouvé aucun projet correspondant à votre recherche "${searchQuery}" dans cette catégorie.`,
-                `We couldn't find any projects matching your search "${searchQuery}" in this category.`
+                "Chaque projet est une exploration de l'équilibre entre esthétique pure et utilité fonctionnelle.",
+                "Every project is an exploration of the balance between pure aesthetics and functional utility."
               )}
             </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <Button
-                onClick={() => setSearchQuery("")}
-                variant="outline"
-                style={{ borderColor: colors.border, color: colors.text }}
-              >
-                {lang("Effacer la recherche", "Clear search")}
-              </Button>
-              <Button
-                onClick={() => { setActiveCategory("all"); setSearchQuery(""); }}
-                style={{ backgroundColor: colors.primary, color: '#ffffff' }}
-              >
-                {lang("Tout réinitialiser", "Reset all")}
-              </Button>
-            </div>
           </div>
-        )}
+        </ScrollAnimation>
 
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="flex justify-center items-center gap-1 sm:gap-2 mb-8 sm:mb-10">
-            {/* Previous Button - Compact on mobile */}
-            <button
-              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-              disabled={currentPage === 1}
-              className={cn(
-                "flex items-center justify-center rounded-lg font-medium transition-all duration-200",
-                currentPage === 1 ? "opacity-30 cursor-not-allowed" : "hover:scale-105"
-              )}
-              style={{
-                padding: '8px 12px',
-                backgroundColor: colors.surface,
-                color: colors.text,
-                border: `1px solid ${colors.border}`,
-                fontSize: '12px'
-              }}
+        <div className="flex flex-col md:flex-row gap-6 mb-12 items-center justify-between">
+          <div className="relative w-full md:w-96 group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-gray group-focus-within:text-terracotta transition-colors" />
+            <input 
+              type="text" 
+              placeholder={lang("Rechercher un projet...", "Search projects...")}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-warm-sand/30 border border-border-cream rounded-xl py-3 pl-12 pr-4 text-sm font-sans focus:outline-none focus:ring-1 focus:ring-terracotta/20 transition-all"
+            />
+          </div>
+
+          <div className="relative w-full md:flex-1 min-w-0 flex items-center gap-2 group/filter-nav">
+            {/* Scroll Buttons - Desktop only */}
+            <button 
+              onClick={() => scrollFilters("left")}
+              className="hidden md:flex absolute -left-4 z-20 w-8 h-8 rounded-full bg-ivory border border-border-cream items-center justify-center text-stone-gray hover:text-terracotta shadow-whisper opacity-0 group-hover/filter-nav:opacity-100 transition-opacity"
             >
-              <ChevronLeft className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-              <span className="hidden sm:inline">{lang("Précédent", "Previous")}</span>
-              <span className="sm:hidden">{lang("Prec", "Prev")}</span>
+              <ChevronLeft className="w-4 h-4" />
             </button>
 
-            {/* Page Numbers - Compact on mobile */}
-            <div className="flex gap-1">
+            {/* Gradient Masks for scrolling */}
+            <div className="absolute left-0 top-0 bottom-4 w-12 bg-gradient-to-r from-parchment to-transparent z-10 pointer-events-none md:hidden" />
+            <div className="absolute right-0 top-0 bottom-4 w-12 bg-gradient-to-l from-parchment to-transparent z-10 pointer-events-none" />
+            
+            <div 
+              ref={filterContainerRef}
+              className="flex items-center gap-2 overflow-x-auto pb-4 w-full scroll-smooth no-scrollbar select-none"
+            >
+              {categories.map((cat) => (
+                <button
+                  key={cat.id}
+                  data-category={cat.id}
+                  onClick={() => setActiveCategory(cat.id)}
+                  className={cn(
+                    "px-4 py-2.5 rounded-xl text-xs font-sans font-medium uppercase tracking-widest transition-all whitespace-nowrap border shrink-0",
+                    activeCategory === cat.id
+                      ? "bg-terracotta text-ivory shadow-ring border-terracotta/20 scale-105"
+                      : "bg-warm-sand/40 text-stone-gray hover:bg-warm-sand/60 border-border-cream/50 hover:scale-105 active:scale-95"
+                  )}
+                >
+                  <div className="flex items-center gap-2">
+                    <cat.icon className={cn("w-3.5 h-3.5", activeCategory === cat.id ? "text-ivory" : "text-terracotta")} />
+                    {cat.name}
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            <button 
+              onClick={() => scrollFilters("right")}
+              className="hidden md:flex absolute -right-4 z-20 w-8 h-8 rounded-full bg-ivory border border-border-cream items-center justify-center text-stone-gray hover:text-terracotta shadow-whisper opacity-0 group-hover/filter-nav:opacity-100 transition-opacity"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+            
+            {/* Visual indicator for desktop */}
+            <div className="hidden md:block absolute -bottom-1 left-0 right-0 h-0.5 bg-border-cream/20 rounded-full overflow-hidden">
+                <div className="h-full bg-terracotta/20 transition-all duration-300" style={{ width: '100%' }} />
+            </div>
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 min-h-[600px]">
+          <AnimatePresence mode="wait">
+            {currentProjects.map((project, index) => (
+              <motion.div 
+                key={project.id}
+                layout
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.4, delay: index * 0.05 }}
+                onClick={() => openProjectDialog(project)}
+                className="group cursor-pointer flex flex-col h-full"
+              >
+                <div className="relative aspect-[4/3] rounded-[32px] overflow-hidden mb-6 border border-border-cream shadow-whisper group-hover:shadow-ring transition-all bg-warm-sand/20">
+                  <img 
+                    src={project.image_url || (project.gallery_urls?.[0]) || "/placeholder.svg"} 
+                    alt={lang(project.title_fr, project.title_en)}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-near-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
+                    <div className="w-12 h-12 rounded-full bg-ivory flex items-center justify-center text-near-black shadow-xl">
+                      <Eye className="w-5 h-5" />
+                    </div>
+                  </div>
+                  {project.is_locked && (
+                    <div className="absolute top-4 right-4 bg-near-black/60 backdrop-blur-md p-2 rounded-full border border-white/10 text-ivory">
+                      <Lock className="w-3.5 h-3.5" />
+                    </div>
+                  )}
+                </div>
+                
+                 <div className="space-y-3 flex-1">
+                   <div className="flex items-center justify-between">
+                     <span className="text-[10px] font-sans font-medium uppercase tracking-widest text-terracotta bg-terracotta/5 px-2 py-1 rounded">
+                       {project.category}
+                     </span>
+                     {project.status_fr && (
+                       <span className="text-[9px] font-sans font-medium uppercase tracking-tighter text-stone-gray italic">
+                         {lang(project.status_fr, project.status_en)}
+                       </span>
+                     )}
+                   </div>
+                   <h3 className="text-2xl font-serif font-medium">{lang(project.title_fr, project.title_en)}</h3>
+                   <p className="text-sm text-stone-gray font-sans line-clamp-2 leading-relaxed">
+                     {lang(project.description_fr, project.description_en)}
+                   </p>
+                   <ProjectRating projectId={project.id} size="sm" />
+                 </div>
+
+                <div className="pt-6 mt-auto">
+                    <div className="flex flex-wrap gap-1.5 opacity-60">
+                         {project.tags.slice(0, 3).map(tag => (
+                             <span key={tag} className="text-[9px] font-sans uppercase tracking-tight px-2 py-0.5 bg-warm-sand/30 border border-border-cream rounded text-stone-gray">
+                                 {tag}
+                             </span>
+                         ))}
+                         {project.tags.length > 3 && (
+                             <span className="text-[9px] font-sans font-bold text-stone-gray">+{project.tags.length - 3}</span>
+                         )}
+                    </div>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
+
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="mt-20 flex items-center justify-center gap-4">
+            <button
+              onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+              disabled={currentPage === 1}
+              className="w-12 h-12 rounded-full border border-border-cream flex items-center justify-center text-stone-gray hover:bg-terracotta hover:text-white disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-stone-gray transition-all"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            
+            <div className="flex items-center gap-2">
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                 <button
                   key={page}
-                  onClick={() => setCurrentPage(page)}
+                  onClick={() => handlePageChange(page)}
                   className={cn(
-                    "rounded-lg font-medium transition-all duration-200 hover:scale-105",
-                    "hidden sm:flex items-center justify-center",
-                    currentPage === page ? "w-10 h-10" : "w-8 h-8 sm:w-10 sm:h-10"
+                    "w-12 h-12 rounded-full font-sans text-sm font-medium transition-all border",
+                    currentPage === page 
+                      ? "bg-terracotta text-white border-terracotta shadow-ring" 
+                      : "bg-warm-sand/20 text-stone-gray border-border-cream hover:bg-warm-sand/40"
                   )}
-                  style={{
-                    backgroundColor: currentPage === page ? colors.primary : 'transparent',
-                    color: currentPage === page ? '#ffffff' : colors.text,
-                    border: `1px solid ${currentPage === page ? colors.primary : colors.border}`,
-                    fontSize: '12px'
-                  }}
                 >
                   {page}
                 </button>
               ))}
             </div>
 
-            {/* Mobile: Show current page / total */}
-            <div
-              className="sm:hidden flex items-center justify-center px-3 py-2 rounded-lg"
-              style={{
-                backgroundColor: colors.surface,
-                color: colors.text,
-                border: `1px solid ${colors.border}`,
-                fontSize: '12px'
-              }}
-            >
-              {currentPage}/{totalPages}
-            </div>
-
-            {/* Next Button - Compact on mobile */}
             <button
-              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+              onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
               disabled={currentPage === totalPages}
-              className={cn(
-                "flex items-center justify-center rounded-lg font-medium transition-all duration-200",
-                currentPage === totalPages ? "opacity-30 cursor-not-allowed" : "hover:scale-105"
-              )}
-              style={{
-                padding: '8px 12px',
-                backgroundColor: colors.surface,
-                color: colors.text,
-                border: `1px solid ${colors.border}`,
-                fontSize: '12px'
-              }}
+              className="w-12 h-12 rounded-full border border-border-cream flex items-center justify-center text-stone-gray hover:bg-terracotta hover:text-white disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-stone-gray transition-all"
             >
-              <span className="hidden sm:inline">{lang("Suivant", "Next")}</span>
-              <span className="sm:hidden">{lang("Suiv", "Next")}</span>
-              <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 ml-1" />
+              <ChevronRight className="w-5 h-5" />
             </button>
           </div>
         )}
 
-        {/* Bottom CTA */}
-        <div className={`text-center transition-all duration-1000 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <div
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full mb-4"
-            style={{ backgroundColor: colors.primary + '15' }}
-          >
-            <Sparkles className="w-5 h-5" style={{ color: colors.primary }} />
-            <span style={{ color: colors.text }}>{filteredProjects.length} {lang("projets disponibles", "projects available")}</span>
-          </div>
-          <h3 className="text-2xl font-bold mb-3" style={{ color: colors.text }}>
-            {lang("Prêt à", "Ready to")} <span style={{ color: colors.primary }}>{lang("collaborer", "collaborate")}</span> ?
-          </h3>
-          <Button
-            size="lg"
-            className="px-8 py-4 text-base font-semibold text-white"
-            style={{ backgroundColor: colors.primary }}
-            onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-          >
-            {lang("Discutons de votre projet", "Let's discuss your project")}
-            <ExternalLink className="w-5 h-5 ml-2" />
-          </Button>
-        </div>
-      </div>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogContent className="max-w-5xl bg-ivory border-border-cream rounded-[40px] p-0 overflow-hidden shadow-2xl">
+            {selectedProject && (
+              <div className="grid md:grid-cols-2 h-full max-h-[90vh] overflow-y-auto md:overflow-hidden">
+                <div className="relative h-[400px] md:h-auto bg-warm-sand/20">
+                    {/* Gallery / Main Image */}
+                    {selectedProject.gallery_urls && selectedProject.gallery_urls.length > 0 ? (
+                        <div className="h-full relative flex flex-col">
+                             <div className="flex-1 overflow-hidden relative">
+                                <img 
+                                    src={selectedProject.gallery_urls[activeImageIndex]} 
+                                    className="w-full h-full object-contain p-2 md:p-6" 
+                                    alt={lang(selectedProject.title_fr, selectedProject.title_en)} 
+                                />
+                             </div>
+                             <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 overflow-x-auto max-w-full px-4 scrollbar-hide py-2 bg-near-black/30 backdrop-blur-md rounded-2xl border border-white/10">
+                                {selectedProject.gallery_urls.map((url, idx) => (
+                                    <button 
+                                        key={idx}
+                                        onClick={() => setActiveImageIndex(idx)}
+                                        className={cn(
+                                            "w-12 h-12 rounded-lg overflow-hidden border-2 transition-all flex-shrink-0",
+                                            activeImageIndex === idx ? "border-terracotta scale-110" : "border-transparent opacity-60 hover:opacity-100"
+                                        )}
+                                    >
+                                        <img src={url} className="w-full h-full object-cover" alt="" />
+                                    </button>
+                                ))}
+                             </div>
+                        </div>
+                    ) : (
+                        <img 
+                            src={selectedProject.image_url || "/placeholder.svg"} 
+                            className="w-full h-full object-contain p-4" 
+                            alt={lang(selectedProject.title_fr, selectedProject.title_en)} 
+                        />
+                    )}
 
-      {/* Project Dialog */}
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        {selectedProject && (
-          <DialogContent
-            className="max-w-4xl max-h-[95vh] overflow-y-auto p-0 border-none bg-transparent"
-            style={{ borderRadius: '24px' }}
-          >
-            <div className="relative bg-slate-900 border border-white/10 overflow-hidden rounded-3xl shadow-2xl flex flex-col group/modal">
-
-              {/* Modal Header */}
-              <div className="sticky top-0 z-50 px-6 py-4 bg-slate-900/80 backdrop-blur-xl border-b border-white/5 flex items-center justify-between">
-                <div>
-                  <h3 className="text-xl font-bold text-white">{selectedProject.title}</h3>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="text-[10px] bg-brand-accent/20 text-brand-accent px-2 py-0.5 rounded uppercase font-bold tracking-widest">
-                      {selectedProject.category}
-                    </span>
-                  </div>
-                </div>
-                {/* Single Close Button */}
-                <button
-                  onClick={closeDialog}
-                  className="w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-all text-white border border-white/10"
-                >
-                  <span className="text-2xl">×</span>
-                </button>
-              </div>
-
-              <div className="p-6 sm:p-8 space-y-8 relative z-10">
-                {/* DescriptionSection */}
-                <div>
-                  <h4 className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-3">{lang("À propos", "About")}</h4>
-                  <ProjectDescription description={selectedProject.description} />
+                    {selectedProject.is_locked && (
+                        <div className="absolute inset-0 bg-near-black/40 backdrop-blur-sm flex items-center justify-center p-8 text-center">
+                            <div className="bg-ivory/95 p-6 rounded-3xl shadow-xl max-w-xs border border-border-cream">
+                                <Lock className="w-8 h-8 text-terracotta mx-auto mb-4" />
+                                <h3 className="font-serif text-lg mb-2">{lang("Accès restreint", "Access Restricted")}</h3>
+                                <p className="text-xs text-stone-gray font-sans leading-relaxed">
+                                    {lang(
+                                        "Ce projet contient des informations confidentielles. Veuillez me contacter pour plus de détails.",
+                                        "This project contains confidential information. Please contact me for more details."
+                                    )}
+                                </p>
+                            </div>
+                        </div>
+                    )}
                 </div>
 
-                {/* Media Gallery */}
-                {selectedProject.images && selectedProject.images.length > 0 && (
-                  <div className="space-y-4">
-                    <h4 className="text-slate-400 text-xs font-bold uppercase tracking-widest">
-                      {lang("Galerie projet", "Project gallery")}
-                    </h4>
-
-                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-                      {selectedProject.images.map((image, index) => {
-                        const optimized = getOptimizedImage(image);
-
-                        return (
-                          <div
-                            key={index}
-                            className="relative group rounded-2xl overflow-hidden aspect-video cursor-zoom-in bg-slate-800 border border-white/5"
-                            onClick={() => setActiveImage(optimized?.webp ?? image)}
-                          >
-                            {failedImages.has(index) ? (
-                              <div className="w-full h-full flex items-center justify-center">
-                                <Camera className="w-6 h-6 text-slate-600" />
-                              </div>
-                            ) : (
-                              <>
-                                <picture>
-                                  {optimized ? (
-                                    <source
-                                      type="image/webp"
-                                      srcSet={optimized.srcset}
-                                      sizes="(max-width: 1024px) 50vw, 33vw"
-                                    />
-                                  ) : null}
-                                  <img
-                                    src={optimized?.webp ?? image}
-                                    alt={`${selectedProject.title} - ${lang("Image de la galerie", "Gallery image")} ${index + 1}/${selectedProject.images.length}`}
-                                    loading="lazy"
-                                    decoding="async"
-                                    fetchPriority="low"
-                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 grayscale-[0.3] group-hover:grayscale-0"
-                                    onError={() => setFailedImages(prev => new Set([...prev, index]))}
-                                  />
-                                </picture>
-                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                  <Eye className="w-6 h-6 text-white" />
-                                </div>
-                              </>
-                            )}
-                          </div>
-                        );
-                      })}
+                <div className="p-8 md:p-14 flex flex-col h-full bg-ivory scroll-smooth overflow-y-auto">
+                  <div className="mb-10">
+                    <div className="flex items-center justify-between mb-4">
+                        <span className="text-[10px] font-sans font-medium uppercase tracking-[0.2em] text-terracotta">
+                            {selectedProject.category}
+                        </span>
+                        {selectedProject.impact && (
+                            <span className="px-3 py-1 bg-terracotta/5 border border-terracotta/10 rounded-full text-[10px] font-sans font-bold text-terracotta uppercase tracking-[0.1em]">
+                                {selectedProject.impact}
+                            </span>
+                        )}
+                    </div>
+                    <h2 className="text-4xl md:text-5xl font-serif font-medium mb-6 leading-tight">{lang(selectedProject.title_fr, selectedProject.title_en)}</h2>
+                    <p className="text-olive-gray font-sans text-lg leading-relaxed first-letter:text-4xl first-letter:font-serif first-letter:text-terracotta first-letter:mr-1">
+                      {lang(selectedProject.description_fr, selectedProject.description_en)}
+                    </p>
+                    <div className="mt-6">
+                      <h4 className="text-[10px] font-sans font-bold uppercase tracking-widest text-stone-gray mb-3">
+                        {lang("Votre évaluation", "Your Rating")}
+                      </h4>
+                      <ProjectRating projectId={selectedProject.id} size="lg" />
                     </div>
                   </div>
-                )}
 
-                {/* Detail Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {/* Left Column: Tech & Skills */}
-                  <div className="space-y-6">
+                  <div className="space-y-8 mb-12 flex-1">
+                    {/* Detail section */}
+                    <div className="grid grid-cols-2 gap-8">
+                        <div>
+                             <h4 className="text-[10px] font-sans font-bold uppercase tracking-widest text-stone-gray mb-3">{lang("Rôle / Type", "Role / Type")}</h4>
+                             <p className="text-sm font-serif">{selectedProject.metrics_type || "Production"}</p>
+                        </div>
+                        {selectedProject.status_fr && (
+                            <div>
+                                <h4 className="text-[10px] font-sans font-bold uppercase tracking-widest text-stone-gray mb-3">{lang("État", "Status")}</h4>
+                                <p className="text-sm font-serif">{lang(selectedProject.status_fr, selectedProject.status_en)}</p>
+                            </div>
+                        )}
+                    </div>
+
                     <div>
-                      <h4 className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-3">{lang("Compétences Clés", "Key Skills")}</h4>
-                      <div className="flex flex-wrap gap-2">
-                        {selectedProject.tags.map((tag) => (
-                          <span key={tag} className="px-3 py-1.5 bg-brand-accent/10 border border-brand-accent/20 rounded-xl text-xs font-bold text-brand-accent">
+                      <h4 className="text-[10px] font-sans font-bold uppercase tracking-widest text-stone-gray mb-4">{lang("Technologies", "Technical Stack")}</h4>
+                      <div className="flex flex-wrap gap-1.5">
+                        {selectedProject.tags.map(tag => (
+                          <span key={tag} className="text-[10px] font-sans font-medium uppercase tracking-tighter text-olive-gray bg-warm-sand/30 px-3 py-1 rounded border border-border-cream/50">
                             {tag}
                           </span>
                         ))}
                       </div>
                     </div>
-
-                    <div>
-                      <h4 className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-3">{lang("Objectifs Atteints", "Goals Achieved")}</h4>
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5">
-                          <span className="text-xs text-slate-400">{lang("Impact Projet", "Project Impact")}</span>
-                          <span className="text-xs font-bold text-emerald-400">{selectedProject.metrics.impact}</span>
-                        </div>
-                        <div className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5">
-                          <span className="text-xs text-slate-400">{lang("Architecture", "Architecture")}</span>
-                          <span className="text-xs font-bold text-white uppercase">{selectedProject.metrics.type}</span>
-                        </div>
-                      </div>
-                    </div>
                   </div>
 
-                  {/* Right Column: Actions */}
-                  <div className="flex flex-col sm:flex-row gap-3 justify-end items-center md:col-span-2 mt-4 pt-6 border-t border-white/5">
-                    {selectedProject.url && (
-                      <button
-                        onClick={() => window.open(selectedProject.url, "_blank")}
-                        className="w-full sm:flex-1 h-12 flex items-center justify-center gap-2 bg-white text-slate-900 font-bold rounded-2xl hover:bg-slate-200 transition-all hover:scale-[1.02] active:scale-95 shadow-lg"
-                      >
-                        <ExternalLink className="w-4 h-4" />
-                        {lang("Consulter l'application", "View Application")}
-                      </button>
+                  <div className="mt-auto pt-8 flex gap-4 border-t border-border-cream/50">
+                    {selectedProject.project_url && (
+                        <a 
+                            href={selectedProject.project_url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="btn-primary flex-1 group"
+                        >
+                            {lang("Voir le projet", "View Live Experience")}
+                            <Maximize2 className="ml-2 w-4 h-4 group-hover:rotate-45 transition-transform" />
+                        </a>
                     )}
-
-                    <button
-                      onClick={() => {
-                        closeDialog();
-                        document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-                      }}
-                      className="w-full sm:flex-1 h-12 flex items-center justify-center gap-2 bg-slate-800 text-white font-bold rounded-2xl border border-white/10 hover:bg-slate-700 transition-all hover:scale-[1.02] active:scale-95"
-                    >
-                      <Mail className="w-4 h-4 text-brand-accent" />
-                      {lang("Discuter de ce projet", "Discuss this project")}
-                    </button>
+                    {selectedProject.is_locked && (
+                         <a 
+                            href="#contact" 
+                            onClick={() => setIsDialogOpen(false)}
+                            className="btn-primary flex-1 bg-near-black text-ivory hover:bg-stone-gray"
+                        >
+                            {lang("Demander l'accès", "Request Access")}
+                            <Mail className="ml-2 w-4 h-4" />
+                        </a>
+                    )}
                   </div>
                 </div>
               </div>
-            </div>
+            )}
           </DialogContent>
-        )}
-      </Dialog>
-
-      {/* Lightbox for Images */}
-      {activeImage && (
-        <div
-          className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex items-center justify-center p-4 cursor-zoom-out"
-          onClick={() => setActiveImage(null)}
-        >
-          <button
-            className="absolute top-8 right-8 text-white/50 hover:text-white transition-colors"
-          >
-            <span className="text-4xl">×</span>
-          </button>
-          <img
-            src={activeImage}
-            alt="Plein écran"
-            loading="eager"
-            decoding="async"
-            className="max-w-full max-h-full object-contain shadow-2xl rounded-lg border border-white/5"
-            onClick={(e) => e.stopPropagation()}
-          />
-        </div>
-      )}
-    </section>
+        </Dialog>
+      </div>
+    </div>
   );
 }

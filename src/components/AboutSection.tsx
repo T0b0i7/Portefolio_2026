@@ -1,5 +1,5 @@
-﻿import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ArrowRight } from "lucide-react";
 import { ScrollAnimation } from "@/components/ui/ScrollAnimation";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -11,11 +11,10 @@ export function AboutSection() {
 
   const audienceQuestions = useMemo(
     () => [
-      lang("Vous en avez assez de tout faire à la main ?", "Are you tired of doing everything manually?"),
-      lang("Vous souhaitez automatiser vos tâches récurrentes ?", "Do you want to automate recurring tasks?"),
-      lang("Vous voulez augmenter vos revenus mensuels et annuels ?", "Do you want to increase your monthly and yearly revenue?"),
-      lang("Vous voulez mieux vous positionner sur le marché digital ?", "Do you want a stronger position in the digital market?"),
-      lang("Vous souhaitez rester dans la course à l'innovation ?", "Do you want to stay ahead in innovation?")
+      lang("Lassé des processus manuels qui freinent votre croissance ?", "Tired of manual processes slowing your growth?"),
+      lang("Besoin d'automatiser vos tâches pour regagner du temps ?", "Need to automate tasks to win back your time?"),
+      lang("Envie d'une présence digitale qui reflète vraiment votre excellence ?", "Want a digital presence that truly reflects your excellence?"),
+      lang("Vous cherchez à transformer vos visiteurs en ambassadeurs ?", "Looking to turn your visitors into ambassadors?"),
     ],
     [lang]
   );
@@ -44,108 +43,99 @@ export function AboutSection() {
 
     const timer = setTimeout(() => {
       setVisibleCount((prev) => prev + 1);
-    }, 260);
+    }, 400);
 
     return () => clearTimeout(timer);
   }, [startReveal, visibleCount, audienceQuestions.length]);
 
   return (
-    <section id="apropos" className="relative overflow-hidden bg-slate-950 py-12 sm:py-14 md:py-16">
-      <div className="pointer-events-none absolute -left-20 top-10 h-52 w-52 rounded-full bg-blue-500/20 blur-3xl" />
-      <div className="pointer-events-none absolute -right-16 bottom-8 h-56 w-56 rounded-full bg-cyan-400/10 blur-3xl" />
+    <div className="py-24 md:py-40 px-6 bg-near-black text-ivory overflow-hidden">
+      <div className="max-w-7xl mx-auto">
+        <div className="grid lg:grid-cols-2 gap-20 items-center">
+          <ScrollAnimation animation="fade-right">
+            <div className="space-y-8">
+              <div className="inline-block px-4 py-1.5 rounded-full border border-white/10 bg-white/5 text-[11px] font-sans font-medium uppercase tracking-[0.2em] text-stone-gray">
+                {lang("Philosophie", "Philosophy")}
+              </div>
+              
+              <h2 className="text-4xl md:text-6xl font-serif font-medium leading-[1.15]">
+                {lang("Un salon littéraire réimaginé pour le web moderne.", "A literary salon reimagined for the modern web.")}
+              </h2>
+              
+              <p className="text-lg md:text-xl text-stone-gray font-sans leading-relaxed max-w-xl">
+                {lang(
+                  "Je ne construis pas seulement des sites web. Je crée des environnements numériques où chaque pixel et chaque ligne de code respirent la clarté, l'intention et le goût.",
+                  "I don't just build websites. I create digital environments where every pixel and line of code breathes clarity, intention, and taste."
+                )}
+              </p>
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <ScrollAnimation>
-          <div className="mb-8 text-center sm:mb-10">
-            <span className="inline-flex items-center gap-2 rounded-full border border-blue-400/30 bg-blue-500/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-blue-300 sm:text-sm">
-              <Sparkles className="h-3.5 w-3.5" />
-              {lang("À propos", "About")}
-            </span>
-            <h2 className="mt-3 text-2xl font-semibold text-slate-100 sm:text-3xl md:text-4xl">
-              {lang("Pourquoi travailler avec moi ?", "Why work with me?")}
-            </h2>
-            <p className="mx-auto mt-3 max-w-3xl text-sm leading-relaxed text-slate-300 sm:text-base">
-              {lang(
-                "Cette section est conçue pour capter votre attention et vous offrir une direction claire : passer de l'effort constant à des résultats mesurables.",
-                "This section is designed to capture your attention and offer a clear direction: moving from constant effort to measurable results."
-              )}
-            </p>
-          </div>
-        </ScrollAnimation>
-
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 lg:items-center">
-          <ScrollAnimation animation="fade-right" delay={80}>
-            <div className="relative overflow-hidden rounded-2xl border border-blue-400/25 bg-slate-900/70 p-2 shadow-[0_0_50px_rgba(37,99,235,0.14)]">
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-blue-500/10 via-transparent to-cyan-300/10" />
-              <img
-                src="/profil.png"
-                alt="TobiDev"
-                className="h-72 w-full rounded-xl object-cover sm:h-80"
-                loading="lazy"
-                decoding="async"
-              />
+              <div className="flex items-center gap-6 pt-4">
+                <div className="flex -space-x-3">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="w-12 h-12 rounded-full border-2 border-near-black bg-warm-sand/20" />
+                  ))}
+                </div>
+                <div className="text-sm font-sans text-stone-gray leading-tight uppercase tracking-wider">
+                   {lang("Rejoint par des visionnaires", "Joined by visionaries")}
+                </div>
+              </div>
             </div>
           </ScrollAnimation>
 
-          <ScrollAnimation animation="fade-left" delay={140}>
-            <div
+          <ScrollAnimation animation="fade-left">
+            <div 
               ref={revealRef}
-              className="rounded-2xl border border-blue-400/20 bg-gradient-to-br from-blue-500/12 via-slate-900/90 to-slate-900 p-5 sm:p-6 md:p-7"
+              className="bg-ivory/[0.03] border border-white/5 rounded-[32px] p-8 md:p-12 relative overflow-hidden"
             >
-              <h3 className="mb-4 text-2xl font-semibold text-white sm:text-3xl">
-                {lang("Et si nous parlions de vos objectifs ?", "What about your goals?")}
-              </h3>
+              <div className="relative z-10">
+                <h3 className="text-2xl font-serif font-medium mb-8">
+                  {lang("Et si nous parlions de vos objectifs ?", "What about your goals?")}
+                </h3>
 
-              <div className="mb-5 space-y-2.5">
-                {audienceQuestions.map((question, index) => {
-                  const isVisible = index < visibleCount;
-                  return (
-                    <p
-                      key={question}
-                      className={`rounded-xl border px-3 py-2.5 text-sm transition-all duration-500 ${
-                        isVisible
-                          ? "translate-x-0 border-blue-300/30 bg-blue-500/15 text-blue-100 opacity-100"
-                          : "translate-x-4 border-blue-300/10 bg-blue-500/5 text-blue-200/40 opacity-0"
-                      }`}
+                <div className="space-y-4 mb-10">
+                  {audienceQuestions.map((question, index) => {
+                    const isVisible = index < visibleCount;
+                    return (
+                      <p
+                        key={question}
+                        className={`text-lg md:text-xl font-sans transition-all duration-700 ${
+                          isVisible
+                            ? "opacity-100 translate-x-0"
+                            : "opacity-0 translate-x-4"
+                        } ${index < visibleCount - 1 ? "text-stone-gray" : "text-ivory"}`}
+                      >
+                        — {question}
+                      </p>
+                    );
+                  })}
+                </div>
+
+                <div className="space-y-6">
+                  <p className="text-stone-gray leading-relaxed">
+                    {lang(
+                      "Ma mission est de transformer ces interrogations en un système concret, lisible et performant qui propulse votre activité au niveau supérieur.",
+                      "My mission is to turn these questions into a concrete, clear, and high-performing system that propels your business to the next level."
+                    )}
+                  </p>
+                  
+                  <div className="pt-4">
+                    <a
+                      href="#contact"
+                      className="btn-primary"
                     >
-                      {question}
-                    </p>
-                  );
-                })}
+                      {lang("Commencer la conversation", "Start the conversation")}
+                      <ArrowRight className="ml-2 w-5 h-5" />
+                    </a>
+                  </div>
+                </div>
               </div>
 
-              <p className="mb-4 text-sm leading-relaxed text-slate-300 sm:text-base">
-                {lang(
-                  "Alors oui : je peux être la solution. Mon rôle est de transformer vos objectifs en un système concret, lisible et performant.",
-                  "Then yes: I can be the solution. My role is to turn your goals into a concrete, clear, and high-performing system."
-                )}
-              </p>
-              <p className="mb-6 text-sm leading-relaxed text-slate-300 sm:text-base">
-                {lang(
-                  "Avec moi, vous gagnez une direction stratégique, une exécution professionnelle et une présence digitale qui vous différencie réellement.",
-                  "With me, you get strategic direction, professional execution, and a digital presence that truly sets you apart."
-                )}
-              </p>
-
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <a
-                  href="#contact"
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-500 px-6 py-3 text-sm font-bold uppercase tracking-wider text-white transition-all hover:bg-blue-600"
-                >
-                  {lang("Je veux évoluer", "I want to grow")}
-                  <ArrowRight className="h-4 w-4" />
-                </a>
-                <a
-                  href="#projects"
-                  className="inline-flex items-center justify-center rounded-xl border border-blue-300/20 bg-blue-500/5 px-6 py-3 text-sm font-bold uppercase tracking-wider text-slate-100 transition-all hover:border-blue-300/50 hover:bg-blue-500/10"
-                >
-                  {lang("Voir mes réalisations", "See my work")}
-                </a>
-              </div>
+              {/* Decorative detail */}
+              <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 blur-3xl rounded-full -translate-y-1/2 translate-x-1/2" />
             </div>
           </ScrollAnimation>
         </div>
       </div>
-    </section>
+    </div>
   );
 }
