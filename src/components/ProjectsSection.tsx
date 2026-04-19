@@ -60,7 +60,15 @@ export function ProjectsSection() {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const filterContainerRef = React.useRef<HTMLDivElement>(null);
-  const projectsPerPage = 6;
+  const [projectsPerPage, setProjectsPerPage] = useState(6);
+
+  useEffect(() => {
+    const mdQuery = window.matchMedia("(min-width: 768px)");
+    setProjectsPerPage(mdQuery.matches ? 6 : 4);
+    const handleResize = (e: MediaQueryListEvent) => setProjectsPerPage(e.matches ? 6 : 4);
+    mdQuery.addEventListener("change", handleResize);
+    return () => mdQuery.removeEventListener("change", handleResize);
+  }, []);
 
   const typedProjects = projectsData as Project[];
 
@@ -174,7 +182,23 @@ export function ProjectsSection() {
             />
           </div>
 
-          <div className="relative w-full md:flex-1 min-w-0 flex items-center gap-2 group/filter-nav">
+          {/* Mobile Select Filter */}
+          <div className="md:hidden w-full relative">
+            <select
+              value={activeCategory}
+              onChange={(e) => setActiveCategory(e.target.value)}
+              className="w-full bg-warm-sand/40 border border-border-cream rounded-xl py-3 px-4 text-sm font-sans font-medium text-stone-gray appearance-none focus:outline-none focus:ring-1 focus:ring-terracotta/20"
+            >
+              {categories.map(cat => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-gray pointer-events-none" />
+          </div>
+
+          <div className="hidden md:flex relative w-full flex-1 min-w-0 items-center gap-2 group/filter-nav">
             {/* Scroll Buttons - Desktop only */}
             <button 
               onClick={() => scrollFilters("left")}
@@ -292,7 +316,7 @@ export function ProjectsSection() {
         </div>
 
         {/* Pagination Controls */}
-        {totalPages > 1 && (
+        {totalPages > 1 && activeCategory === "all" && (
           <div className="mt-20 flex items-center justify-center gap-4">
             <button
               onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
@@ -434,23 +458,33 @@ export function ProjectsSection() {
                     </div>
                   </div>
 
-                  <div className="mt-auto pt-8 flex gap-4 border-t border-border-cream/50">
+                  <div className="mt-auto pt-8 flex flex-wrap gap-4 border-t border-border-cream/50">
                     {selectedProject.project_url && (
                         <a 
                             href={selectedProject.project_url} 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className="btn-primary flex-1 group"
+                            className="btn-primary flex-1 group min-w-[200px]"
                         >
                             {lang("Voir le projet", "View Live Experience")}
                             <Maximize2 className="ml-2 w-4 h-4 group-hover:rotate-45 transition-transform" />
                         </a>
                     )}
+                    
+                    <a
+                      href="#contact"
+                      onClick={() => setIsDialogOpen(false)}
+                      className="btn-primary flex-1 min-w-[200px] bg-transparent border border-border-cream text-near-black hover:bg-warm-sand/30"
+                    >
+                      {lang("Consulter le code", "View Code")}
+                      <Code className="ml-2 w-4 h-4" />
+                    </a>
+
                     {selectedProject.is_locked && (
                          <a 
                             href="#contact" 
                             onClick={() => setIsDialogOpen(false)}
-                            className="btn-primary flex-1 bg-near-black text-ivory hover:bg-stone-gray"
+                            className="btn-primary flex-1 min-w-[200px] bg-near-black text-ivory hover:bg-stone-gray"
                         >
                             {lang("Demander l'accès", "Request Access")}
                             <Mail className="ml-2 w-4 h-4" />

@@ -46,12 +46,19 @@ const Index = () => {
             <FeaturedProject
               title_fr="Imona"
               title_en="Imona"
-              description_fr="Plateforme complète pour la gestion interne des processus métier, avec tableaux de bord interactifs et automatisation des tâches répétitives."
-              description_en="Complete platform for internal business process management, with interactive dashboards and automation of repetitive tasks."
+              description_fr="IMONA est une application béninoise de gestion locative simplifiée destinée aux propriétaires au Bénin."
+              description_en="IMONA is a simplified Beninese rental management application designed for property owners in Benin."
               projectUrl="https://imona.app/"
               techStack={["Laravel", "TypeScript", "PHP", "Blade", "CSS", "Dockerfile", "HTML"]}
               cta_fr="Explorer Imona"
               cta_en="Launch Imona"
+              goalsDescription_fr="Le défi était de créer un outil digital adapté au marché local, permettant une gestion transparente et automatisée des biens immobiliers."
+              goalsDescription_en="The challenge was to create a digital tool adapted to the local market, allowing transparent and automated management of real estate properties."
+              goalsList={[
+                { fr: "Gestion automatisée des loyers", en: "Automated rent management" },
+                { fr: "Suivi des paiements en temps réel", en: "Real-time payment tracking" },
+                { fr: "Simplification administrative", en: "Administrative simplification" }
+              ]}
               capabilities={[
                 { icon: Layout, label: "Tableau de Bord" },
                 { icon: ShieldCheck, label: "Accès Sécurisé" },
@@ -80,6 +87,13 @@ const Index = () => {
               techStack={["TypeScript", "PHP", "Blade", "CSS", "Dockerfile", "HTML"]}
               cta_fr="Explorer l'IUUP"
               cta_en="Launch IUUP"
+              goalsDescription_fr="L'objectif était de moderniser la communication de l'institut avec une plateforme dynamique intégrant un back-office complet pour la gestion académique."
+              goalsDescription_en="The objective was to modernize the institute's communication with a dynamic platform integrating a complete back-office for academic management."
+              goalsList={[
+                { fr: "Site vitrine académique", en: "Academic showcase site" },
+                { fr: "Gestion des formations", en: "Training management" },
+                { fr: "Administration autonome", en: "Autonomous administration" }
+              ]}
               capabilities={[
                 { icon: GraduationCap, label: "Portail Académique" },
                 { icon: FileText, label: "Gestion CMS" },

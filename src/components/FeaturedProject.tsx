@@ -29,6 +29,9 @@ interface FeaturedProjectProps {
   capabilities?: { icon: any; label: string }[];
   cta_fr?: string;
   cta_en?: string;
+  goalsDescription_fr?: string;
+  goalsDescription_en?: string;
+  goalsList?: { fr: string; en: string }[];
 }
 
 const defaultCapabilities = [
@@ -64,6 +67,9 @@ export function FeaturedProject({
   capabilities = defaultCapabilities,
   cta_fr,
   cta_en,
+  goalsDescription_fr,
+  goalsDescription_en,
+  goalsList,
 }: FeaturedProjectProps) {
   const { toast } = useToast();
   const { lang } = useLanguage();
@@ -232,20 +238,22 @@ export function FeaturedProject({
                 {lang("Objectifs & Défis", "Goals & Challenges")}
               </h4>
               <p className="text-stone-gray leading-relaxed mb-6 font-medium">
-                {lang(
-                  "Le défi principal était de concevoir une architecture capable de basculer instantanément entre dix directions artistiques radicalement différentes sans interruption de l'expérience utilisateur.",
-                  "The main challenge was to design an architecture capable of switching instantly between ten radically different artistic directions without interrupting the user experience."
-                )}
+                {goalsDescription_fr && goalsDescription_en
+                  ? lang(goalsDescription_fr, goalsDescription_en)
+                  : lang(
+                      "Le défi principal était de concevoir une architecture capable de basculer instantanément entre dix directions artistiques radicalement différentes sans interruption de l'expérience utilisateur.",
+                      "The main challenge was to design an architecture capable of switching instantly between ten radically different artistic directions without interrupting the user experience."
+                    )}
               </p>
               <ul className="space-y-4">
-                {[
-                  lang("Rendu temps réel performant", "High-perf real-time rendering"),
-                  lang("Système de thèmes dynamique", "Dynamic theme system"),
-                  lang("Interface utilisateur next-gen", "Next-gen user interface")
-                ].map((item, i) => (
+                {(goalsList || [
+                  { fr: "Rendu temps réel performant", en: "High-perf real-time rendering" },
+                  { fr: "Système de thèmes dynamique", en: "Dynamic theme system" },
+                  { fr: "Interface utilisateur next-gen", en: "Next-gen user interface" }
+                ]).map((item, i) => (
                   <li key={i} className="flex items-center gap-3 text-sm text-ivory/80">
                     <ArrowRight className="w-4 h-4 text-terracotta" />
-                    <span>{item}</span>
+                    <span>{lang(item.fr, item.en)}</span>
                   </li>
                 ))}
               </ul>
