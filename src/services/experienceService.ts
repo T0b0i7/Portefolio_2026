@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase";
+import experiencesData from "../../experiences_seed.json";
 
 export interface Experience {
   id: number;
@@ -12,14 +12,20 @@ export interface Experience {
   color?: string;
 }
 
-interface ExperienceDbRow {
+interface ExperienceRow {
   id: number;
   type: "work" | "education" | string;
   title_fr: string;
   title_en: string;
   company: string;
+  company_fr?: string;
+  company_en?: string;
   location: string;
+  location_fr?: string;
+  location_en?: string;
   period: string;
+  period_fr: string;
+  period_en: string;
   description_fr: string[] | null;
   description_en: string[] | null;
   status_fr: string | null;
@@ -27,29 +33,25 @@ interface ExperienceDbRow {
 }
 
 export const experienceService = {
-  async getAllExperiences(lang: string): Promise<Experience[]> {
+  getAllExperiences(lang: string): Experience[] {
     const isFrench = lang.toUpperCase() === "FR";
-    const { data, error } = await supabase
-      .from("experiences")
-      .select("*")
-      .order("id", { ascending: true });
+    const typedData = experiencesData as ExperienceRow[];
 
-    if (error) {
-      console.error("Error fetching experiences:", error);
-      return [];
-    }
-
-    return ((data as ExperienceDbRow[] | null) ?? []).map((e) => ({
+    return typedData.map((e) => ({
       id: e.id,
       type: e.type,
       title: isFrench ? e.title_fr : e.title_en,
-      company: e.company,
-      location: e.location,
-      period: e.period,
+      company: isFrench 
+        ? (e.company_fr || e.company || "") 
+        : (e.company_en || e.company || ""),
+      location: isFrench 
+        ? (e.location_fr || e.location || "") 
+        : (e.location_en || e.location || ""),
+      period: isFrench ? e.period_fr : e.period_en,
       description: isFrench
         ? (Array.isArray(e.description_fr) ? e.description_fr : [])
         : (Array.isArray(e.description_en) ? e.description_en : []),
-      status: isFrench ? (e.status_fr ?? undefined) : (e.status_en ?? undefined),
+      status: isFrench ? (e.status_fr || undefined) : (e.status_en || undefined),
     }));
   }
 };

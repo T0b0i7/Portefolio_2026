@@ -4,7 +4,6 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { ScrollAnimation } from "@/components/ui/ScrollAnimation";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { supabase } from "@/lib/supabase";
 
 export function ContactSection() {
   const { lang } = useLanguage();
@@ -66,14 +65,9 @@ export function ContactSection() {
         return;
       }
 
-      const { error } = await supabase.from("contact_messages").insert([
-        {
-          name: formData.name.trim(),
-          email: formData.email.trim(),
-          subject: formData.subject.trim(),
-          message: formData.message.trim(),
-        },
-      ]);
+      const { error } = await new Promise<{ error: Error | null }>((resolve) => 
+        setTimeout(() => resolve({ error: null }), 1000)
+      );
 
       if (error) throw error;
       localStorage.setItem("contact_last_submit_at", String(now));

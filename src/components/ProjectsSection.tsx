@@ -60,7 +60,7 @@ export function ProjectsSection() {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const filterContainerRef = React.useRef<HTMLDivElement>(null);
-  const [projectsPerPage, setProjectsPerPage] = useState(6);
+  const [projectsPerPage, setProjectsPerPage] = useState(4);
 
   useEffect(() => {
     const mdQuery = window.matchMedia("(min-width: 768px)");
@@ -69,6 +69,11 @@ export function ProjectsSection() {
     mdQuery.addEventListener("change", handleResize);
     return () => mdQuery.removeEventListener("change", handleResize);
   }, []);
+
+  const handleProjectsPerPageChange = (value: string) => {
+    setProjectsPerPage(parseInt(value));
+    setCurrentPage(1);
+  };
 
   const typedProjects = projectsData as Project[];
 
@@ -182,20 +187,36 @@ export function ProjectsSection() {
             />
           </div>
 
-          {/* Mobile Select Filter */}
-          <div className="md:hidden w-full relative">
-            <select
-              value={activeCategory}
-              onChange={(e) => setActiveCategory(e.target.value)}
-              className="w-full bg-warm-sand/40 border border-border-cream rounded-xl py-3 px-4 text-sm font-sans font-medium text-stone-gray appearance-none focus:outline-none focus:ring-1 focus:ring-terracotta/20"
-            >
-              {categories.map(cat => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
-            <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-gray pointer-events-none" />
+          {/* Mobile Filter & Projects Per Page */}
+          <div className="flex gap-4">
+            <div className="md:hidden flex-1 relative">
+              <select
+                value={activeCategory}
+                onChange={(e) => setActiveCategory(e.target.value)}
+                className="w-full bg-warm-sand/40 border border-border-cream rounded-xl py-3 px-4 text-sm font-sans font-medium text-stone-gray appearance-none focus:outline-none focus:ring-1 focus:ring-terracotta/20"
+              >
+                {categories.map(cat => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-gray pointer-events-none" />
+            </div>
+            
+            <div className="md:hidden w-32 relative">
+              <select
+                value={projectsPerPage.toString()}
+                onChange={(e) => handleProjectsPerPageChange(e.target.value)}
+                className="w-full bg-warm-sand/40 border border-border-cream rounded-xl py-3 px-4 text-sm font-sans font-medium text-stone-gray appearance-none focus:outline-none focus:ring-1 focus:ring-terracotta/20"
+              >
+                <option value="4">4 / page</option>
+                <option value="6">6 / page</option>
+                <option value="8">8 / page</option>
+                <option value="10">10 / page</option>
+              </select>
+              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-gray pointer-events-none" />
+            </div>
           </div>
 
           <div className="hidden md:flex relative w-full flex-1 min-w-0 items-center gap-2 group/filter-nav">
@@ -316,7 +337,7 @@ export function ProjectsSection() {
         </div>
 
         {/* Pagination Controls */}
-        {totalPages > 1 && activeCategory === "all" && (
+        {totalPages > 1 && (
           <div className="mt-20 flex items-center justify-center gap-4">
             <button
               onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
@@ -476,8 +497,8 @@ export function ProjectsSection() {
                       onClick={() => setIsDialogOpen(false)}
                       className="btn-primary flex-1 min-w-[200px] bg-transparent border border-border-cream text-near-black hover:bg-warm-sand/30"
                     >
-                      {lang("Consulter le code", "View Code")}
-                      <Code className="ml-2 w-4 h-4" />
+                      {lang("Envoyer un message", "Send Message")}
+                      <Mail className="ml-2 w-4 h-4" />
                     </a>
 
                     {selectedProject.is_locked && (

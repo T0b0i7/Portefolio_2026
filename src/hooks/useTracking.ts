@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { supabase } from "@/lib/supabase";
 import { readTrackingConsent } from "@/hooks/use-tracking-consent";
 
 interface GeoInfo {
@@ -11,7 +10,6 @@ interface GeoInfo {
 const GEO_CACHE_KEY = "portfolio_geo_info";
 let geoInfoPromise: Promise<GeoInfo> | null = null;
 
-// Generate a stable session ID for the current browser tab
 function getSessionId(): string {
   if (typeof window === "undefined") return "server-session";
 
@@ -90,17 +88,21 @@ export function useTracking() {
   }, []);
 
   const trackEvent = useCallback(
-    async (eventName: string, metadata?: Record<string, unknown>) => {
+    async (_eventName: string, _metadata?: Record<string, unknown>) => {
       if (!canTrack) return;
 
       try {
         const geo = await fetchGeoInfo();
-        await supabase.from("visitor_events").insert({
+        const eventData = {
           event_type: "custom",
-          event_name: eventName,
-          metadata: { ...metadata, ...geo },
+          event_name: _eventName,
+          metadata: { ..._metadata, ...geo },
           session_id: sessionId.current,
-        });
+          timestamp: new Date().toISOString(),
+        };
+        const stored = JSON.parse(localStorage.getItem("portfolio_events") || "[]");
+        stored.push(eventData);
+        localStorage.setItem("portfolio_events", JSON.stringify(stored.slice(-100)));
       } catch {
         // Don't crash the app if tracking fails
       }
@@ -114,12 +116,16 @@ export function useTracking() {
 
       try {
         const geo = await fetchGeoInfo();
-        await supabase.from("visitor_events").insert({
+        const eventData = {
           event_type: "page_view",
           event_name: pageName,
           metadata: geo,
           session_id: sessionId.current,
-        });
+          timestamp: new Date().toISOString(),
+        };
+        const stored = JSON.parse(localStorage.getItem("portfolio_events") || "[]");
+        stored.push(eventData);
+        localStorage.setItem("portfolio_events", JSON.stringify(stored.slice(-100)));
       } catch {
         // Silently fail
       }

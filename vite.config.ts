@@ -18,7 +18,7 @@ export default defineConfig({
             return "react-vendor";
           }
 
-          if (id.includes("@supabase") || id.includes("@tanstack")) {
+if (id.includes("@tanstack")) {
             return "data-vendor";
           }
 

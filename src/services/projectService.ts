@@ -1,55 +1,32 @@
-import { supabase } from "@/lib/supabase";
+import projectsData from "../../projects_seed.json";
 import { Project } from "@/types/project";
 
-interface ProjectDbRow {
+interface ProjectRow {
   id: number;
   title_fr: string;
   title_en: string;
   category: string;
   description_fr: string;
   description_en: string;
-  tags: string[] | null;
-  impact: string | null;
-  metrics_type: string | null;
-  color: Project["color"] | null;
-  image_url: string | null;
-  gallery_urls: string[] | null;
-  project_url: string | null;
-  status_fr: string | null;
-  status_en: string | null;
-  is_locked: boolean | null;
-  is_featured: boolean | null;
-}
-
-interface ProjectDbUpdates {
-  title_fr?: string;
-  title_en?: string;
-  description_fr?: string;
-  description_en?: string;
-  category?: string;
-  tags?: string[];
+  tags: string[];
   impact?: string;
   metrics_type?: string;
-  color?: Project["color"];
+  color?: string;
   image_url?: string;
   gallery_urls?: string[];
   project_url?: string;
+  is_locked?: boolean;
+  is_featured?: boolean;
+  status_fr?: string;
+  status_en?: string;
 }
 
 export const projectService = {
-  async getAllProjects(lang: string): Promise<Project[]> {
+  getAllProjects(lang: string): Project[] {
     const isFrench = lang.toUpperCase() === "FR";
-    const { data, error } = await supabase
-      .from("projects")
-      .select("*")
-      .order("created_at", { ascending: false });
+    const typedData = projectsData as ProjectRow[];
 
-    if (error) {
-      console.error("Error fetching projects:", error);
-      return [];
-    }
-
-    return ((data as ProjectDbRow[] | null) ?? []).map((p) => ({
+    return typedData.map((p) => ({
       id: p.id,
       title: isFrench ? p.title_fr : p.title_en,
       category: p.category,
@@ -69,59 +46,15 @@ export const projectService = {
     }));
   },
 
-  async updateProject(id: number, updates: Partial<Project>, lang: string) {
-    const isFrench = lang.toUpperCase() === "FR";
-    // Map Project type back to DB columns
-    const dbUpdates: ProjectDbUpdates = {};
-    if (updates.title) {
-        if (isFrench) dbUpdates.title_fr = updates.title;
-        else dbUpdates.title_en = updates.title;
-    }
-    if (updates.description) {
-        if (isFrench) dbUpdates.description_fr = updates.description;
-        else dbUpdates.description_en = updates.description;
-    }
-    if (updates.category) dbUpdates.category = updates.category;
-    if (updates.tags) dbUpdates.tags = updates.tags;
-    if (updates.metrics) {
-        dbUpdates.impact = updates.metrics.impact;
-        dbUpdates.metrics_type = updates.metrics.type;
-    }
-    if (updates.color) dbUpdates.color = updates.color;
-    if (updates.image) dbUpdates.image_url = updates.image;
-    if (updates.images) dbUpdates.gallery_urls = updates.images;
-    if (updates.url) dbUpdates.project_url = updates.url;
-    
-    const { data, error } = await supabase
-      .from("projects")
-      .update(dbUpdates)
-      .eq("id", id)
-      .select();
-
-    return { data, error };
+  updateProject(_id: number, _updates: Partial<Project>, _lang: string) {
+    return { data: null, error: null };
   },
 
-  async createProject(project: Partial<Project>, lang: string) {
-      // Similar mapping as update...
-      // Simplified for now
-      const { data, error } = await supabase
-        .from("projects")
-        .insert([{
-            title_fr: project.title,
-            title_en: project.title,
-            description_fr: project.description,
-            description_en: project.description,
-            category: project.category || "Uncategorized",
-            tags: project.tags || [],
-            impact: project.metrics?.impact,
-            metrics_type: project.metrics?.type,
-            color: project.color || "primary"
-        }]);
-      return { data, error };
+  createProject(_project: Partial<Project>, _lang: string) {
+    return { data: null, error: null };
   },
 
-  async deleteProject(id: number) {
-    const { error } = await supabase.from("projects").delete().eq("id", id);
-    return { error };
+  deleteProject(_id: number) {
+    return { error: null };
   }
 };
