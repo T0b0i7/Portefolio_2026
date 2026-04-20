@@ -15,6 +15,7 @@ import { useTrackingConsent } from "./hooks/use-tracking-consent";
 import { usePageTracking } from "./hooks/usePageTracking";
 import { useGlobalClickTracking } from "./hooks/useGlobalClickTracking";
 import { useSectionTracking } from "./hooks/useSectionTracking";
+import { TrackingConsentBanner } from "./components/TrackingConsentBanner";
 
 const TrackingBridge = () => {
   const { canTrack } = useTrackingConsent();
@@ -31,8 +32,9 @@ const App = () => (
           <TooltipProvider>
             <Toaster />
             <Sonner />
-            <AlternativeBackground />
-          {/* <BackgroundScene /> - Three.js version causing crash */}
+<AlternativeBackground />
+            <TrackingConsentBanner />
+            {/* <BackgroundScene /> - Three.js version causing crash */}
           <a
             href="#main-content"
             className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[130] focus:bg-white focus:text-slate-950 focus:px-3 focus:py-2 focus:rounded-md focus:font-semibold"
