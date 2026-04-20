@@ -18,7 +18,8 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
-    "optimize-images": "node scripts/optimize-images.js"
+    "optimize-images": "node scripts/optimize-images.js",
+    "supabase:seed:projects": "node scripts/generate-supabase-project-seed.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -51,6 +52,7 @@
     "@radix-ui/react-tooltip": "^1.2.7",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.6.0",
+    "@supabase/supabase-js": "^2.104.0",
     "@tanstack/react-query": "^5.83.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

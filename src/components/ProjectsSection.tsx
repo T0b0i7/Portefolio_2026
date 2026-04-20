@@ -28,7 +28,7 @@ import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ScrollAnimation } from "@/components/ui/ScrollAnimation";
 import { ProjectRating } from "@/components/ui/ProjectRating";
-import projectsData from "../../projects_seed.json";
+import { useCmsProjects } from "@/hooks/useCmsProjects";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface Project {
@@ -75,7 +75,8 @@ export function ProjectsSection() {
     setCurrentPage(1);
   };
 
-  const typedProjects = projectsData as Project[];
+  const { projects } = useCmsProjects();
+  const typedProjects = projects as Project[];
 
   // Reset to first page when filters change
   useEffect(() => {
@@ -112,14 +113,14 @@ export function ProjectsSection() {
         p.tags.some(t => t.toLowerCase().includes(searchQuery.toLowerCase()));
       return matchesCategory && matchesSearch;
     });
-  }, [activeCategory, searchQuery, lang]);
+  }, [activeCategory, searchQuery, lang, typedProjects]);
 
   const totalPages = Math.ceil(filteredProjects.length / projectsPerPage);
   const currentProjects = useMemo(() => {
     const indexOfLastProject = currentPage * projectsPerPage;
     const indexOfFirstProject = indexOfLastProject - projectsPerPage;
     return filteredProjects.slice(indexOfFirstProject, indexOfLastProject);
-  }, [filteredProjects, currentPage]);
+  }, [filteredProjects, currentPage, projectsPerPage]);
 
   const categories = useMemo(() => {
     const counts: Record<string, number> = { all: typedProjects.length };
@@ -139,7 +140,7 @@ export function ProjectsSection() {
     ];
 
     return availableCategories.filter(cat => cat.id === "all" || (counts[cat.id] || 0) > 0);
-  }, [lang]);
+  }, [lang, typedProjects]);
 
   const openProjectDialog = (project: Project) => {
     setSelectedProject(project);
