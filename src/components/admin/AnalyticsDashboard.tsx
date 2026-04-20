@@ -1,7 +1,13 @@
+import { useState } from "react";
 import { useLiveAnalytics } from "@/hooks/useLiveAnalytics";
 import { LiveGlobe } from "@/components/admin/LiveGlobe";
+import { VisitsChart } from "./VisitsChart";
+import { HeatmapSections } from "./HeatmapSections";
+
+type Period = "today" | "7days" | "30days";
 
 export function AnalyticsDashboard() {
+  const [period, setPeriod] = useState<Period>("7days");
   const { overview, events, globePoints, loading } = useLiveAnalytics();
 
   if (loading) {
@@ -40,6 +46,31 @@ export function AnalyticsDashboard() {
           </div>
         </div>
       </div>
+
+      <div className="bg-white rounded-2xl border border-slate-200 p-4">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-semibold">Visites</h3>
+          <div className="flex gap-1">
+            {(["today", "7days", "30days"] as Period[]).map((p) => (
+              <button
+                key={p}
+                onClick={() => setPeriod(p)}
+                className={`px-3 py-1 text-xs rounded-lg ${
+                  period === p ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                }`}
+              >
+                {p === "today" ? "Aujourd'hui" : p === "7days" ? "7 jours" : "30 jours"}
+              </button>
+            ))}
+          </div>
+        </div>
+        <VisitsChart period={period} />
+      </div>
+
+      <div className="bg-white rounded-2xl border border-slate-200 p-4">
+        <h3 className="font-semibold mb-4">Sections les plus consultées</h3>
+        <HeatmapSections />
+      </div>
     </div>
   );
 }
@@ -52,4 +83,3 @@ function StatCard({ label, value }: { label: string; value: number }) {
     </div>
   );
 }
-
