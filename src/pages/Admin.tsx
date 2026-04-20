@@ -1,38 +1,102 @@
-import type { Session } from "@supabase/supabase-js";
-import { useEffect, useState } from "react";
-import { supabase, isSupabaseConfigured } from "@/integrations/supabase/client";
-import { AdminLogin } from "@/components/admin/AdminLogin";
+import { useEffect, useState, useCallback } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { AnalyticsDashboard } from "@/components/admin/AnalyticsDashboard";
 import { CmsManager } from "@/components/admin/CmsManager";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 type Tab = "analytics" | "cms";
 
 export default function AdminPage() {
-  const [session, setSession] = useState<Session | null>(null);
   const [tab, setTab] = useState<Tab>("analytics");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showPasswordDialog, setShowPasswordDialog] = useState(false);
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+  const verifyPassword = useCallback(async (pwd: string) => {
     if (!supabase) return;
+    setLoading(true);
+    setError(null);
 
-    supabase.auth.getSession().then(({ data }) => setSession(data.session));
-    const { data } = supabase.auth.onAuthStateChange((_event, session) => setSession(session));
-    return () => data.subscription.unsubscribe();
+    const { data, error: verifyError } = await supabase.rpc("verify_admin_password", {
+      input_password: pwd
+    });
+
+    if (verifyError) {
+      setError("Erreur de vérification");
+      setLoading(false);
+      return;
+    }
+
+    if (data === true) {
+      setIsAuthenticated(true);
+      setShowPasswordDialog(false);
+      setPassword("");
+    } else {
+      setError("Mot de passe incorrect");
+    }
+    setLoading(false);
   }, []);
 
-  if (!isSupabaseConfigured) {
+  const handleKeyDown = useCallback((event: KeyboardEvent) => {
+    if (event.ctrlKey && event.key === "m") {
+      event.preventDefault();
+      if (!isAuthenticated) {
+        setShowPasswordDialog(true);
+      }
+    }
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [handleKeyDown]);
+
+  if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-slate-100 p-10">
-        <div className="max-w-2xl mx-auto bg-white rounded-2xl p-6 border border-slate-200">
-          <h1 className="text-2xl font-semibold mb-2">Backoffice non configuré</h1>
-          <p className="text-sm text-slate-600">
-            Ajoute `VITE_SUPABASE_URL` et `VITE_SUPABASE_ANON_KEY` dans ton `.env.local`, puis relance le serveur.
-          </p>
+      <div className="min-h-screen flex items-center justify-center bg-slate-100">
+        <div className="text-center p-6">
+          <h1 className="text-2xl font-semibold mb-2">Backoffice Portfolio</h1>
+          <p className="text-sm text-slate-600 mb-4">Appuie sur Ctrl+M pour accéder</p>
+          <Button onClick={() => setShowPasswordDialog(true)}>
+            Ouvrir le panneau
+          </Button>
         </div>
+
+        <Dialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Mot de passe administrateur</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <Input
+                type="password"
+                placeholder="Mot de passe"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    verifyPassword(password);
+                  }
+                }}
+              />
+              {error && <p className="text-sm text-red-500">{error}</p>}
+              <Button 
+                onClick={() => verifyPassword(password)} 
+                disabled={loading || !password}
+                className="w-full"
+              >
+                {loading ? "Vérification..." : "Valider"}
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     );
   }
-
-  if (!session) return <AdminLogin />;
 
   return (
     <div className="min-h-screen bg-slate-100">
@@ -54,7 +118,10 @@ export default function AdminPage() {
           >
             CMS
           </button>
-          <button className="px-3 py-2 text-sm rounded-lg bg-rose-600 text-white" onClick={() => void supabase?.auth.signOut()}>
+          <button 
+            className="px-3 py-2 text-sm rounded-lg bg-rose-600 text-white" 
+            onClick={() => setIsAuthenticated(false)}
+          >
             Déconnexion
           </button>
         </div>
@@ -64,4 +131,3 @@ export default function AdminPage() {
     </div>
   );
 }
-
