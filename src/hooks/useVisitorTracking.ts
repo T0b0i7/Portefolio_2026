@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 export interface Visitor {
@@ -142,7 +142,12 @@ export function useVisitorTracking() {
     setLoading(false);
   };
 
+  const channelRef = useRef<string | null>(null);
+
   useEffect(() => {
+    if (channelRef.current) return;
+    channelRef.current = "subscribed";
+
     void fetchVisitors();
 
     if (!supabase) return;
@@ -157,6 +162,7 @@ export function useVisitorTracking() {
 
     return () => {
       void supabase.removeChannel(ch);
+      channelRef.current = null;
     };
   }, []);
 

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { LiveEvent } from "@/types/cms";
 
@@ -147,6 +147,10 @@ export function useLiveAnalytics() {
 
     void load();
 
+    const channelRef = useRef<string | null>(null);
+    if (channelRef.current) return;
+    channelRef.current = "subscribed";
+
     const ch = supabase
       .channel("analytics-live")
       .on("postgres_changes", { event: "*", schema: "public", table: "page_views" }, () => void load())
@@ -157,6 +161,7 @@ export function useLiveAnalytics() {
     return () => {
       active = false;
       void supabase.removeChannel(ch);
+      channelRef.current = null;
     };
   }, []);
 

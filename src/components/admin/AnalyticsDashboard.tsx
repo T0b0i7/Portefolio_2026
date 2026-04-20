@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useVisitorTracking } from "@/hooks/useVisitorTracking";
 import { LiveGlobe } from "@/components/admin/LiveGlobe";
 import { VisitorDetailPanel } from "@/components/admin/VisitorDetailPanel";
-import { ExportPanel } from "@/components/admin/ExportPanel";
 import { VisitsChart } from "./VisitsChart";
 import { HeatmapSections } from "./HeatmapSections";
 
@@ -125,8 +124,6 @@ export function AnalyticsDashboard() {
         <h3 className="font-semibold mb-4">Sections les plus consultées</h3>
         <HeatmapSections />
       </div>
-
-      <ExportPanel />
 
       <VisitorDetailPanel
         visitor={selectedVisitor}
