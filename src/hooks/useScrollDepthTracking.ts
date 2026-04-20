@@ -1,9 +1,7 @@
 import { useEffect, useRef, useCallback } from "react";
-import { useLocation } from "react-router-dom";
 import { trackEvent } from "@/lib/tracker";
 
-export function usePageTracking(canTrack: boolean) {
-  const location = useLocation();
+export function useScrollDepthTracking(canTrack: boolean, pagePath: string) {
   const maxScrollRef = useRef(0);
   const lastScrollEventRef = useRef<string | null>(null);
 
@@ -21,13 +19,13 @@ export function usePageTracking(canTrack: boolean) {
     const newMax = maxScrollRef.current;
     for (const threshold of thresholds) {
       if (newMax < threshold && scrollPercent >= threshold) {
-        const eventKey = `${location.pathname}-${threshold}`;
+        const eventKey = `${pagePath}-${threshold}`;
         if (lastScrollEventRef.current !== eventKey) {
           lastScrollEventRef.current = eventKey;
           void trackEvent(
             "scroll_depth",
             {
-              pagePath: `${location.pathname}${location.search}`,
+              pagePath,
               sectionId: `scroll_${threshold}`,
             },
             canTrack
@@ -37,18 +35,7 @@ export function usePageTracking(canTrack: boolean) {
     }
 
     maxScrollRef.current = Math.max(maxScrollRef.current, scrollPercent);
-  }, [canTrack, location.pathname, location.search]);
-
-  useEffect(() => {
-    void trackEvent(
-      "page_view",
-      {
-        pagePath: `${location.pathname}${location.search}`,
-        pageTitle: document.title,
-      },
-      canTrack
-    );
-  }, [location.pathname, location.search, canTrack]);
+  }, [canTrack, pagePath]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -58,5 +45,9 @@ export function usePageTracking(canTrack: boolean) {
   useEffect(() => {
     maxScrollRef.current = 0;
     lastScrollEventRef.current = null;
-  }, [location.pathname]);
+  }, [pagePath]);
+
+  return {
+    currentDepth: maxScrollRef.current,
+  };
 }

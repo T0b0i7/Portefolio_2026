@@ -1,6 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 
-export type TrackerEventType = "page_view" | "click" | "section_view";
+export type TrackerEventType = "page_view" | "click" | "section_view" | "scroll_depth";
 
 type BasePayload = {
   pagePath: string;
@@ -137,6 +137,14 @@ async function insertEventDirect(eventType: TrackerEventType, payload: BasePaylo
       session_id: sessionId,
       page_path: payload.pagePath,
       section_id: payload.sectionId,
+    });
+  }
+
+  if (eventType === "scroll_depth" && payload.sectionId) {
+    await supabase.from("scroll_events").insert({
+      session_id: sessionId,
+      page_path: payload.pagePath,
+      scroll_depth: parseInt(payload.sectionId.replace("scroll_", ""), 10),
     });
   }
 }
