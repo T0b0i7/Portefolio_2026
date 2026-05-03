@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { AutoImageCarousel } from "./AutoImageCarousel";
 import { Github, Linkedin, Facebook, ArrowRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -77,23 +78,24 @@ export function HeroSection() {
         </div>
 
         <div className={`relative transition-all duration-1000 delay-300 transform ${isLoaded ? "scale-100 opacity-100" : "scale-95 opacity-0"}`}>
-          <div className="relative aspect-square max-w-[500px] mx-auto">
+          <div className="relative w-full max-w-[420px] aspect-square mx-auto flex flex-col items-center justify-center">
             {/* Organic Shape Backdrops */}
-            <div className="absolute inset-0 bg-terracotta/5 rounded-[40px] rotate-6" />
-            <div className="absolute inset-0 bg-warm-sand/40 rounded-[40px] -rotate-3" />
-            
-            <div className="relative h-full w-full rounded-[32px] overflow-hidden border border-border-cream shadow-whisper">
-              <img
-                src="/profil.png"
-                alt="TobiDev"
-                className="h-full w-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+            <div className="absolute inset-0 bg-terracotta/5 rounded-[40px] rotate-6 pointer-events-none" />
+            <div className="absolute inset-0 bg-warm-sand/40 rounded-[40px] -rotate-3 pointer-events-none" />
+
+            <div className="relative h-[340px] w-[340px] md:h-[380px] md:w-[380px] lg:h-[420px] lg:w-[420px] rounded-[32px] overflow-hidden border border-border-cream shadow-whisper z-10">
+              <AutoImageCarousel
+                images={[
+                  { src: "/profil.png", alt: "TobiDev" },
+                  { src: "/profil1.png", alt: "TobiDev couleur" },
+                ]}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-near-black/20 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-near-black/20 to-transparent pointer-events-none" />
             </div>
 
-            {/* Floating Badge */}
-            <div className="absolute -bottom-6 -right-6 md:-right-10 bg-ivory p-6 rounded-2xl border border-border-cream shadow-whisper max-w-[200px]">
-              <div className="text-terracotta font-serif text-3xl font-medium mb-1">5+</div>
+            {/* Floating Badge repositionné */}
+            <div className="absolute bottom-2 right-2 md:bottom-4 md:right-4 bg-ivory p-5 rounded-2xl border border-border-cream shadow-whisper max-w-[170px] z-20">
+              <div className="text-terracotta font-serif text-2xl md:text-3xl font-medium mb-1">5+</div>
               <div className="text-xs font-sans text-olive-gray leading-tight uppercase tracking-wider">
                 {lang("Années d'expérience en dev", "Years of dev experience")}
               </div>

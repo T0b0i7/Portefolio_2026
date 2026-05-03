@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, useRef } from "react";
+import { motion, useScroll, useSpring } from "framer-motion";
 import { ChevronDown, History } from "lucide-react";
 import { ScrollAnimation } from "@/components/ui/ScrollAnimation";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -13,6 +14,18 @@ export function EvolutionSection() {
   const { lang, language } = useLanguage();
   const [timelineItems, setTimelineItems] = useState<Experience[]>(getExperiences(lang) as Experience[]);
   const [isOpen, setIsOpen] = useState(true);
+  const timelineRef = useRef<HTMLDivElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: timelineRef,
+    offset: ["start center", "end center"]
+  });
+
+  const scaleY = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
 
   useEffect(() => {
     setTimelineItems(getExperiences(lang) as Experience[]);
@@ -71,43 +84,72 @@ export function EvolutionSection() {
             </CollapsibleTrigger>
 
             <CollapsibleContent className="animate-in fade-in slide-in-from-top-4 duration-500">
-              <div className="space-y-12 md:space-y-24">
-                {timelineItems.map((item, index) => (
-                  <ScrollAnimation key={item.id ?? index} delay={index * 100}>
-                    <div className="grid md:grid-cols-12 gap-6 md:gap-12 group">
-                      <div className="md:col-span-3">
-                        <span className="text-sm font-sans font-medium text-stone-gray uppercase tracking-widest bg-warm-sand/40 px-3 py-1 rounded-full">
-                          {item.period}
-                        </span>
-                      </div>
-                      
-                      <div className="md:col-span-6 space-y-4">
-                        <h3 className="text-2xl md:text-3xl font-serif font-medium text-near-black group-hover:text-terracotta transition-colors">
-                          {item.title}
-                        </h3>
-                        <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm font-sans font-medium text-olive-gray uppercase tracking-wider">
-                          <span>{item.company}</span>
-                          <span className="text-stone-gray">— {item.location}</span>
-                        </div>
-                        <div className="space-y-4 pt-4 border-l border-border-cream pl-6">
-                          {item.description.map((desc, i) => (
-                            <p key={i} className="text-olive-gray leading-relaxed">
-                              {desc}
-                            </p>
-                          ))}
-                        </div>
-                      </div>
+              <div ref={timelineRef} className="relative">
+                {/* Dynamic Scroll Progress Line */}
+                <div className="absolute left-0 md:left-[12.5%] top-0 bottom-0 w-px bg-border-cream hidden md:block" />
+                <motion.div
+                  className="absolute left-0 md:left-[12.5%] top-0 w-px bg-terracotta z-20 hidden md:block origin-top"
+                  style={{ scaleY }}
+                />
 
-                      <div className="md:col-span-3 flex justify-end items-start">
-                        {item.status && (
-                          <span className="text-[10px] font-sans font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-border-cream text-stone-gray">
-                            {item.status}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </ScrollAnimation>
-                ))}
+                <div className="space-y-12 md:space-y-32 relative">
+                  {timelineItems.map((item, index) => {
+                    const Icon = (item as any).icon || History;
+                    return (
+                      <ScrollAnimation key={item.id ?? index} delay={index * 150} animation="fade-up">
+                        <div className="grid md:grid-cols-12 gap-8 md:gap-16 group relative">
+                          {/* Period & Dot */}
+                          <div className="md:col-span-3 relative flex items-start md:justify-end">
+                            <div className="flex flex-col items-start md:items-end gap-3">
+                              <span className="text-sm font-sans font-bold text-terracotta uppercase tracking-[0.2em] bg-terracotta/5 px-4 py-1.5 rounded-full border border-terracotta/10">
+                                {item.period}
+                              </span>
+                            </div>
+
+                            {/* Timeline Dot with Icon */}
+                            <div className="absolute top-2 right-0 translate-x-1/2 hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-parchment border border-border-cream z-30 group-hover:border-terracotta group-hover:scale-110 transition-all duration-500 shadow-whisper">
+                              <Icon className="w-5 h-5 text-olive-gray group-hover:text-terracotta transition-colors" />
+                            </div>
+                          </div>
+
+                          {/* Content */}
+                          <div className="md:col-span-7 space-y-6">
+                            <div className="space-y-2">
+                              <h3 className="text-3xl md:text-5xl font-serif font-medium text-near-black group-hover:text-terracotta transition-colors duration-500 leading-tight">
+                                {item.title}
+                              </h3>
+                              <div className="flex items-center gap-3 text-sm font-sans font-bold text-olive-gray uppercase tracking-[0.2em]">
+                                <span>{item.company}</span>
+                                <span className="w-1 h-1 rounded-full bg-border-cream" />
+                                <span className="text-stone-gray">{item.location}</span>
+                              </div>
+                            </div>
+
+                            <div className="space-y-5 pt-4">
+                              {item.description.map((desc, i) => (
+                                <p key={i} className="text-lg md:text-xl text-olive-gray font-sans leading-relaxed max-w-2xl">
+                                  {desc}
+                                </p>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Status Badge */}
+                          <div className="md:col-span-2 flex justify-start md:justify-end items-start pt-2">
+                            {item.status && (
+                              <span className={cn(
+                                "text-[10px] font-sans font-bold uppercase tracking-[0.2em] px-4 py-1.5 rounded-full border border-border-cream text-stone-gray",
+                                item.status === "Actuel" || item.status === "Current" ? "bg-terracotta/10 text-terracotta border-terracotta/20" : ""
+                              )}>
+                                {item.status}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </ScrollAnimation>
+                    );
+                  })}
+                </div>
               </div>
             </CollapsibleContent>
           </div>

@@ -10,6 +10,7 @@ type Period = "today" | "7days" | "30days";
 export function AnalyticsDashboard() {
   const [period, setPeriod] = useState<Period>("7days");
   const {
+    visitors,
     activeVisitors,
     globePoints,
     loading,
@@ -49,7 +50,10 @@ export function AnalyticsDashboard() {
           </div>
           <LiveGlobe
             points={globePoints}
-            onPointClick={setSelectedVisitor}
+            onPointClick={(id) => {
+              const visitor = activeVisitors.find(v => v.id === id) || visitors.find(v => v.id === id);
+              if (visitor) setSelectedVisitor(visitor);
+            }}
             selectedPointId={selectedVisitor?.id}
           />
           <p className="text-xs text-slate-500 mt-2">

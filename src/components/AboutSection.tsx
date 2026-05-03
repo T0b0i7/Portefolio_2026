@@ -59,7 +59,11 @@ export function AboutSection() {
               </div>
               
               <h2 className="text-4xl md:text-6xl font-serif font-medium leading-[1.15]">
-                {lang("Un salon littéraire réimaginé pour le web moderne.", "A literary salon reimagined for the modern web.")}
+                {lang(
+                  "« Les programmes doivent être écrits pour être lus par des humains, et seulement accessoirement pour être exécutés par des machines. »",
+                  "“Programs must be written for people to read, and only incidentally for machines to execute.”"
+                )}
+                <span className="block mt-4 text-2xl text-stone-gray">— Harold Abelson</span>
               </h2>
               
               <p className="text-lg md:text-xl text-stone-gray font-sans leading-relaxed max-w-xl">

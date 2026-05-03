@@ -1,87 +1,125 @@
-import { Building2, Briefcase, GraduationCap, Rocket } from "lucide-react";
+import { Monitor, Palette, Code, Layers, Bot, Cpu } from "lucide-react";
 
 export const getExperiences = (lang: (fr: string, en: string) => string) => [
     {
-        id: 1,
+        id: 6,
         type: "work",
-        title: lang("Stagiaire Développeur Full-Stack", "Full-Stack Developer Intern"),
-        company: "INNOVTECH",
-        location: lang("Cotonou, Aidjèdo (Télétravail)", "Cotonou, Aidjèdo (Remote)"),
-        period: lang("Nov 2025 - Fév 2026", "Nov 2025 - Feb 2026"),
+        title: lang("Expertise & Innovation en IA", "AI Expertise & Innovation"),
+        company: lang("Expertise", "Expertise"),
+        location: lang("Bénin (Remote)", "Benin (Remote)"),
+        period: "2026",
         current: true,
-        status: lang("En cours", "In Progress"),
+        status: lang("Futur", "Future"),
         description: [
-            lang("Développement front-end et participation au back-end des applications internes", "Front-end development and participation in the back-end of internal applications"),
-            lang("Création d'interfaces et intégration de fonctionnalités", "Interface creation and feature integration"),
-            lang("Optimisation des outils internes et automatisation des processus", "Internal tools optimization and process automation"),
+            lang(
+                "Approfondissement des systèmes d’IA avancés, recherche et développement de solutions innovantes.",
+                "Deepening of advanced AI systems, research and development of innovative solutions."
+            ),
+            lang(
+                "Objectif : concevoir des technologies intelligentes performantes et à forte valeur ajoutée.",
+                "Goal: to design high-performance intelligent technologies with high added value."
+            )
         ],
-        icon: Rocket,
+        icon: Cpu,
         color: "primary",
     },
     {
-        id: 2,
+        id: 5,
         type: "work",
-        title: lang("Stagiaire Développeur / Technicien Informatique", "Developer Intern / IT Technician"),
-        company: "SIAB – Société Industrielle d'Acier du Bénin",
-        location: "Djeffa",
-        period: lang("Juin 2024 - Avril 2025", "June 2024 - April 2025"),
-        current: false,
+        title: lang("Ingénieur en IA & Prompt Engineer", "AI Engineer & Prompt Engineer"),
+        company: lang("Spécialisation", "Specialization"),
+        location: lang("Bénin", "Benin"),
+        period: "2025",
+        current: true,
+        status: lang("Actuel", "Current"),
         description: [
-            lang("Conception, développement et déploiement de systèmes internes", "Design, development, and deployment of internal systems"),
-            lang("Outils d'automatisation réduisant le temps de traitement de 30%", "Automation tools reducing processing time by 30%"),
-            lang("Maintenance des équipements informatiques et support technique", "IT equipment maintenance and technical support"),
+            lang(
+                "Spécialisation en intelligence artificielle : création de chatbots, agents intelligents et assistants conversationnels.",
+                "Specialization in artificial intelligence: creation of chatbots, intelligent agents, and conversational assistants."
+            ),
+            lang(
+                "Maîtrise du prompt engineering pour optimiser les performances des modèles d’IA.",
+                "Mastery of prompt engineering to optimize AI model performance."
+            )
         ],
-        badge: lang("-30% temps de traitement", "-30% processing time"),
-        status: lang("-30% temps de traitement", "-30% processing time"),
-        icon: Building2,
+        icon: Bot,
+        color: "accent",
+    },
+    {
+        id: 4,
+        type: "work",
+        title: lang("Développeur Full-Stack (Indépendant)", "Full-Stack Developer (Freelance)"),
+        company: lang("Indépendant", "Freelance"),
+        location: lang("Bénin", "Benin"),
+        period: "2024",
+        current: false,
+        status: lang("Réalisé", "Completed"),
+        description: [
+            lang(
+                "Développement d’applications web complètes (frontend & backend), création d’API et conception de solutions digitales adaptées aux besoins de différents projets.",
+                "Development of complete web applications (frontend & backend), API creation, and design of digital solutions adapted to the needs of different projects."
+            )
+        ],
+        icon: Layers,
         color: "secondary",
     },
     {
         id: 3,
         type: "work",
-        title: lang("Freelance / Prestataire", "Freelance / Service Provider"),
-        company: lang("Développeur & Designer Graphique", "Developer & Graphic Designer"),
-        location: lang("Porto-Novo, Bénin", "Porto-Novo, Benin"),
-        period: lang("2024 - Présent", "2024 - Present"),
-        current: true,
-        status: lang("En cours", "In Progress"),
+        title: lang("Développeur Python (Autodidacte & Projets)", "Python Developer (Self-taught & Projects)"),
+        company: lang("Autodidacte", "Self-taught"),
+        location: lang("Apprentissage", "Learning"),
+        period: "2023",
+        current: false,
         description: [
-            lang("Création de sites web pour particuliers et entreprises", "Creation of websites for individuals and companies"),
-            lang("Réalisation d'affiches et supports visuels pour la communication digitale", "Creation of posters and visual supports for digital communication"),
-            lang("Maintenance et accompagnement technique de projets clients", "Maintenance and technical support for client projects"),
+            lang(
+                "Apprentissage de la programmation avec Python : scripts, automatisation et bots.",
+                "Learning programming with Python: scripts, automation, and bots."
+            ),
+            lang(
+                "Renforcement des bases en logique, développement logiciel et résolution de problèmes.",
+                "Strengthening foundations in logic, software development, and problem-solving."
+            )
         ],
-        icon: Briefcase,
+        icon: Code,
+        color: "primary",
+    },
+    {
+        id: 2,
+        type: "work",
+        title: lang("Graphiste (Freelance)", "Graphic Designer (Freelance)"),
+        company: lang("Freelance", "Freelance"),
+        location: lang("Digital Studio", "Digital Studio"),
+        period: "2022",
+        current: false,
+        description: [
+            lang(
+                "Début dans la création visuelle : conception de logos, bannières et contenus graphiques.",
+                "Start in visual creation: design of logos, banners, and graphic content."
+            ),
+            lang(
+                "Utilisation d’outils modernes comme Canva, combinés à l’intelligence artificielle et au prompt engineering pour produire des visuels créatifs, rapides et efficaces.",
+                "Use of modern tools like Canva, combined with artificial intelligence and prompt engineering to produce creative, fast, and efficient visuals."
+            )
+        ],
+        icon: Palette,
+        color: "secondary",
+    },
+    {
+        id: 1,
+        type: "education",
+        title: lang("Microsoft Office (Initiation)", "Microsoft Office (Initiation)"),
+        company: lang("Formation", "Training"),
+        location: lang("Bénin", "Benin"),
+        period: "2021",
+        current: false,
+        description: [
+            lang(
+                "Découverte du monde numérique à travers l’apprentissage des outils Microsoft Office. Cette étape pose les bases de l’utilisation des ordinateurs et développe une première aisance digitale.",
+                "Discovery of the digital world through learning Microsoft Office tools. This step lays the foundations for computer use and develops initial digital fluency."
+            )
+        ],
+        icon: Monitor,
         color: "accent",
-    },
-    {
-        id: 4,
-        type: "education",
-        title: lang("Licence Professionnelle en Système Informatique Logiciel (SIL)", "Professional License in Software Computer Systems (SIL)"),
-        company: "HECM - Haute École de Commerce et de Management",
-        location: lang("Porto Novo, Bénin", "Porto Novo, Benin"),
-        period: lang("Terminé", "Completed"),
-        current: false,
-        description: [
-            lang("Spécialisation en développement logiciel et systèmes d'information", "Specialization in software development and information systems"),
-        ],
-        badge: lang("Terminé", "Completed"),
-        status: lang("Très Bien", "Very Good"),
-        icon: GraduationCap,
-        color: "success",
-    },
-    {
-        id: 5,
-        type: "education",
-        title: lang("Baccalauréat Série D (scientifique)", "High School Diploma - Scientific Stream (D)"),
-        company: lang("Collège Catholique Notre-Dame de Lourdes", "Notre-Dame de Lourdes Catholic College"),
-        location: "Porto-Novo",
-        period: "2021 - 2022",
-        current: false,
-        status: "",
-        description: [
-            lang("Formation scientifique", "Scientific training"),
-        ],
-        icon: GraduationCap,
-        color: "success",
     },
 ];

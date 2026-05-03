@@ -36,7 +36,7 @@ export const projectService = {
         impact: p.impact ?? "",
         type: p.metrics_type ?? "",
       },
-      color: p.color ?? "primary",
+      color: (p.color as Project["color"]) ?? "primary",
       image: p.image_url ?? undefined,
       images: Array.isArray(p.gallery_urls) ? p.gallery_urls : undefined,
       url: p.project_url ?? undefined,
