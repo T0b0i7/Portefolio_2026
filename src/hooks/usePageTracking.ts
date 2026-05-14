@@ -2,12 +2,12 @@ import { useEffect, useRef, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import { trackEvent } from "@/lib/tracker";
 
+const THRESHOLDS = [25, 50, 75, 90, 100];
+
 export function usePageTracking(canTrack: boolean) {
   const location = useLocation();
   const maxScrollRef = useRef(0);
   const lastScrollEventRef = useRef<string | null>(null);
-
-  const thresholds = [25, 50, 75, 90, 100];
 
   const handleScroll = useCallback(() => {
     if (!canTrack) return;
@@ -19,7 +19,7 @@ export function usePageTracking(canTrack: boolean) {
     if (scrollPercent <= maxScrollRef.current) return;
 
     const newMax = maxScrollRef.current;
-    for (const threshold of thresholds) {
+    for (const threshold of THRESHOLDS) {
       if (newMax < threshold && scrollPercent >= threshold) {
         const eventKey = `${location.pathname}-${threshold}`;
         if (lastScrollEventRef.current !== eventKey) {

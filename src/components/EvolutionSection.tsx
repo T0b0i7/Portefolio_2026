@@ -94,7 +94,7 @@ export function EvolutionSection() {
 
                 <div className="space-y-12 md:space-y-32 relative">
                   {timelineItems.map((item, index) => {
-                    const Icon = (item as any).icon || History;
+                    const Icon = (item as { icon?: React.ElementType }).icon || History;
                     return (
                       <ScrollAnimation key={item.id ?? index} delay={index * 150} animation="fade-up">
                         <div className="grid md:grid-cols-12 gap-8 md:gap-16 group relative">

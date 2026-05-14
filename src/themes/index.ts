@@ -1,6 +1,5 @@
 import { airbnbTheme } from './airbnb';
 import { airtableTheme } from './airtable';
-import { appleTheme } from './apple';
 
 // Un objet de configuration global pour exporter nom, objet de variables, couleurs d'aperçu FAB
 export const themeConfigs = {
@@ -25,13 +24,6 @@ export const themeConfigs = {
     variables: airtableTheme,
     previewColors: { primary: '#1b61c9', secondary: '#254fad' },
   },
-  apple: {
-    id: 'apple',
-    name: 'Apple',
-    description: 'Minimalisme & précision',
-    variables: appleTheme,
-    previewColors: { primary: '#0071e3', secondary: '#1d1d1f' },
-  },
 } as const;
 
 export type ThemeName = keyof typeof themeConfigs;
@@ -40,5 +32,4 @@ export const themes = {
   default: themeConfigs.default.variables,
   airbnb: themeConfigs.airbnb.variables,
   airtable: themeConfigs.airtable.variables,
-  apple: themeConfigs.apple.variables,
 };

@@ -4,6 +4,8 @@ import { readTrackingConsent } from "@/hooks/use-tracking-consent";
 interface GeoInfo {
   city: string;
   country: string;
+  lat?: number;
+  lng?: number;
   device: "Mobile" | "Desktop";
 }
 
@@ -54,6 +56,8 @@ async function fetchGeoInfo(): Promise<GeoInfo> {
         const info: GeoInfo = {
           city: data.city || "Unknown",
           country: data.country_name || "Unknown",
+          lat: data.latitude,
+          lng: data.longitude,
           device: /Mobi|Android/i.test(navigator.userAgent) ? "Mobile" : "Desktop",
         };
 

@@ -51,7 +51,7 @@ export function HeatmapSections() {
 
     const ch = supabase
       .channel("heatmap-sections")
-      .on("postgres_changes" as any, { event: "insert", schema: "public", table: "section_events" }, () => fetchData())
+      .on("postgres_changes", { event: "insert", schema: "public", table: "section_events" }, () => fetchData())
       .subscribe();
 
     return () => {

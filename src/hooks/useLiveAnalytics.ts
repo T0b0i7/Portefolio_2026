@@ -51,6 +51,7 @@ export function useLiveAnalytics() {
   const [overview, setOverview] = useState<Overview>(initialOverview);
   const [events, setEvents] = useState<LiveEvent[]>([]);
   const [loading, setLoading] = useState(true);
+  const channelRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (!supabase) {
@@ -147,7 +148,6 @@ export function useLiveAnalytics() {
 
     void load();
 
-    const channelRef = useRef<string | null>(null);
     if (channelRef.current) return;
     channelRef.current = "subscribed";
 
