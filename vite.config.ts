@@ -2,13 +2,15 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 
-// https://vitejs.dev/config/
 export default defineConfig({
   server: {
     host: "::",
     port: 8080,
   },
   build: {
+    target: "esnext",
+    minify: "esbuild",
+    cssMinify: true,
     rollupOptions: {
       output: {
         manualChunks(id) {
@@ -18,16 +20,28 @@ export default defineConfig({
             return "react-vendor";
           }
 
-if (id.includes("@tanstack")) {
+          if (id.includes("@tanstack")) {
             return "data-vendor";
           }
 
-          if (id.includes("@radix-ui") || id.includes("lucide-react")) {
-            return "ui-vendor";
+          if (id.includes("@radix-ui")) {
+            return "radix-vendor";
+          }
+
+          if (id.includes("lucide-react")) {
+            return "icons-vendor";
           }
 
           if (id.includes("recharts") || id.includes("dayjs") || id.includes("date-fns")) {
             return "charts-vendor";
+          }
+
+          if (id.includes("framer-motion")) {
+            return "animation-vendor";
+          }
+
+          if (id.includes("supabase")) {
+            return "supabase-vendor";
           }
         },
       },
@@ -38,5 +52,8 @@ if (id.includes("@tanstack")) {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
+  },
+  optimizeDeps: {
+    include: ["react", "react-dom"],
   },
 });

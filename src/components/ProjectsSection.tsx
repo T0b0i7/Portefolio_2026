@@ -28,6 +28,7 @@ import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ScrollAnimation } from "@/components/ui/ScrollAnimation";
 import { ProjectRating } from "@/components/ui/ProjectRating";
+import { TechBadge } from "@/components/TechBadge";
 import { useCmsProjects } from "@/hooks/useCmsProjects";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -54,12 +55,15 @@ interface Project {
 export function ProjectsSection() {
   const { lang } = useLanguage();
   const [activeCategory, setActiveCategory] = useState("all");
+  const [activeTech, setActiveTech] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const [showAll, setShowAll] = useState(false);
   const filterContainerRef = React.useRef<HTMLDivElement>(null);
+  const techFilterRef = React.useRef<HTMLDivElement>(null);
   const [projectsPerPage, setProjectsPerPage] = useState(4);
 
   useEffect(() => {
@@ -105,22 +109,24 @@ export function ProjectsSection() {
   const filteredProjects = useMemo(() => {
     return typedProjects.filter(p => {
       const matchesCategory = activeCategory === "all" || p.category === activeCategory;
+      const matchesTech = activeTech === "all" || p.tags.some(t => t.toLowerCase().includes(activeTech));
       const title = lang(p.title_fr, p.title_en);
       const desc = lang(p.description_fr, p.description_en);
       const matchesSearch = 
         title.toLowerCase().includes(searchQuery.toLowerCase()) || 
         desc.toLowerCase().includes(searchQuery.toLowerCase()) ||
         p.tags.some(t => t.toLowerCase().includes(searchQuery.toLowerCase()));
-      return matchesCategory && matchesSearch;
+      return matchesCategory && matchesTech && matchesSearch;
     });
-  }, [activeCategory, searchQuery, lang, typedProjects]);
+  }, [activeCategory, activeTech, searchQuery, lang, typedProjects]);
 
   const totalPages = Math.ceil(filteredProjects.length / projectsPerPage);
   const currentProjects = useMemo(() => {
+    if (showAll) return filteredProjects;
     const indexOfLastProject = currentPage * projectsPerPage;
     const indexOfFirstProject = indexOfLastProject - projectsPerPage;
     return filteredProjects.slice(indexOfFirstProject, indexOfLastProject);
-  }, [filteredProjects, currentPage, projectsPerPage]);
+  }, [filteredProjects, currentPage, projectsPerPage, showAll]);
 
   const categories = useMemo(() => {
     const counts: Record<string, number> = { all: typedProjects.length };
@@ -141,6 +147,28 @@ export function ProjectsSection() {
 
     return availableCategories.filter(cat => cat.id === "all" || (counts[cat.id] || 0) > 0);
   }, [lang, typedProjects]);
+
+  const technologies = useMemo(() => {
+    const techSet = new Set<string>();
+    typedProjects.forEach(p => {
+      p.tags.forEach(tag => {
+        const tech = tag.split(' ')[0].toLowerCase();
+        if (tech.length > 2) techSet.add(tech);
+      });
+    });
+    const sortedTech = Array.from(techSet).sort();
+    return [
+      { id: "all", name: lang("Toutes tech", "All tech") },
+      ...sortedTech.slice(0, 12).map(t => ({ id: t, name: t }))
+    ];
+  }, [typedProjects, lang]);
+
+  const scrollTechFilters = (direction: "left" | "right") => {
+    if (techFilterRef.current) {
+      const scrollAmount = direction === "left" ? -150 : 150;
+      techFilterRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    }
+  };
 
   const openProjectDialog = (project: Project) => {
     setSelectedProject(project);
@@ -271,6 +299,49 @@ export function ProjectsSection() {
           </div>
         </div>
 
+        {/* Technology Filters - Cross-filter */}
+        <div className="mb-8">
+          <div className="flex items-center gap-2 mb-4">
+            <Filter className="w-4 h-4 text-terracotta" />
+            <span className="text-[11px] font-sans font-medium uppercase tracking-widest text-charcoal-warm">
+              {lang("Filtrer par technologie:", "Filter by technology:")}
+            </span>
+          </div>
+          <div className="relative flex items-center gap-2 group/tech-nav">
+            <button 
+              onClick={() => scrollTechFilters("left")}
+              className="hidden md:flex absolute -left-2 z-20 w-6 h-6 rounded-full bg-ivory border border-border-cream items-center justify-center text-stone-gray hover:text-terracotta shadow-whisper opacity-0 group-hover/tech-nav:opacity-100 transition-opacity"
+            >
+              <ChevronLeft className="w-3 h-3" />
+            </button>
+            <div 
+              ref={techFilterRef}
+              className="flex items-center gap-2 overflow-x-auto pb-2 w-full scroll-smooth no-scrollbar"
+            >
+              {technologies.map((tech) => (
+                <button
+                  key={tech.id}
+                  onClick={() => { setActiveTech(tech.id); setCurrentPage(1); }}
+                  className={cn(
+                    "px-3 py-1.5 rounded-lg text-[10px] font-sans font-medium uppercase tracking-wider transition-all whitespace-nowrap border shrink-0",
+                    activeTech === tech.id
+                      ? "bg-near-black text-ivory border-near-black"
+                      : "bg-white text-charcoal-warm border-border-cream hover:border-terracotta/50 hover:bg-warm-sand/30"
+                  )}
+                >
+                  {tech.name}
+                </button>
+              ))}
+            </div>
+            <button 
+              onClick={() => scrollTechFilters("right")}
+              className="hidden md:flex absolute -right-2 z-20 w-6 h-6 rounded-full bg-ivory border border-border-cream items-center justify-center text-stone-gray hover:text-terracotta shadow-whisper opacity-0 group-hover/tech-nav:opacity-100 transition-opacity"
+            >
+              <ChevronRight className="w-3 h-3" />
+            </button>
+          </div>
+        </div>
+
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 min-h-[600px]">
           <AnimatePresence mode="wait">
             {currentProjects.map((project, index) => (
@@ -321,14 +392,12 @@ export function ProjectsSection() {
                  </div>
 
                 <div className="pt-6 mt-auto">
-                    <div className="flex flex-wrap gap-1.5 opacity-60">
+                    <div className="flex flex-wrap gap-1.5 opacity-70">
                          {project.tags.slice(0, 3).map(tag => (
-                             <span key={tag} className="text-[9px] font-sans uppercase tracking-tight px-2 py-0.5 bg-warm-sand/30 border border-border-cream rounded text-stone-gray">
-                                 {tag}
-                             </span>
+                             <TechBadge key={tag} tag={tag} size="sm" />
                          ))}
                          {project.tags.length > 3 && (
-                             <span className="text-[9px] font-sans font-bold text-stone-gray">+{project.tags.length - 3}</span>
+                             <span className="text-[9px] font-sans font-bold text-charcoal-warm self-center">+{project.tags.length - 3}</span>
                          )}
                     </div>
                 </div>
@@ -339,39 +408,65 @@ export function ProjectsSection() {
 
         {/* Pagination Controls */}
         {totalPages > 1 && (
-          <div className="mt-20 flex items-center justify-center gap-4">
-            <button
-              onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
-              disabled={currentPage === 1}
-              className="w-12 h-12 rounded-full border border-border-cream flex items-center justify-center text-stone-gray hover:bg-terracotta hover:text-white disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-stone-gray transition-all"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            
-            <div className="flex items-center gap-2">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                <button
-                  key={page}
-                  onClick={() => handlePageChange(page)}
-                  className={cn(
-                    "w-12 h-12 rounded-full font-sans text-sm font-medium transition-all border",
-                    currentPage === page 
-                      ? "bg-terracotta text-white border-terracotta shadow-ring" 
-                      : "bg-warm-sand/20 text-stone-gray border-border-cream hover:bg-warm-sand/40"
-                  )}
-                >
-                  {page}
-                </button>
-              ))}
-            </div>
+          <div className="mt-16 flex flex-col items-center gap-6">
+            {!showAll ? (
+              <>
+                <div className="flex items-center justify-center gap-4">
+                  <button
+                    onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                    disabled={currentPage === 1}
+                    className="w-12 h-12 rounded-full border border-border-cream flex items-center justify-center text-stone-gray hover:bg-terracotta hover:text-white disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-stone-gray transition-all"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+                  
+                  <div className="flex items-center gap-2">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                      <button
+                        key={page}
+                        onClick={() => handlePageChange(page)}
+                        className={cn(
+                          "w-12 h-12 rounded-full font-sans text-sm font-medium transition-all border",
+                          currentPage === page 
+                            ? "bg-terracotta text-white border-terracotta shadow-ring" 
+                            : "bg-warm-sand/20 text-stone-gray border-border-cream hover:bg-warm-sand/40"
+                        )}
+                      >
+                        {page}
+                      </button>
+                    ))}
+                  </div>
 
-            <button
-              onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
-              disabled={currentPage === totalPages}
-              className="w-12 h-12 rounded-full border border-border-cream flex items-center justify-center text-stone-gray hover:bg-terracotta hover:text-white disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-stone-gray transition-all"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
+                  <button
+                    onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+                    disabled={currentPage === totalPages}
+                    className="w-12 h-12 rounded-full border border-border-cream flex items-center justify-center text-stone-gray hover:bg-terracotta hover:text-white disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-stone-gray transition-all"
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </div>
+
+                <button
+                  onClick={() => setShowAll(true)}
+                  className="px-6 py-3 rounded-xl border border-border-cream text-charcoal-warm text-sm font-sans font-medium hover:bg-warm-sand/30 hover:border-terracotta/50 transition-all flex items-center gap-2"
+                >
+                  <Sparkles className="w-4 h-4 text-terracotta" />
+                  {lang("Tout charger", "Load all")} ({filteredProjects.length} {lang("projets", "projects")})
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => { setShowAll(false); setCurrentPage(1); }}
+                className="px-6 py-3 rounded-xl border border-border-cream text-charcoal-warm text-sm font-sans font-medium hover:bg-warm-sand/30 hover:border-terracotta/50 transition-all flex items-center gap-2"
+              >
+                <ChevronUp className="w-4 h-4" />
+                {lang("Retour à la pagination", "Back to pagination")}
+              </button>
+            )}
+            
+            <p className="text-xs text-stone-gray font-sans">
+              {lang("Affichage de", "Showing")} {currentProjects.length} {lang("sur", "of")} {filteredProjects.length} {lang("projets", "projects")}
+            </p>
           </div>
         )}
 
@@ -470,11 +565,9 @@ export function ProjectsSection() {
 
                     <div>
                       <h4 className="text-[10px] font-sans font-bold uppercase tracking-widest text-stone-gray mb-4">{lang("Technologies", "Technical Stack")}</h4>
-                      <div className="flex flex-wrap gap-1.5">
+                      <div className="flex flex-wrap gap-2">
                         {selectedProject.tags.map(tag => (
-                          <span key={tag} className="text-[10px] font-sans font-medium uppercase tracking-tighter text-olive-gray bg-warm-sand/30 px-3 py-1 rounded border border-border-cream/50">
-                            {tag}
-                          </span>
+                          <TechBadge key={tag} tag={tag} size="md" />
                         ))}
                       </div>
                     </div>

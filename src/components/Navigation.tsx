@@ -3,6 +3,8 @@ import { Menu, X, Globe, Layout, Cpu, Briefcase, Mail, UserRound } from "lucide-
 import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
 import { ThemeSwitcher } from "./ThemeSwitcher";
+import { motion, AnimatePresence } from "framer-motion";
+
 export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -107,46 +109,78 @@ export function Navigation() {
         </div>
       </nav>
 
-      {/* ══════════ MOBILE MENU ══════════ */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden absolute top-full left-0 w-full bg-ivory border-b border-border-cream shadow-whisper animate-in fade-in slide-in-from-top-4 duration-300">
-          <div className="p-6 space-y-1">
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className={cn(
-                  "flex items-center gap-4 px-4 py-3 rounded-xl text-lg font-medium transition-all",
-                  activeTab === link.href
-                    ? "bg-warm-sand/50 text-near-black"
-                    : "text-olive-gray hover:bg-warm-sand/20"
-                )}
-                onClick={() => {
-                  setActiveTab(link.href);
-                  setMobileMenuOpen(false);
-                }}
-              >
-                <link.icon className="w-5 h-5 opacity-60" />
-                {link.label}
-              </a>
-            ))}
-            <div className="pt-4 mt-4 border-t border-border-cream">
-              <button
-                className="w-full flex items-center justify-between px-4 py-3 bg-terracotta rounded-xl text-ivory font-medium"
-                onClick={() => {
-                  toggleLanguage();
-                  setMobileMenuOpen(false);
-                }}
-              >
-                <div className="flex items-center gap-3">
-                  <Globe className="w-5 h-5" />
-                  <span>{lang("English", "Français")}</span>
-                </div>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+{/* ══════════ MOBILE MENU ══════════ */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="lg:hidden fixed inset-0 bg-near-black/20 backdrop-blur-sm z-[90]"
+              onClick={() => setMobileMenuOpen(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, y: -20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -20, scale: 0.95 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="lg:hidden absolute top-full left-0 w-full bg-ivory/98 backdrop-blur-xl border-b border-border-cream shadow-xl z-[100]"
+            >
+              <div className="p-6 space-y-2">
+                {navLinks.map((link, index) => (
+                  <motion.a
+                    key={link.href}
+                    href={link.href}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    className={cn(
+                      "flex items-center gap-4 px-4 py-4 rounded-xl text-lg font-medium transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta focus-visible:ring-inset",
+                      activeTab === link.href
+                        ? "bg-warm-sand/60 text-near-black font-semibold"
+                        : "text-charcoal-warm hover:bg-warm-sand/30 hover:text-near-black"
+                    )}
+                    onClick={() => {
+                      setActiveTab(link.href);
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    <link.icon className={cn("w-5 h-5", activeTab === link.href ? "text-terracotta" : "text-charcoal-warm/60")} />
+                    {link.label}
+                  </motion.a>
+                ))}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                  className="pt-4 mt-4 border-t border-border-cream space-y-3"
+                >
+                  <button
+                    className="w-full flex items-center justify-between px-4 py-3 bg-terracotta rounded-xl text-ivory font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-near-black focus-visible:ring-offset-2"
+                    onClick={() => {
+                      toggleLanguage();
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    <div className="flex items-center gap-3">
+                      <Globe className="w-5 h-5" />
+                      <span>{lang("English", "Français")}</span>
+                    </div>
+                  </button>
+                  <a
+                    href="#contact"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="w-full flex items-center justify-center px-4 py-3 rounded-xl border-2 border-terracotta text-terracotta font-medium hover:bg-terracotta hover:text-ivory transition-all"
+                  >
+                    {lang("Parlons-en", "Let's talk")}
+                  </a>
+                </motion.div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
