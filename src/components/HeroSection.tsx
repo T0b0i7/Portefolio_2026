@@ -35,7 +35,7 @@ export function HeroSection() {
             <span className="text-terracotta">{lang("présence numérique", "digital presence")}</span>
           </h1>
 
-          <p className="text-xl md:text-2xl text-olive-gray font-sans leading-relaxed mb-10 max-w-xl">
+          <p className="text-xl md:text-2xl text-charcoal-warm font-sans leading-relaxed mb-10 max-w-xl">
             {lang(
               "Développeur Full-Stack & Designer UI/UX. Je conçois des interfaces élégantes et des systèmes robustes qui racontent votre histoire.",
               "Full-Stack Developer & UI/UX Designer. I craft elegant interfaces and robust systems that tell your story."
@@ -59,7 +59,7 @@ export function HeroSection() {
           </div>
 
           <div className="flex items-center gap-8">
-            <span className="text-sm font-sans text-stone-gray uppercase tracking-widest">{lang("Suivez-moi", "Follow me")}</span>
+            <span className="text-sm font-sans text-charcoal-warm uppercase tracking-widest font-medium">{lang("Suivez-moi", "Follow me")}</span>
             <div className="flex gap-5">
               {socialLinks.map((social) => (
                 <a
@@ -96,7 +96,7 @@ export function HeroSection() {
             {/* Floating Badge repositionné */}
             <div className="absolute bottom-2 right-2 md:bottom-4 md:right-4 bg-ivory p-5 rounded-2xl border border-border-cream shadow-whisper max-w-[170px] z-20">
               <div className="text-terracotta font-serif text-2xl md:text-3xl font-medium mb-1">5+</div>
-              <div className="text-xs font-sans text-olive-gray leading-tight uppercase tracking-wider">
+              <div className="text-xs font-sans text-charcoal-warm leading-tight uppercase tracking-wider font-medium">
                 {lang("Années d'expérience en dev", "Years of dev experience")}
               </div>
             </div>

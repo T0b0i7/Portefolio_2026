@@ -11,11 +11,11 @@ export const MotionLayout = ({ children }: MotionLayoutProps) => {
   const mouseY = useMotionValue(0);
 
   const rotateX = useSpring(
-    useTransform(mouseY, [-200, 200], [15, -15]),
+    useTransform(mouseY, [-200, 200], [2, -2]),
     { stiffness: 120, damping: 30 }
   );
   const rotateY = useSpring(
-    useTransform(mouseX, [-200, 200], [-15, 15]),
+    useTransform(mouseX, [-200, 200], [-2, 2]),
     { stiffness: 120, damping: 30 }
   );
 

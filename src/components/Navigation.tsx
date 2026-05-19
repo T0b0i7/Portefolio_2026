@@ -43,7 +43,7 @@ export function Navigation() {
       className={cn(
         "fixed top-0 left-0 w-full z-[100] transition-all duration-300",
         isScrolled
-          ? "bg-ivory/95 backdrop-blur-md border-b border-border-cream py-3"
+          ? "bg-ivory/90 backdrop-blur-xl backdrop-saturate-150 border-b border-border-cream py-3"
           : "bg-transparent py-6"
       )}
     >
@@ -57,7 +57,7 @@ export function Navigation() {
           </span>
         </a>
 
-        {/* ══════════ CENTER NAVIGATION ══════════ */}
+{/* ══════════ CENTER NAVIGATION ══════════ */}
         <div className="hidden lg:flex items-center gap-1">
             {navLinks.map((link) => (
               <a
@@ -67,15 +67,15 @@ export function Navigation() {
                   setActiveTab(link.href);
                 }}
                 className={cn(
-                "px-4 py-2 text-[15px] font-medium transition-all duration-200 rounded-lg",
+                "px-4 py-2 text-[15px] font-medium transition-all duration-200 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta focus-visible:ring-offset-2",
                 activeTab === link.href
-                  ? "text-near-black bg-warm-sand/50"
-                  : "text-olive-gray hover:text-near-black hover:bg-warm-sand/30"
+                  ? "text-near-black bg-warm-sand/60 font-semibold"
+                  : "text-charcoal-warm hover:text-near-black hover:bg-warm-sand/30"
               )}
-            >
-              {link.label}
-            </a>
-          ))}
+              >
+                {link.label}
+              </a>
+            ))}
         </div>
 
         {/* ══════════ ACTIONS ══════════ */}
@@ -84,7 +84,7 @@ export function Navigation() {
           
           <button
             onClick={toggleLanguage}
-            className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border-cream hover:bg-warm-sand/30 transition-all text-xs font-medium text-olive-gray"
+            className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border-cream hover:bg-warm-sand/30 transition-all text-xs font-medium text-charcoal-warm"
           >
             <Globe className="w-3.5 h-3.5" />
             <span className="uppercase">{lang("EN", "FR")}</span>

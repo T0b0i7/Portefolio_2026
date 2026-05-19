@@ -15,7 +15,7 @@ export function Footer() {
             <a href="#accueil" className="text-3xl font-serif font-medium text-near-black">
               Tobi<span className="text-terracotta">Dev</span>
             </a>
-            <p className="text-olive-gray font-sans leading-relaxed max-w-xs">
+            <p className="text-charcoal-warm font-sans leading-relaxed max-w-xs">
               {lang(
                 "Conception numérique alliant clarté éditoriale et performance technologique.",
                 "Digital design combining editorial clarity and technical performance."
@@ -36,7 +36,7 @@ export function Footer() {
             <h4 className="text-[11px] font-sans font-medium uppercase tracking-[0.2em] text-stone-gray mb-8">
               {lang("Navigation", "Navigation")}
             </h4>
-            <ul className="space-y-4 font-sans text-sm text-olive-gray">
+            <ul className="space-y-4 font-sans text-sm text-charcoal-warm">
               <li><a href="#accueil" className="hover:text-terracotta transition-colors">{lang("Accueil", "Home")}</a></li>
               <li><a href="#apropos" className="hover:text-terracotta transition-colors">{lang("À propos", "About")}</a></li>
               <li><a href="#projects" className="hover:text-terracotta transition-colors">{lang("Projets", "Projects")}</a></li>
@@ -49,7 +49,7 @@ export function Footer() {
             <h4 className="text-[11px] font-sans font-medium uppercase tracking-[0.2em] text-stone-gray mb-8">
               {lang("Contact", "Direct Line")}
             </h4>
-            <ul className="space-y-4 font-sans text-sm text-olive-gray">
+            <ul className="space-y-4 font-sans text-sm text-charcoal-warm">
               <li className="flex items-center gap-2">
                 <Mail size={16} className="text-terracotta" />
                 <a href="mailto:abattieucher@gmail.com" className="hover:text-terracotta transition-colors">abattieucher@gmail.com</a>
@@ -70,7 +70,7 @@ export function Footer() {
             <h4 className="text-[11px] font-sans font-medium uppercase tracking-[0.2em] text-stone-gray mb-8">
               {lang("Légal & Plus", "Legal & More")}
             </h4>
-            <div className="flex flex-col gap-4 font-sans text-sm text-olive-gray">
+            <div className="flex flex-col gap-4 font-sans text-sm text-charcoal-warm">
               <Dialog>
                 <DialogTrigger className="text-left hover:text-terracotta transition-colors flex items-center gap-2">
                   <FileText size={16} />
@@ -78,7 +78,7 @@ export function Footer() {
                 </DialogTrigger>
                 <DialogContent className="bg-ivory border-border-cream text-near-black rounded-3xl p-10">
                   <DialogHeader><DialogTitle className="font-serif text-3xl mb-4">{lang("Mentions Légales", "Legal Notice")}</DialogTitle></DialogHeader>
-                  <p className="font-sans leading-relaxed text-olive-gray">
+                  <p className="font-sans leading-relaxed text-charcoal-warm">
                     TobiDev — Porto-Novo, Bénin. <br />
                     Propulsé par la passion et la technologie.
                   </p>
@@ -92,7 +92,7 @@ export function Footer() {
                 </DialogTrigger>
                 <DialogContent className="bg-ivory border-border-cream text-near-black rounded-3xl p-10">
                   <DialogHeader><DialogTitle className="font-serif text-3xl mb-4">{lang("Confidentialité", "Privacy Policy")}</DialogTitle></DialogHeader>
-                  <p className="font-sans leading-relaxed text-olive-gray">
+                  <p className="font-sans leading-relaxed text-charcoal-warm">
                     Vos données sont traitées avec le plus grand respect du secret professionnel.
                   </p>
                 </DialogContent>
@@ -102,10 +102,10 @@ export function Footer() {
         </div>
 
         <div className="mt-20 pt-10 border-t border-border-cream flex flex-col md:flex-row justify-between items-center gap-6">
-          <p className="text-xs font-sans text-stone-gray tracking-widest uppercase">
+          <p className="text-xs font-sans text-charcoal-warm tracking-widest uppercase">
             © {currentYear} TobiDev Studio — {lang("Tous droits réservés", "All rights reserved")}
           </p>
-          <div className="flex items-center gap-4 text-[10px] font-sans font-medium text-stone-gray tracking-widest uppercase">
+          <div className="flex items-center gap-4 text-[10px] font-sans font-medium text-charcoal-warm tracking-widest uppercase">
             <span>React</span>
             <span className="w-1 h-1 rounded-full bg-border-cream" />
             <span>Tailwind</span>

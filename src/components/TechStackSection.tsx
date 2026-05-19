@@ -1,4 +1,4 @@
-import { useRef, useState, useMemo, useCallback } from "react";
+import { useRef, useState, useMemo, useCallback, useEffect } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Sparkles, Search } from "lucide-react";
@@ -151,6 +151,14 @@ export function TechStackSection() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeKey, setActiveKey] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -159,7 +167,7 @@ export function TechStackSection() {
   const rotateY = useSpring(useTransform(mouseX, [-300, 300], [-10, 10]), { stiffness: 100, damping: 30 });
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!containerRef.current || window.innerWidth <= 768) return;
+    if (!containerRef.current || isMobile) return;
     const rect = containerRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
@@ -204,13 +212,13 @@ export function TechStackSection() {
 
           <div className="max-w-md mx-auto relative group">
             <div className="relative flex items-center bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 backdrop-blur-xl group-focus-within:border-terracotta/40 transition-all duration-300">
-              <Search className="w-5 h-5 text-stone-gray mr-4 group-focus-within:text-terracotta" />
+              <Search className="w-5 h-5 text-stone-gray/60 mr-4 group-focus-within:text-terracotta" />
               <input 
                 type="text"
                 placeholder={lang("Rechercher une techno...", "Search tech...")}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="bg-transparent border-none outline-none text-ivory font-sans text-base w-full placeholder:text-stone-gray/40"
+                className="bg-transparent border-none outline-none text-ivory font-sans text-base w-full placeholder:text-stone-gray/50"
               />
             </div>
           </div>
@@ -218,19 +226,19 @@ export function TechStackSection() {
 
         {/* 3D Keyboard Perspective Container */}
         <div 
-          className="relative w-full flex justify-center px-2"
+          className={`relative w-full flex justify-center px-2 ${isMobile ? '' : 'md:hover:cursor-none'}`}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
         >
           <motion.div 
             ref={containerRef}
             style={{ 
-              perspective: "2000px",
-              rotateX,
-              rotateY,
-              transformStyle: "preserve-3d"
+              perspective: isMobile ? "none" : "2000px",
+              rotateX: isMobile ? 0 : rotateX,
+              rotateY: isMobile ? 0 : rotateY,
+              transformStyle: isMobile ? "flat" as const : "preserve-3d" as const
             }}
-            className="flex flex-col items-center gap-2 md:gap-4 p-4 md:p-12 bg-[#121212] border border-white/5 rounded-[1.5rem] md:rounded-[2.5rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] w-full max-w-fit"
+            className={`flex flex-col items-center gap-2 md:gap-4 p-4 md:p-12 bg-[#121212] border border-white/5 rounded-[1.5rem] md:rounded-[2.5rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] w-full max-w-fit transition-all ${isMobile ? '' : 'hover:shadow-[0_60px_120px_-20px_rgba(0,0,0,0.6)]'}`}
           >
             {rows.map((row, rowIndex) => (
               <div 
@@ -262,14 +270,14 @@ export function TechStackSection() {
                    transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
                    className="absolute inset-0 bg-gradient-to-r from-transparent via-terracotta/10 to-transparent w-full h-full"
                  />
-                 <span className="relative z-10 text-[7px] md:text-[10px] font-sans font-bold uppercase tracking-[0.2em] md:tracking-[0.4em] text-stone-gray/40">Full-Stack Expertise</span>
+                 <span className="relative z-10 text-[7px] md:text-[10px] font-sans font-bold uppercase tracking-[0.2em] md:tracking-[0.4em] text-stone-gray/70">Full-Stack Expertise</span>
               </div>
               <div className="hidden sm:block w-12 h-10 md:w-20 md:h-14 bg-[#1e1e1e] border border-white/10 rounded-lg shadow-[0_4px_0_0_#0a0a0a]" />
             </div>
           </motion.div>
         </div>
 
-        <p className="mt-20 text-stone-gray text-xs font-sans tracking-widest uppercase text-center max-w-lg leading-relaxed opacity-50">
+        <p className="mt-20 text-stone-gray/70 text-xs font-sans tracking-widest uppercase text-center max-w-lg leading-relaxed">
           {lang(
             "Chaque touche représente une brique de mon expertise, assemblée pour créer des expériences numériques sans compromis.",
             "Each key represents a brick of my expertise, assembled to create uncompromising digital experiences."
