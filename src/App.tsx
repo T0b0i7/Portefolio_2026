@@ -7,7 +7,8 @@ import { MotionLayout } from "./components/MotionLayout";
 import { Toaster } from "./components/ui/toaster";
 import { Toaster as Sonner } from "sonner";
 import { TrackingConsentBanner } from "./components/TrackingConsentBanner";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
 import Index from "./pages/Index";
 import AdminPage from "./pages/Admin";
 import BackofficePage from "./pages/Backoffice";
@@ -37,13 +38,7 @@ const App = () => (
             </a>
             <BrowserRouter>
               <TrackingBridge />
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/admin" element={<AdminPage />} />
-                <Route path="/backoffice" element={<BackofficePage />} />
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
+              <RouteTransition />
             </BrowserRouter>
           </MotionLayout>
         </TooltipProvider>
@@ -58,5 +53,34 @@ const TrackingBridge = () => {
   useSectionTracking(canTrack);
   return null;
 };
+
+const pageVariants = {
+  initial: { opacity: 0, y: 20, filter: "blur(4px)" },
+  animate: { opacity: 1, y: 0, filter: "blur(0px)" },
+  exit: { opacity: 0, y: -20, filter: "blur(4px)" },
+};
+
+function RouteTransition() {
+  const location = useLocation();
+  return (
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={location.pathname}
+        variants={pageVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <Routes location={location}>
+          <Route path="/" element={<Index />} />
+          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/backoffice" element={<BackofficePage />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
 
 export default App;

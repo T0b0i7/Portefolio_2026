@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Quote, ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
+import { Quote, ChevronLeft, ChevronRight, Sparkles, Pause, Play } from "lucide-react";
 import { ScrollAnimation } from "@/components/ui/ScrollAnimation";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
@@ -135,20 +135,27 @@ export function TestimonialsSection() {
               </h2>
             </div>
 
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-3">
+               <button
+                 onClick={() => setIsAutoPlaying(!isAutoPlaying)}
+                 className="w-14 h-14 rounded-3xl border border-border-cream flex items-center justify-center hover:bg-near-black hover:text-ivory transition-all duration-500 group bg-white/50 backdrop-blur-md"
+                 aria-label={isAutoPlaying ? lang("Pause", "Pause") : lang("Lecture auto", "Auto-play")}
+               >
+                 {isAutoPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
+               </button>
                <button 
-                onClick={goToPrev}
-                className="w-16 h-16 rounded-3xl border border-border-cream flex items-center justify-center hover:bg-near-black hover:text-ivory transition-all duration-500 group bg-white/50 backdrop-blur-md"
-              >
-                <ChevronLeft className="w-6 h-6 group-hover:-translate-x-1 transition-transform" />
-              </button>
-              <button 
-                onClick={goToNext}
-                className="w-16 h-16 rounded-3xl border border-border-cream flex items-center justify-center hover:bg-near-black hover:text-ivory transition-all duration-500 group bg-white/50 backdrop-blur-md"
-              >
-                <ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-              </button>
-            </div>
+                 onClick={goToPrev}
+                 className="w-14 h-14 rounded-3xl border border-border-cream flex items-center justify-center hover:bg-near-black hover:text-ivory transition-all duration-500 group bg-white/50 backdrop-blur-md"
+               >
+                 <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+               </button>
+               <button 
+                 onClick={goToNext}
+                 className="w-14 h-14 rounded-3xl border border-border-cream flex items-center justify-center hover:bg-near-black hover:text-ivory transition-all duration-500 group bg-white/50 backdrop-blur-md"
+               >
+                 <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+               </button>
+             </div>
           </div>
         </ScrollAnimation>
 

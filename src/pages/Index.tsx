@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { HeroSection } from "@/components/HeroSection";
 import { AboutSection } from "@/components/AboutSection";
 import { TechStackSection } from "@/components/TechStackSection";
@@ -11,9 +12,44 @@ import { Footer } from "@/components/Footer";
 import { Navigation } from "@/components/Navigation";
 import { WhatsAppFloatButton } from "@/components/WhatsAppFloatButton";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { ChevronUp } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+
+const sections = [
+  { id: "accueil", label: { fr: "Accueil", en: "Home" } },
+  { id: "apropos", label: { fr: "À propos", en: "About" } },
+  { id: "arsenal", label: { fr: "Arsenal", en: "Arsenal" } },
+  { id: "parcours", label: { fr: "Parcours", en: "Timeline" } },
+  { id: "projects", label: { fr: "Projets", en: "Projects" } },
+  { id: "services", label: { fr: "Services", en: "Services" } },
+  { id: "temoignages", label: { fr: "Témoignages", en: "Testimonials" } },
+  { id: "contact", label: { fr: "Contact", en: "Contact" } },
+];
 
 const Index = () => {
   const { lang } = useLanguage();
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [activeSection, setActiveSection] = useState("accueil");
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 600);
+
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const el = document.getElementById(sections[i].id);
+        if (el && window.scrollY >= el.offsetTop - 150) {
+          setActiveSection(sections[i].id);
+          break;
+        }
+      }
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
   
   return (
     <div className="min-h-screen bg-parchment text-near-black selection:bg-terracotta/20 selection:text-near-black">
@@ -80,6 +116,45 @@ const Index = () => {
 
       {/* Footer - Light/Warm */}
       <Footer />
+
+      {/* Quick Navigation - Section dots */}
+      <nav aria-label="Quick navigation" className="fixed right-4 md:right-8 top-1/2 -translate-y-1/2 z-[80] hidden lg:flex flex-col items-center gap-3 no-print">
+        {sections.map((s) => (
+          <a
+            key={s.id}
+            href={`#${s.id}`}
+            aria-label={lang(s.label.fr, s.label.en)}
+            className="group relative flex items-center justify-center"
+          >
+            <span className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+              activeSection === s.id
+                ? "bg-terracotta scale-125 shadow-sm shadow-terracotta/40"
+                : "bg-stone-gray/30 hover:bg-stone-gray/60"
+            }`} />
+            <span className="absolute right-full mr-3 px-2 py-1 rounded-md bg-near-black text-ivory text-[10px] font-sans font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+              {lang(s.label.fr, s.label.en)}
+            </span>
+          </a>
+        ))}
+        <div className="w-px h-8 bg-border-cream/50 mt-1" />
+      </nav>
+
+      {/* Scroll to Top FAB */}
+      <AnimatePresence>
+        {showScrollTop && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.8, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: 20 }}
+            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+            onClick={scrollToTop}
+            aria-label={lang("Retour en haut", "Back to top")}
+            className="fixed bottom-8 right-8 z-[90] w-12 h-12 rounded-2xl bg-terracotta text-ivory shadow-lg shadow-terracotta/30 flex items-center justify-center hover:bg-terracotta/90 active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-terracotta focus:ring-offset-2 focus:ring-offset-parchment"
+          >
+            <ChevronUp className="w-5 h-5" />
+          </motion.button>
+        )}
+      </AnimatePresence>
 
       {/* <WhatsAppFloatButton /> - Temporarily hidden for redesign check */}
     </div>

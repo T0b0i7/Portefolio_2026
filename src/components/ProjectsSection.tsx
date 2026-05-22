@@ -79,9 +79,6 @@ export function ProjectsSection() {
     setCurrentPage(1);
   };
 
-  const { projects } = useCmsProjects();
-  const typedProjects = projects as Project[];
-
   // Reset to first page when filters change
   useEffect(() => {
     setCurrentPage(1);
@@ -98,6 +95,9 @@ export function ProjectsSection() {
       filterContainerRef.current.scrollTo({ left: 0, behavior: "smooth" });
     }
   }, [activeCategory, searchQuery]);
+
+  const { projects, loading } = useCmsProjects();
+  const typedProjects = projects as Project[];
 
   const scrollFilters = (direction: "left" | "right") => {
     if (filterContainerRef.current) {
@@ -181,6 +181,40 @@ export function ProjectsSection() {
     document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
   };
 
+  // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+    
+    // Auto-scroll to center the active category
+    if (filterContainerRef.current && activeCategory !== "all") {
+      const container = filterContainerRef.current;
+      const activeButton = container.querySelector(`[data-category="${activeCategory}"]`) as HTMLElement;
+      if (activeButton) {
+        const scrollLeft = activeButton.offsetLeft - (container.offsetWidth / 2) + (activeButton.offsetWidth / 2);
+        container.scrollTo({ left: scrollLeft, behavior: "smooth" });
+      }
+    } else if (filterContainerRef.current && activeCategory === "all") {
+      filterContainerRef.current.scrollTo({ left: 0, behavior: "smooth" });
+    }
+  }, [activeCategory, searchQuery]);
+
+  const SkeletonCard = () => (
+    <div className="flex flex-col h-full animate-pulse">
+      <div className="relative aspect-[4/3] rounded-[32px] overflow-hidden mb-6 bg-warm-sand/30" />
+      <div className="space-y-3 flex-1">
+        <div className="h-3 w-16 bg-warm-sand/30 rounded" />
+        <div className="h-5 w-3/4 bg-warm-sand/30 rounded" />
+        <div className="h-3 w-full bg-warm-sand/20 rounded" />
+        <div className="h-3 w-2/3 bg-warm-sand/20 rounded" />
+      </div>
+      <div className="pt-6 mt-auto flex gap-1.5">
+        <div className="h-5 w-14 bg-warm-sand/20 rounded-full" />
+        <div className="h-5 w-16 bg-warm-sand/20 rounded-full" />
+        <div className="h-5 w-12 bg-warm-sand/20 rounded-full" />
+      </div>
+    </div>
+  );
+
   return (
     <div id="projects" className="py-24 md:py-40 bg-parchment text-near-black">
       <div className="max-w-7xl mx-auto px-6">
@@ -203,6 +237,14 @@ export function ProjectsSection() {
             </p>
           </div>
         </ScrollAnimation>
+
+        {loading && (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
+            {Array.from({ length: projectsPerPage }).map((_, i) => (
+              <SkeletonCard key={i} />
+            ))}
+          </div>
+        )}
 
         <div className="flex flex-col md:flex-row gap-6 mb-12 items-center justify-between">
           <div className="relative w-full md:w-96 group">
@@ -342,6 +384,7 @@ export function ProjectsSection() {
           </div>
         </div>
 
+        {!loading && (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 min-h-[600px]">
           <AnimatePresence mode="wait">
             {currentProjects.map((project, index) => (
@@ -359,6 +402,8 @@ export function ProjectsSection() {
                   <img 
                     src={project.image_url || (project.gallery_urls?.[0]) || "/placeholder.svg"} 
                     alt={lang(project.title_fr, project.title_en)}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-near-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
@@ -405,6 +450,7 @@ export function ProjectsSection() {
             ))}
           </AnimatePresence>
         </div>
+        )}
 
         {/* Pagination Controls */}
         {totalPages > 1 && (
@@ -468,6 +514,7 @@ export function ProjectsSection() {
               {lang("Affichage de", "Showing")} {currentProjects.length} {lang("sur", "of")} {filteredProjects.length} {lang("projets", "projects")}
             </p>
           </div>
+
         )}
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -481,6 +528,8 @@ export function ProjectsSection() {
                              <div className="flex-1 overflow-hidden relative">
                                 <img 
                                     src={selectedProject.gallery_urls[activeImageIndex]} 
+                                    loading="lazy"
+                                    decoding="async"
                                     className="w-full h-full object-contain p-2 md:p-6" 
                                     alt={lang(selectedProject.title_fr, selectedProject.title_en)} 
                                 />
@@ -495,7 +544,7 @@ export function ProjectsSection() {
                                             activeImageIndex === idx ? "border-terracotta scale-110" : "border-transparent opacity-60 hover:opacity-100"
                                         )}
                                     >
-                                        <img src={url} className="w-full h-full object-cover" alt="" />
+                                        <img src={url} loading="lazy" decoding="async" className="w-full h-full object-cover" alt="" />
                                     </button>
                                 ))}
                              </div>

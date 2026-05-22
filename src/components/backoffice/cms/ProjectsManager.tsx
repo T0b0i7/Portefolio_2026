@@ -4,6 +4,16 @@ import { upsertProject, deleteProject } from "@/lib/cms-service";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { 
   Plus, 
   Search, 
@@ -31,6 +41,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useLanguage } from "@/contexts/LanguageContext";
 import type { CmsProject } from "@/types/cms";
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; icon: React.ReactNode }> = {
@@ -56,11 +67,13 @@ const emptyProject: Partial<CmsProject> = {
 
 export function ProjectsManager() {
   const { projects, loading, hasRemoteData, refresh } = useCmsProjects();
+  const { lang } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState<"all" | "published" | "draft" | "archived">("all");
   const [editingProject, setEditingProject] = useState<Partial<CmsProject> | null>(null);
   const [saving, setSaving] = useState(false);
   const [tagsInput, setTagsInput] = useState("");
+  const [deleteConfirm, setDeleteConfirm] = useState<{ id: number; title: string } | null>(null);
 
   const filteredProjects = projects.filter(p => {
     const matchesSearch = 
@@ -109,11 +122,12 @@ export function ProjectsManager() {
     }
   };
 
-  const handleDelete = async (id: number, title: string) => {
-    if (!confirm(`Supprimer "${title}" ? Cette action est irréversible.`)) return;
+  const handleDelete = async () => {
+    if (!deleteConfirm) return;
     try {
-      await deleteProject(id);
+      await deleteProject(deleteConfirm.id);
       toast.success("Projet supprimé");
+      setDeleteConfirm(null);
       refresh();
     } catch {
       toast.error("Erreur lors de la suppression");
@@ -314,7 +328,7 @@ export function ProjectsManager() {
                           <DropdownMenuSeparator className="bg-[#e6dfd8]" />
                           <DropdownMenuItem 
                             className="gap-2 text-[#c64545] cursor-pointer" 
-                            onClick={() => handleDelete(project.id!, project.title_fr || "ce projet")}
+                            onClick={() => setDeleteConfirm({ id: project.id!, title: project.title_fr || "ce projet" })}
                           >
                             <Trash2 className="w-4 h-4" /> Supprimer
                           </DropdownMenuItem>
@@ -525,6 +539,31 @@ export function ProjectsManager() {
           </Card>
         </div>
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={!!deleteConfirm} onOpenChange={() => setDeleteConfirm(null)}>
+        <AlertDialogContent className="bg-white border-[#e6dfd8] rounded-2xl">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="font-serif text-[#141413]">
+              {lang("Confirmer la suppression", "Confirm deletion")}
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-[#6c6a64] text-sm">
+              {lang(
+                `Êtes-vous sûr de vouloir supprimer "${deleteConfirm?.title}" ? Cette action est irréversible.`,
+                `Are you sure you want to delete "${deleteConfirm?.title}"? This action cannot be undone.`
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="border-[#e6dfd8] text-[#141413]">
+              {lang("Annuler", "Cancel")}
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700 text-white">
+              {lang("Supprimer", "Delete")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

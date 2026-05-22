@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Mail, MapPin, Github, Linkedin, Send, Phone, ArrowRight } from "lucide-react";
+import { useState, useRef } from "react";
+import { Mail, MapPin, Github, Linkedin, Send, Phone, ArrowRight, AlertCircle } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { ScrollAnimation } from "@/components/ui/ScrollAnimation";
@@ -14,8 +14,37 @@ export function ContactSection() {
     message: "",
     website: "",
   });
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const MIN_SECONDS_BETWEEN_SUBMISSIONS = 45;
+
+  const validateField = (name: string, value: string) => {
+    const newErrors = { ...errors };
+    switch (name) {
+      case 'name':
+        if (!value.trim()) newErrors.name = lang("Le nom est requis", "Name is required");
+        else if (value.trim().length < 2) newErrors.name = lang("Minimum 2 caractères", "Minimum 2 characters");
+        else delete newErrors.name;
+        break;
+      case 'email':
+        if (!value.trim()) newErrors.email = lang("L'email est requis", "Email is required");
+        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) newErrors.email = lang("Email invalide", "Invalid email");
+        else delete newErrors.email;
+        break;
+      case 'subject':
+        if (!value.trim()) newErrors.subject = lang("Le sujet est requis", "Subject is required");
+        else if (value.trim().length < 3) newErrors.subject = lang("Minimum 3 caractères", "Minimum 3 characters");
+        else delete newErrors.subject;
+        break;
+      case 'message':
+        if (!value.trim()) newErrors.message = lang("Le message est requis", "Message is required");
+        else if (value.trim().length < 10) newErrors.message = lang("Minimum 10 caractères", "Minimum 10 characters");
+        else if (value.length > 2000) newErrors.message = lang("Maximum 2000 caractères", "Maximum 2000 characters");
+        else delete newErrors.message;
+        break;
+    }
+    setErrors(newErrors);
+  };
 
   const contactInfo = [
     {
@@ -44,6 +73,19 @@ export function ContactSection() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate all fields synchronously
+    const newErrors: Record<string, string> = {};
+    if (!formData.name.trim()) newErrors.name = lang("Le nom est requis", "Name is required");
+    if (!formData.email.trim()) newErrors.email = lang("L'email est requis", "Email is required");
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = lang("Email invalide", "Invalid email");
+    if (!formData.subject.trim()) newErrors.subject = lang("Le sujet est requis", "Subject is required");
+    if (!formData.message.trim()) newErrors.message = lang("Le message est requis", "Message is required");
+    else if (formData.message.length > 2000) newErrors.message = lang("Maximum 2000 caractères", "Maximum 2000 characters");
+
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) return;
+
     setIsSubmitting(true);
 
     try {
@@ -88,7 +130,13 @@ export function ContactSection() {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    validateField(name, value);
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    validateField(e.target.name, e.target.value);
   };
 
   return (
@@ -143,7 +191,9 @@ export function ContactSection() {
                       key={i} 
                       href={social.href} 
                       target="_blank" 
+                      rel="noopener noreferrer"
                       className="text-stone-gray hover:text-terracotta transition-colors"
+                      aria-label={`${social.icon === Github ? 'GitHub' : 'LinkedIn'} (nouvelle fenêtre / new window)`}
                     >
                       <social.icon className="w-6 h-6" />
                     </a>
@@ -169,10 +219,16 @@ export function ContactSection() {
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
+                      onBlur={handleBlur}
                       required
-                      className="w-full bg-transparent border-b border-white/10 py-3 text-ivory focus:outline-none focus:border-terracotta transition-colors font-sans"
+                      className={`w-full bg-transparent border-b py-3 text-ivory focus:outline-none transition-colors font-sans ${errors.name ? 'border-red-500/50 focus:border-red-500' : 'border-white/10 focus:border-terracotta'}`}
                       placeholder="Jean Dupont"
                     />
+                    {errors.name && (
+                      <span className="text-[10px] text-red-400 flex items-center gap-1">
+                        <AlertCircle className="w-3 h-3" /> {errors.name}
+                      </span>
+                    )}
                   </div>
                   <div className="space-y-3">
                     <Label htmlFor="email" className="text-[10px] font-sans font-medium uppercase tracking-widest text-stone-gray">
@@ -184,10 +240,16 @@ export function ContactSection() {
                       type="email"
                       value={formData.email}
                       onChange={handleChange}
+                      onBlur={handleBlur}
                       required
-                      className="w-full bg-transparent border-b border-white/10 py-3 text-ivory focus:outline-none focus:border-terracotta transition-colors font-sans"
+                      className={`w-full bg-transparent border-b py-3 text-ivory focus:outline-none transition-colors font-sans ${errors.email ? 'border-red-500/50 focus:border-red-500' : 'border-white/10 focus:border-terracotta'}`}
                       placeholder="jean@exemple.com"
                     />
+                    {errors.email && (
+                      <span className="text-[10px] text-red-400 flex items-center gap-1">
+                        <AlertCircle className="w-3 h-3" /> {errors.email}
+                      </span>
+                    )}
                   </div>
                 </div>
 
@@ -200,10 +262,16 @@ export function ContactSection() {
                     name="subject"
                     value={formData.subject}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     required
-                    className="w-full bg-transparent border-b border-white/10 py-3 text-ivory focus:outline-none focus:border-terracotta transition-colors font-sans"
+                    className={`w-full bg-transparent border-b py-3 text-ivory focus:outline-none transition-colors font-sans ${errors.subject ? 'border-red-500/50 focus:border-red-500' : 'border-white/10 focus:border-terracotta'}`}
                     placeholder={lang("Une opportunité de projet", "A project opportunity")}
                   />
+                  {errors.subject && (
+                    <span className="text-[10px] text-red-400 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" /> {errors.subject}
+                    </span>
+                  )}
                 </div>
 
                 <div className="space-y-3">
@@ -216,10 +284,24 @@ export function ContactSection() {
                     rows={4}
                     value={formData.message}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     required
-                    className="w-full bg-transparent border border-white/10 rounded-2xl p-6 text-ivory focus:outline-none focus:border-terracotta transition-colors font-sans resize-none"
+                    maxLength={2000}
+                    className={`w-full bg-transparent border rounded-2xl p-6 text-ivory focus:outline-none transition-colors font-sans resize-none ${errors.message ? 'border-red-500/50 focus:border-red-500' : 'border-white/10 focus:border-terracotta'}`}
                     placeholder={lang("Décrivez votre vision...", "Tell me about your vision...")}
                   />
+                  <div className="flex items-center justify-between">
+                    {errors.message ? (
+                      <span className="text-[10px] text-red-400 flex items-center gap-1">
+                        <AlertCircle className="w-3 h-3" /> {errors.message}
+                      </span>
+                    ) : (
+                      <span />
+                    )}
+                    <span className={`text-[10px] font-sans ${formData.message.length > 1800 ? 'text-amber-400' : 'text-stone-gray'}`}>
+                      {formData.message.length}/2000
+                    </span>
+                  </div>
                 </div>
 
                 <button

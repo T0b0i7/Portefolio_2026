@@ -8,6 +8,18 @@ interface ScrollAnimationProps {
     once?: boolean;
 }
 
+function usePrefersReducedMotion() {
+    const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+    useEffect(() => {
+        const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+        setPrefersReducedMotion(mq.matches);
+        const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+        mq.addEventListener("change", handler);
+        return () => mq.removeEventListener("change", handler);
+    }, []);
+    return prefersReducedMotion;
+}
+
 export function ScrollAnimation({
     children,
     className = "",
@@ -17,6 +29,7 @@ export function ScrollAnimation({
 }: ScrollAnimationProps) {
     const [isVisible, setIsVisible] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
+    const prefersReducedMotion = usePrefersReducedMotion();
 
     useEffect(() => {
         const node = ref.current;
@@ -70,13 +83,15 @@ export function ScrollAnimation({
     return (
         <div
             ref={ref}
-            className={`will-change-transform ${className}`}
+            className={`${className}`}
             style={{
-                ...(isVisible ? visibleState : getHiddenState()),
-                transitionProperty: "opacity, transform, filter",
+                opacity: prefersReducedMotion ? 1 : (isVisible ? 1 : 0),
+                transform: prefersReducedMotion ? "none" : (isVisible ? "translate3d(0,0,0) scale(1)" : getHiddenState().transform),
+                filter: prefersReducedMotion ? "none" : (isVisible ? "blur(0px)" : getHiddenState().filter),
+                transitionProperty: prefersReducedMotion ? "none" : "opacity, transform, filter",
                 transitionDuration: "760ms",
                 transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
-                transitionDelay: `${delay}ms`,
+                transitionDelay: prefersReducedMotion ? "0ms" : `${delay}ms`,
             }}
         >
             {children}

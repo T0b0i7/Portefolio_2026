@@ -80,29 +80,6 @@
         ]
     },
     {
-        "id": 4,
-        "title_fr": "Plateforme E-commerce Haute Performance",
-        "title_en": "High Performance E-commerce Platform",
-        "category": "E-commerce",
-        "description_fr": "Développement d'une plateforme e-commerce moderne avec paiement intégré et gestion d'inventaire en temps réel.",
-        "description_en": "Development of a modern e-commerce platform with integrated payment and real-time inventory management.",
-        "tags": [
-            "Next.js",
-            "Stripe",
-            "MongoDB",
-            "Vercel"
-        ],
-        "impact": "+100k users",
-        "metrics_type": "Startup",
-        "color": "primary",
-        "status_fr": "En cours",
-        "status_en": "In Progress",
-        "gallery_urls": [
-            "/design/Luxe.PNG",
-            "/design/Luxe1.PNG"
-        ]
-    },
-    {
         "id": 5,
         "title_fr": "Afrimemorie",
         "title_en": "Afrimemorie",

@@ -22,10 +22,10 @@ export function Footer() {
               )}
             </p>
             <div className="flex gap-4">
-              <a href="https://github.com/T0b0i7/" target="_blank" className="text-stone-gray hover:text-terracotta transition-colors">
+              <a href="https://github.com/T0b0i7/" target="_blank" rel="noopener noreferrer" title={lang("GitHub (nouvelle fenêtre)", "GitHub (new window)")} className="text-stone-gray hover:text-terracotta transition-colors">
                 <Github size={20} />
               </a>
-              <a href="https://www.linkedin.com/in/eucher-abatti-7a9472283" target="_blank" className="text-stone-gray hover:text-terracotta transition-colors">
+              <a href="https://www.linkedin.com/in/eucher-abatti-7a9472283" target="_blank" rel="noopener noreferrer" title={lang("LinkedIn (nouvelle fenêtre)", "LinkedIn (new window)")} className="text-stone-gray hover:text-terracotta transition-colors">
                 <Linkedin size={20} />
               </a>
             </div>
@@ -39,8 +39,12 @@ export function Footer() {
             <ul className="space-y-4 font-sans text-sm text-charcoal-warm">
               <li><a href="#accueil" className="hover:text-terracotta transition-colors">{lang("Accueil", "Home")}</a></li>
               <li><a href="#apropos" className="hover:text-terracotta transition-colors">{lang("À propos", "About")}</a></li>
+              <li><a href="#arsenal" className="hover:text-terracotta transition-colors">{lang("Arsenal", "Arsenal")}</a></li>
+              <li><a href="#parcours" className="hover:text-terracotta transition-colors">{lang("Parcours", "Timeline")}</a></li>
               <li><a href="#projects" className="hover:text-terracotta transition-colors">{lang("Projets", "Projects")}</a></li>
               <li><a href="#services" className="hover:text-terracotta transition-colors">{lang("Services", "Services")}</a></li>
+              <li><a href="#temoignages" className="hover:text-terracotta transition-colors">{lang("Témoignages", "Testimonials")}</a></li>
+              <li><a href="#contact" className="hover:text-terracotta transition-colors">{lang("Contact", "Contact")}</a></li>
             </ul>
           </div>
 

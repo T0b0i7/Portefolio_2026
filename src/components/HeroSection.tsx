@@ -68,7 +68,7 @@ export function HeroSection() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-stone-gray hover:text-terracotta transition-colors"
-                  aria-label={social.label}
+                  aria-label={`${social.label} (nouvelle fenêtre / new window)`}
                 >
                   <social.icon className="w-5 h-5" />
                 </a>

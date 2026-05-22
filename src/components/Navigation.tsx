@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { Menu, X, Globe, Layout, Cpu, Briefcase, Mail, UserRound } from "lucide-react";
+import { Menu, X, Globe, Layout, Cpu, Briefcase, Mail, UserRound, Waypoints } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
 import { ThemeSwitcher } from "./ThemeSwitcher";
@@ -9,23 +9,57 @@ export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("#accueil");
+  const [scrollProgress, setScrollProgress] = useState(0);
   const { toggleLanguage, lang } = useLanguage();
 
   const navLinks = useMemo(
     () => [
       { href: "#accueil", label: lang("Accueil", "Home"), icon: Layout },
       { href: "#apropos", label: lang("À propos", "About"), icon: UserRound },
-      { label: lang("Parcours", "Timeline"), href: "#parcours", icon: Cpu },
-      { label: lang("Projets", "Projects"), href: "#projects", icon: Briefcase },
-      { href: "#services", label: lang("Services", "Services"), icon: Globe },
+      { label: lang("Arsenal", "Arsenal"), href: "#arsenal", icon: Cpu },
+      { label: lang("Parcours", "Timeline"), href: "#parcours", icon: Briefcase },
+      { label: lang("Projets", "Projects"), href: "#projects", icon: Globe },
+      { href: "#services", label: lang("Services", "Services"), icon: Mail },
+      { label: lang("Témoignages", "Testimonials"), href: "#temoignages", icon: Mail },
       { label: lang("Contact", "Contact"), href: "#contact", icon: Mail },
     ],
     [lang]
   );
 
+  // Focus trap for mobile menu
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const header = document.querySelector('header');
+    const focusableEls = header?.querySelectorAll<HTMLElement>(
+      'a, button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])'
+    );
+    if (!focusableEls || focusableEls.length === 0) return;
+    const firstEl = focusableEls[0];
+    const lastEl = focusableEls[focusableEls.length - 1];
+    const handleTab = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') { setMobileMenuOpen(false); return; }
+      if (e.key !== 'Tab') return;
+      if (e.shiftKey && document.activeElement === firstEl) {
+        e.preventDefault();
+        lastEl?.focus();
+      } else if (!e.shiftKey && document.activeElement === lastEl) {
+        e.preventDefault();
+        firstEl?.focus();
+      }
+    };
+    document.addEventListener('keydown', handleTab);
+    // Focus first element
+    setTimeout(() => firstEl?.focus(), 100);
+    return () => document.removeEventListener('keydown', handleTab);
+  }, [mobileMenuOpen]);
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
+
+      const docEl = document.documentElement;
+      const scrollTotal = docEl.scrollHeight - docEl.clientHeight;
+      setScrollProgress(scrollTotal > 0 ? (window.scrollY / scrollTotal) * 100 : 0);
 
       const sections = navLinks.map(link => link.href.substring(1));
       for (const section of sections.reverse()) {
@@ -181,6 +215,13 @@ export function Navigation() {
           </>
         )}
       </AnimatePresence>
+      {/* Scroll Progress Bar */}
+      <div className="absolute bottom-0 left-0 w-full h-[2px] bg-border-cream/30">
+        <div
+          className="h-full bg-gradient-to-r from-terracotta/40 to-terracotta transition-all duration-150 ease-out"
+          style={{ width: `${scrollProgress}%` }}
+        />
+      </div>
     </header>
   );
 }

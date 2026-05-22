@@ -48,7 +48,7 @@ export const AutoImageCarousel: React.FC<AutoImageCarouselProps> = ({ images }) 
 
       <button
         onClick={togglePlayPause}
-        className="absolute bottom-4 right-4 z-30 p-2 rounded-full bg-near-black/60 backdrop-blur-sm text-ivory opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-near-black/80 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-terracotta"
+        className="absolute bottom-4 right-4 z-30 p-2 rounded-full bg-near-black/60 backdrop-blur-sm text-ivory opacity-70 hover:opacity-100 transition-all duration-300 hover:bg-near-black/80 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-terracotta"
         aria-label={isPlaying ? "Pause carousel" : "Play carousel"}
       >
         {isPlaying ? (

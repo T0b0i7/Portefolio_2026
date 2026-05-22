@@ -22,6 +22,7 @@ export function MediaLibrary({
   const [filter, setFilter] = useState<"all" | "image" | "video" | "document">("all");
   const [search, setSearch] = useState("");
   const [selectedFile, setSelectedFile] = useState<MediaFile | null>(null);
+  const [previewFile, setPreviewFile] = useState<{ name: string; url: string; type: string } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const mockFiles: MediaFile[] = [
@@ -41,9 +42,28 @@ export function MediaLibrary({
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0];
-    if (selected && onUpload) {
-      onUpload(selected);
+    if (selected) {
+      const fileType = selected.type.startsWith('image/') ? 'image' : selected.type.startsWith('video/') ? 'video' : 'document';
+      setPreviewFile({
+        name: selected.name,
+        url: URL.createObjectURL(selected),
+        type: fileType,
+      });
     }
+  };
+
+  const confirmUpload = () => {
+    if (previewFile && onUpload) {
+      const file = fileInputRef.current?.files?.[0];
+      if (file) onUpload(file);
+      setPreviewFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
+  const cancelPreview = () => {
+    setPreviewFile(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const formatSize = (bytes: number) => {
@@ -139,6 +159,41 @@ export function MediaLibrary({
       {filteredFiles.length === 0 && (
         <div className="text-center py-12 text-[#6c6a64]">
           Aucun fichier trouvé
+        </div>
+      )}
+
+      {/* Upload Preview */}
+      {previewFile && (
+        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50" onClick={cancelPreview}>
+          <Card className="bg-[#faf9f5] border border-[#e6dfd8] w-96" onClick={(e) => e.stopPropagation()}>
+            <CardContent className="p-6 space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="text-lg font-serif font-normal tracking-[-0.3px] text-[#141413]">
+                  {lang("Aperçu", "Preview")}
+                </div>
+                <button onClick={cancelPreview} className="p-1 text-[#6c6a64] hover:text-[#141413]">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              {previewFile.type === 'image' ? (
+                <img src={previewFile.url} alt={previewFile.name} className="w-full h-48 object-cover rounded-lg border border-[#e6dfd8]" />
+              ) : (
+                <div className="w-full h-48 flex items-center justify-center bg-[#f5f0e8] rounded-lg">
+                  <FileText className="w-12 h-12 text-[#cc785c]" />
+                </div>
+              )}
+              <p className="text-sm text-[#141413] truncate">{previewFile.name}</p>
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={cancelPreview} className="flex-1 border-[#e6dfd8] text-[#141413]">
+                  {lang("Annuler", "Cancel")}
+                </Button>
+                <Button onClick={confirmUpload} className="flex-1 bg-[#cc785c] hover:bg-[#a9583e] text-white gap-2">
+                  <Upload className="w-4 h-4" />
+                  {lang("Uploader", "Upload")}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       )}
 

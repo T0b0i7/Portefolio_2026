@@ -308,34 +308,29 @@ const getFeaturedProjects = (lang: (fr: string, en: string) => string): Featured
   },
 ];
 
-// Tech Icon Component
-const TechIcon = ({ tech }: { tech: TechItem }) => (
-  <div className="flex flex-col items-center gap-1 group cursor-default">
-    <div
-      className="w-10 h-10 rounded-lg flex items-center justify-center text-lg
-        bg-white/5 border border-white/10 group-hover:border-white/20 
-        group-hover:bg-white/10 transition-all duration-300"
-      style={{ boxShadow: `0 0 15px ${tech.color}15` }}
-    >
-      <span className="group-hover:scale-110 transition-transform duration-300">
-        {tech.icon}
-      </span>
-    </div>
-    <span className="text-[9px] font-sans font-medium text-stone-gray group-hover:text-ivory/80 transition-colors">
-      {tech.name}
-    </span>
-  </div>
+// Tech Badge Component
+const TechBadge = ({ tech }: { tech: TechItem }) => (
+  <span 
+    className="inline-flex px-3 py-1.5 rounded-lg border text-xs font-sans font-medium transition-all duration-200"
+    style={{ 
+      borderColor: `${tech.color}30`,
+      backgroundColor: `${tech.color}10`,
+      color: tech.color,
+    }}
+  >
+    {tech.name}
+  </span>
 );
 
 // Tech Dock Component
 const TechDock = ({ title, items }: { title: string; items: TechItem[] }) => (
-  <div className="flex flex-col items-start gap-2">
-    <span className="text-[9px] uppercase tracking-[0.15em] text-stone-gray font-medium">
+  <div className="flex flex-col items-start gap-3">
+    <span className="text-[10px] uppercase tracking-[0.15em] text-stone-gray font-bold">
       {title}
     </span>
-    <div className="flex items-center gap-2">
+    <div className="flex flex-wrap items-center gap-2">
       {items.map((tech, i) => (
-        <TechIcon key={i} tech={tech} />
+        <TechBadge key={i} tech={tech} />
       ))}
     </div>
   </div>
@@ -372,6 +367,8 @@ const ProjectCard = ({
         <motion.img
           src={project.image}
           alt={project.title}
+          loading="lazy"
+          decoding="async"
           className="absolute inset-0 w-full h-full object-cover"
           whileHover={{ scale: 1.08 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
@@ -512,7 +509,7 @@ const ProjectModal = ({
                   {project.category}
                 </span>
               </div>
-              <div className="shrink-0 flex items-center gap-2 sm:gap-3">
+              <div className="shrink-0 flex items-center gap-2">
                 {project.repoUrl && !project.locked && (
                   <a
                     href={project.repoUrl}
@@ -548,6 +545,13 @@ const ProjectModal = ({
                     </>
                   )}
                 </a>
+                <button
+                  onClick={onClose}
+                  className="w-8 h-8 rounded-full flex items-center justify-center text-stone-gray hover:text-ivory hover:bg-white/10 transition-all"
+                  aria-label={lang("Fermer", "Close")}
+                >
+                  <X className="w-4 h-4" />
+                </button>
               </div>
             </div>
           </div>
@@ -599,6 +603,8 @@ const ProjectModal = ({
                           exit={{ opacity: 0, scale: 0.95 }}
                           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                           className="absolute inset-0 w-full h-full object-cover"
+                          loading="lazy"
+                          decoding="async"
                           alt={`Screenshot ${activeIndex + 1}`}
                         />
                       </AnimatePresence>
@@ -643,7 +649,7 @@ const ProjectModal = ({
                                 : "border-transparent opacity-50 hover:opacity-80"
                             )}
                           >
-                            <img src={img} className="w-full h-full object-cover" alt="" />
+                            <img src={img} loading="lazy" decoding="async" className="w-full h-full object-cover" alt="" />
                           </button>
                         ))}
                       </div>

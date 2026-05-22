@@ -193,3 +193,41 @@
 .animate-scan-line {
   animation: scan-line 3s linear infinite;
 }
+
+/* Print Styles */
+@media print {
+  header, footer, .no-print, .btn-primary, .btn-secondary, 
+  .fixed, [class*="fixed"], [class*="sticky"],
+  .WhatsAppFloatButton, .scroll-to-top, iframe, video {
+    display: none !important;
+  }
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 12pt;
+  }
+  a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #666;
+  }
+  a[href^="#"]::after, a[href^="javascript"]::after {
+    content: "";
+  }
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid;
+  }
+  h1, h2, h3, h4 {
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+  section {
+    page-break-inside: avoid;
+    padding: 1cm 0 !important;
+  }
+  .max-w-7xl {
+    max-width: 100% !important;
+    padding: 0 0.5cm !important;
+  }
+}
