@@ -9,7 +9,7 @@ export const aetherisTheme = {
   '--primary-foreground': '0 0% 0%',
   '--secondary': '0 0% 12%',
   '--secondary-foreground': '0 0% 100%',
-  '--muted': '0 0% 60%',
+  '--muted': '0 0% 72%',
   '--muted-foreground': '0 0% 100%',
   '--accent': '0 0% 100%',
   '--accent-foreground': '0 0% 0%',
