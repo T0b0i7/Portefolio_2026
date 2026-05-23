@@ -40,7 +40,6 @@ export function Footer() {
               <li><a href="#accueil" className="hover:text-terracotta transition-colors">{lang("Accueil", "Home")}</a></li>
               <li><a href="#apropos" className="hover:text-terracotta transition-colors">{lang("À propos", "About")}</a></li>
               <li><a href="#arsenal" className="hover:text-terracotta transition-colors">{lang("Arsenal", "Arsenal")}</a></li>
-              <li><a href="#parcours" className="hover:text-terracotta transition-colors">{lang("Parcours", "Timeline")}</a></li>
               <li><a href="#projects" className="hover:text-terracotta transition-colors">{lang("Projets", "Projects")}</a></li>
               <li><a href="#services" className="hover:text-terracotta transition-colors">{lang("Services", "Services")}</a></li>
               <li><a href="#temoignages" className="hover:text-terracotta transition-colors">{lang("Témoignages", "Testimonials")}</a></li>

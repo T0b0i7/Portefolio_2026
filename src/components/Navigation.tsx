@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { Menu, X, Globe, Layout, Cpu, Briefcase, Mail, UserRound, Waypoints } from "lucide-react";
+import { Menu, X, Globe, Layout, Cpu, Mail, UserRound, Waypoints } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
 import { ThemeSwitcher } from "./ThemeSwitcher";
@@ -17,7 +17,6 @@ export function Navigation() {
       { href: "#accueil", label: lang("Accueil", "Home"), icon: Layout },
       { href: "#apropos", label: lang("À propos", "About"), icon: UserRound },
       { label: lang("Arsenal", "Arsenal"), href: "#arsenal", icon: Cpu },
-      { label: lang("Parcours", "Timeline"), href: "#parcours", icon: Briefcase },
       { label: lang("Projets", "Projects"), href: "#projects", icon: Globe },
       { href: "#services", label: lang("Services", "Services"), icon: Mail },
       { label: lang("Témoignages", "Testimonials"), href: "#temoignages", icon: Mail },

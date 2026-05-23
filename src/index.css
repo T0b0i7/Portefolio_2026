@@ -247,18 +247,15 @@ html[data-theme="aetheris"] ::selection {
   color: #fff !important;
 }
 
-/* ── Texte : toutes les classes de couleur de texte passent en blanc ── */
+/* ── Texte : adaptation douce au fond noir ── */
 html[data-theme="aetheris"] .text-near-black,
-html[data-theme="aetheris"] .text-ivory,
-html[data-theme="aetheris"] .text-charcoal-warm,
-html[data-theme="aetheris"] .text-olive-gray,
-html[data-theme="aetheris"] .text-stone-gray,
-html[data-theme="aetheris"] .text-terracotta,
-html[data-theme="aetheris"] .text-muted-foreground,
 html[data-theme="aetheris"] .text-card-foreground,
 html[data-theme="aetheris"] .text-primary-foreground,
+html[data-theme="aetheris"] .text-accent-foreground {
+  color: rgb(235 230 220) !important;
+}
+html[data-theme="aetheris"] .text-muted-foreground,
 html[data-theme="aetheris"] .text-secondary-foreground,
-html[data-theme="aetheris"] .text-accent-foreground,
 html[data-theme="aetheris"] .text-destructive-foreground,
 html[data-theme="aetheris"] .text-popover-foreground {
   color: #fff !important;
@@ -291,13 +288,17 @@ html[data-theme="aetheris"] .card-editorial {
 html[data-theme="aetheris"] .btn-primary,
 html[data-theme="aetheris"] button.bg-terracotta,
 html[data-theme="aetheris"] a.bg-terracotta {
-  background: rgba(255,255,255,0.08) !important;
-  backdrop-filter: blur(50px) !important;
-  -webkit-backdrop-filter: blur(50px) !important;
+  background: rgb(212 175 55 / 0.9) !important;
   border: none !important;
   border-radius: 9999px !important;
-  color: #fff !important;
-  box-shadow: 4px 4px 4px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.15) !important;
+  color: #000 !important;
+  box-shadow: 0 4px 20px rgb(212 175 55 / 0.3) !important;
+}
+html[data-theme="aetheris"] .btn-primary:hover,
+html[data-theme="aetheris"] button.bg-terracotta:hover,
+html[data-theme="aetheris"] a.bg-terracotta:hover {
+  background: rgb(212 175 55) !important;
+  box-shadow: 0 6px 28px rgb(212 175 55 / 0.45) !important;
 }
 
 html[data-theme="aetheris"] .btn-secondary {
@@ -307,6 +308,45 @@ html[data-theme="aetheris"] .btn-secondary {
   border: 1px solid rgba(255,255,255,0.1) !important;
   border-radius: 9999px !important;
   color: #fff !important;
+}
+
+/* ── Filtres : visibles sans survol ── */
+html[data-theme="aetheris"] .bg-ivory {
+  background: rgb(235 230 220) !important;
+}
+html[data-theme="aetheris"] .bg-ivory.text-stone-gray {
+  color: rgb(30 28 26) !important;
+}
+html[data-theme="aetheris"] .bg-ivory.text-stone-gray:hover {
+  color: rgb(212 175 55) !important;
+}
+
+html[data-theme="aetheris"] .bg-near-black {
+  background: rgb(40 38 34) !important;
+  border-color: rgb(55 52 48) !important;
+}
+html[data-theme="aetheris"] .bg-near-black.text-ivory {
+  color: rgb(235 230 220) !important;
+}
+
+html[data-theme="aetheris"] .bg-white {
+  background: rgba(255,255,255,0.08) !important;
+  backdrop-filter: blur(8px) !important;
+  border-color: rgb(55 52 48) !important;
+}
+html[data-theme="aetheris"] .bg-white.text-charcoal-warm {
+  color: rgb(210 205 195) !important;
+}
+html[data-theme="aetheris"] .bg-white.hover\:bg-warm-sand\/30:hover {
+  background: rgba(255,255,255,0.14) !important;
+}
+
+/* ── Détail projet : texte lisible ── */
+html[data-theme="aetheris"] [role="dialog"] .text-olive-gray {
+  color: rgb(90 87 80) !important;
+}
+html[data-theme="aetheris"] [role="dialog"] .text-stone-gray {
+  color: rgb(120 115 105) !important;
 }
 
 /* ── Navigation ── */

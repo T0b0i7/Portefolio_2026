@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { HeroSection } from "@/components/HeroSection";
 import { AboutSection } from "@/components/AboutSection";
 import { TechStackSection } from "@/components/TechStackSection";
-import { EvolutionSection } from "@/components/EvolutionSection";
 import { FeaturedProjects } from "@/components/FeaturedProjects";
 import { ProjectsSection } from "@/components/ProjectsSection";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
@@ -19,7 +18,6 @@ const sections = [
   { id: "accueil", label: { fr: "Accueil", en: "Home" } },
   { id: "apropos", label: { fr: "À propos", en: "About" } },
   { id: "arsenal", label: { fr: "Arsenal", en: "Arsenal" } },
-  { id: "parcours", label: { fr: "Parcours", en: "Timeline" } },
   { id: "projects", label: { fr: "Projets", en: "Projects" } },
   { id: "services", label: { fr: "Services", en: "Services" } },
   { id: "temoignages", label: { fr: "Témoignages", en: "Testimonials" } },
@@ -81,11 +79,6 @@ const Index = () => {
         {/* Tech Stack Section - Dark */}
         <section id="arsenal" className="bg-near-black text-ivory">
           <TechStackSection />
-        </section>
-
-        {/* Evolution Section - Light */}
-        <section id="parcours" className="bg-parchment">
-          <EvolutionSection />
         </section>
 
         {/* Featured Projects Grid - Dark */}
