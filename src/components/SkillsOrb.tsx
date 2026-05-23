@@ -2,11 +2,11 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { motion } from "framer-motion";
 
 const ITEMS_PER_PAGE = 15;
 
 const skills = [
-  // Frameworks
   { name: "React", category: "framework", level: 90 },
   { name: "Vue.js", category: "framework", level: 75 },
   { name: "Svelte", category: "framework", level: 70 },
@@ -22,8 +22,6 @@ const skills = [
   { name: "Node.js", category: "framework", level: 85 },
   { name: "Laravel", category: "framework", level: 75 },
   { name: "Tailwind", category: "framework", level: 90 },
-
-  // Langages
   { name: "TypeScript", category: "language", level: 80 },
   { name: "JavaScript", category: "language", level: 95 },
   { name: "PHP", category: "language", level: 80 },
@@ -36,20 +34,15 @@ const skills = [
   { name: "Solidity", category: "language", level: 55 },
   { name: "Vyper", category: "language", level: 10 },
   { name: "Rust (Solana)", category: "language", level: 10 },
-  // Bases de données
   { name: "PostgreSQL", category: "database", level: 75 },
   { name: "MySQL", category: "database", level: 80 },
   { name: "SQL Server", category: "database", level: 70 },
-
-  // Design
   { name: "Figma", category: "design", level: 85 },
   { name: "Canva", category: "design", level: 80 },
   { name: "Adobe XD", category: "design", level: 75 },
   { name: "Sketch", category: "design", level: 70 },
   { name: "InVision", category: "design", level: 70 },
   { name: "Framer", category: "design", level: 75 },
-
-  // Outils
   { name: "Git", category: "tool", level: 85 },
   { name: "VS Code", category: "tool", level: 95 },
   { name: "Docker", category: "tool", level: 80 },
@@ -60,12 +53,8 @@ const skills = [
   { name: "Postman", category: "tool", level: 85 },
   { name: "GitHub", category: "tool", level: 90 },
   { name: "GitLab", category: "tool", level: 80 },
-
-  // Automatisation
   { name: "Zapier", category: "automation", level: 80 },
   { name: "Make", category: "automation", level: 75 },
-
-  // IA
   { name: "ChatGPT", category: "ai", level: 90 },
   { name: "Claude IA", category: "ai", level: 85 },
   { name: "ChatPDF", category: "ai", level: 80 },
@@ -76,11 +65,44 @@ const skills = [
   { name: "Midjourney", category: "ai", level: 80 },
   { name: "DALL-E", category: "ai", level: 80 },
   { name: "Stable Diffusion", category: "ai", level: 75 },
-
-  // No-Code
   { name: "Lovable", category: "nocode", level: 75 },
   { name: "Webflow", category: "nocode", level: 70 },
 ];
+
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.04, delayChildren: 0.3 },
+  },
+};
+
+const filterVariants = {
+  hidden: { opacity: 0, y: -10 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.4, ease: "easeOut" },
+  },
+};
+
+const skillCardVariants = {
+  hidden: { opacity: 0, scale: 0.85, y: 20 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] },
+  },
+};
+
+const paginationVariants = {
+  hidden: { opacity: 0, y: 15 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut" },
+  },
+};
 
 export function SkillsOrb() {
   const { lang } = useLanguage();
@@ -115,8 +137,15 @@ export function SkillsOrb() {
   return (
     <div className="relative">
       {/* Category Filter */}
-      <div className="flex flex-wrap justify-center gap-2 mb-8">
-        <button
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-50px" }}
+        className="flex flex-wrap justify-center gap-2 mb-8"
+      >
+        <motion.button
+          variants={filterVariants}
           onClick={() => handleCategoryChange(null)}
           className={cn(
             "px-4 py-2 rounded-full text-sm font-medium transition-all duration-300",
@@ -126,10 +155,11 @@ export function SkillsOrb() {
           )}
         >
           {lang("Tous", "All")}
-        </button>
+        </motion.button>
         {Object.entries(categories).map(([key, { label }]) => (
-          <button
+          <motion.button
             key={key}
+            variants={filterVariants}
             onClick={() => handleCategoryChange(activeCategory === key ? null : key)}
             className={cn(
               "px-4 py-2 rounded-full text-sm font-medium transition-all duration-300",
@@ -139,24 +169,31 @@ export function SkillsOrb() {
             )}
           >
             {label}
-          </button>
+          </motion.button>
         ))}
-      </div>
+      </motion.div>
 
       {/* Skills Grid */}
-      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4 mb-8">
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-50px" }}
+        className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4 mb-8"
+      >
         {paginatedSkills.map((skill, index) => {
           const category = categories[skill.category as keyof typeof categories];
           const isHovered = hoveredSkill === skill.name;
 
           return (
-            <div
+            <motion.div
               key={skill.name}
+              variants={skillCardVariants}
+              custom={index}
               className={cn(
                 "relative group cursor-pointer transition-all duration-300",
                 isHovered && "z-10"
               )}
-              style={{ animationDelay: `${index * 50}ms` }}
               onMouseEnter={() => setHoveredSkill(skill.name)}
               onMouseLeave={() => setHoveredSkill(null)}
             >
@@ -178,8 +215,8 @@ export function SkillsOrb() {
                       cx="18"
                       cy="18"
                     />
-                    <circle
-                      className="text-primary transition-all duration-700"
+                    <motion.circle
+                      className="text-primary"
                       strokeWidth="3"
                       strokeLinecap="round"
                       stroke="currentColor"
@@ -188,6 +225,10 @@ export function SkillsOrb() {
                       cx="18"
                       cy="18"
                       strokeDasharray={`${skill.level} 100`}
+                      initial={{ strokeDashoffset: 100 }}
+                      whileInView={{ strokeDashoffset: 100 - skill.level }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 1, delay: 0.3 + index * 0.04, ease: "easeOut" }}
                     />
                   </svg>
                   <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">
@@ -208,14 +249,20 @@ export function SkillsOrb() {
                   )}
                 />
               </div>
-            </div>
+            </motion.div>
           );
         })}
-      </div>
+      </motion.div>
 
       {/* Pagination Controls */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-4">
+        <motion.div
+          variants={paginationVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="flex items-center justify-center gap-4"
+        >
           <button
             onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
             disabled={currentPage === 1}
@@ -258,9 +305,8 @@ export function SkillsOrb() {
           >
             <ChevronRight className="w-5 h-5" />
           </button>
-        </div>
+        </motion.div>
       )}
     </div>
   );
 }
-

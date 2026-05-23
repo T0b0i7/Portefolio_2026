@@ -1,6 +1,32 @@
 import { ArrowRight, FileText, Github, Linkedin, Mail, MapPin, Phone, ShieldCheck } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { motion } from "framer-motion";
+
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.15, delayChildren: 0.2 },
+  },
+};
+
+const columnVariants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+  },
+};
+
+const barVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut" },
+  },
+};
 
 export function Footer() {
   const { lang } = useLanguage();
@@ -9,9 +35,15 @@ export function Footer() {
   return (
     <footer className="bg-ivory py-24 border-t border-border-cream">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 md:gap-12">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 md:gap-12"
+        >
           {/* Brand */}
-          <div className="space-y-6">
+          <motion.div variants={columnVariants} className="space-y-6">
             <a href="#accueil" className="text-3xl font-serif font-medium text-near-black">
               Tobi<span className="text-terracotta">Dev</span>
             </a>
@@ -22,17 +54,33 @@ export function Footer() {
               )}
             </p>
             <div className="flex gap-4">
-              <a href="https://github.com/T0b0i7/" target="_blank" rel="noopener noreferrer" title={lang("GitHub (nouvelle fenêtre)", "GitHub (new window)")} className="text-stone-gray hover:text-terracotta transition-colors">
+              <motion.a
+                href="https://github.com/T0b0i7/"
+                target="_blank"
+                rel="noopener noreferrer"
+                title={lang("GitHub (nouvelle fenêtre)", "GitHub (new window)")}
+                className="text-stone-gray hover:text-terracotta transition-colors"
+                whileHover={{ scale: 1.2, color: "#c96442" }}
+                whileTap={{ scale: 0.9 }}
+              >
                 <Github size={20} />
-              </a>
-              <a href="https://www.linkedin.com/in/eucher-abatti-7a9472283" target="_blank" rel="noopener noreferrer" title={lang("LinkedIn (nouvelle fenêtre)", "LinkedIn (new window)")} className="text-stone-gray hover:text-terracotta transition-colors">
+              </motion.a>
+              <motion.a
+                href="https://www.linkedin.com/in/eucher-abatti-7a9472283"
+                target="_blank"
+                rel="noopener noreferrer"
+                title={lang("LinkedIn (nouvelle fenêtre)", "LinkedIn (new window)")}
+                className="text-stone-gray hover:text-terracotta transition-colors"
+                whileHover={{ scale: 1.2, color: "#c96442" }}
+                whileTap={{ scale: 0.9 }}
+              >
                 <Linkedin size={20} />
-              </a>
+              </motion.a>
             </div>
-          </div>
+          </motion.div>
 
           {/* Navigation */}
-          <div>
+          <motion.div variants={columnVariants}>
             <h4 className="text-[11px] font-sans font-medium uppercase tracking-[0.2em] text-stone-gray mb-8">
               {lang("Navigation", "Navigation")}
             </h4>
@@ -45,10 +93,10 @@ export function Footer() {
               <li><a href="#temoignages" className="hover:text-terracotta transition-colors">{lang("Témoignages", "Testimonials")}</a></li>
               <li><a href="#contact" className="hover:text-terracotta transition-colors">{lang("Contact", "Contact")}</a></li>
             </ul>
-          </div>
+          </motion.div>
 
           {/* Contact */}
-          <div>
+          <motion.div variants={columnVariants}>
             <h4 className="text-[11px] font-sans font-medium uppercase tracking-[0.2em] text-stone-gray mb-8">
               {lang("Contact", "Direct Line")}
             </h4>
@@ -66,10 +114,10 @@ export function Footer() {
                 <span>Porto-Novo, Bénin</span>
               </li>
             </ul>
-          </div>
+          </motion.div>
 
           {/* Legal */}
-          <div>
+          <motion.div variants={columnVariants}>
             <h4 className="text-[11px] font-sans font-medium uppercase tracking-[0.2em] text-stone-gray mb-8">
               {lang("Légal & Plus", "Legal & More")}
             </h4>
@@ -101,10 +149,17 @@ export function Footer() {
                 </DialogContent>
               </Dialog>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
-        <div className="mt-20 pt-10 border-t border-border-cream flex flex-col md:flex-row justify-between items-center gap-6">
+        {/* Bottom Bar */}
+        <motion.div
+          variants={barVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="mt-20 pt-10 border-t border-border-cream flex flex-col md:flex-row justify-between items-center gap-6"
+        >
           <p className="text-xs font-sans text-charcoal-warm tracking-widest uppercase">
             © {currentYear} TobiDev Studio — {lang("Tous droits réservés", "All rights reserved")}
           </p>
@@ -115,7 +170,7 @@ export function Footer() {
             <span className="w-1 h-1 rounded-full bg-border-cream" />
             <span>Claude AI Style</span>
           </div>
-        </div>
+        </motion.div>
       </div>
     </footer>
   );

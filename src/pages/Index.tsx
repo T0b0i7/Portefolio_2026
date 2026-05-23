@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { HeroSection } from "@/components/HeroSection";
+import { AnimatedHeroSection } from "@/components/AnimatedHeroSection";
 import { AboutSection } from "@/components/AboutSection";
 import { TechStackSection } from "@/components/TechStackSection";
 import { FeaturedProjects } from "@/components/FeaturedProjects";
@@ -65,7 +65,7 @@ const Index = () => {
       <main id="main-content">
         {/* Hero Section - Light */}
         <section id="accueil" className="bg-parchment">
-          <HeroSection />
+          <AnimatedHeroSection />
         </section>
 
         {/* About Section - Dark */}
