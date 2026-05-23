@@ -16,11 +16,15 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const root = document.documentElement;
     root.style.transition = 'all 0.3s ease';
     
+    // data-theme pour les surcharges CSS globales
+    root.setAttribute('data-theme', themeName === 'default' ? '' : themeName);
+    
     // Si on repasse au thème par défaut, on nettoie toutes les variables injectées
     if (themeName === 'default') {
       const allKeys = new Set([
         ...Object.keys(themes.airbnb || {}),
-        ...Object.keys(themes.airtable || {})
+        ...Object.keys(themes.airtable || {}),
+        ...Object.keys(themes.aetheris || {})
       ]);
       allKeys.forEach((key) => {
         root.style.removeProperty(key);

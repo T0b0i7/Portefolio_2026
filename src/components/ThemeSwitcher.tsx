@@ -12,7 +12,7 @@ export function ThemeSwitcher() {
     { value: 'default', label: 'Default' },
     { value: 'airbnb', label: 'Airbnb' },
     { value: 'airtable', label: 'Airtable' },
-    { value: 'apple', label: 'Apple' },
+    { value: 'aetheris', label: 'Aetheris' },
   ];
 
   // Ferme le menu en cliquant à l'extérieur

@@ -78,12 +78,12 @@ export function HeroSection() {
         </div>
 
         <div className={`relative transition-all duration-1000 delay-300 transform ${isLoaded ? "scale-100 opacity-100" : "scale-95 opacity-0"}`}>
-          <div className="relative w-full max-w-[420px] aspect-square mx-auto flex flex-col items-center justify-center">
+          <div className="relative w-full max-w-[520px] aspect-square mx-auto flex flex-col items-center justify-center">
             {/* Organic Shape Backdrops */}
-            <div className="absolute inset-0 bg-terracotta/5 rounded-[40px] rotate-6 pointer-events-none" />
-            <div className="absolute inset-0 bg-warm-sand/40 rounded-[40px] -rotate-3 pointer-events-none" />
+            <div className="absolute inset-0 bg-terracotta/5 rounded-[48px] rotate-6 pointer-events-none" />
+            <div className="absolute inset-0 bg-warm-sand/40 rounded-[48px] -rotate-3 pointer-events-none" />
 
-            <div className="relative h-[340px] w-[340px] md:h-[380px] md:w-[380px] lg:h-[420px] lg:w-[420px] rounded-[32px] overflow-hidden border border-border-cream shadow-whisper z-10">
+            <div className="relative h-[380px] w-[380px] md:h-[440px] md:w-[440px] lg:h-[500px] lg:w-[500px] rounded-[32px] overflow-hidden border border-border-cream shadow-whisper z-10">
               <AutoImageCarousel
                 images={[
                   { src: "/profil.png", alt: "TobiDev" },
@@ -94,7 +94,7 @@ export function HeroSection() {
             </div>
 
             {/* Floating Badge repositionné */}
-            <div className="absolute bottom-2 right-2 md:bottom-4 md:right-4 bg-ivory p-5 rounded-2xl border border-border-cream shadow-whisper max-w-[170px] z-20">
+            <div className="absolute bottom-2 right-2 md:bottom-6 md:right-6 bg-ivory p-5 rounded-2xl border border-border-cream shadow-whisper max-w-[180px] z-20">
               <div className="text-terracotta font-serif text-2xl md:text-3xl font-medium mb-1">5+</div>
               <div className="text-xs font-sans text-charcoal-warm leading-tight uppercase tracking-wider font-medium">
                 {lang("Années d'expérience en dev", "Years of dev experience")}

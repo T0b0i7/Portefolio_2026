@@ -1,5 +1,6 @@
 import { airbnbTheme } from './airbnb';
 import { airtableTheme } from './airtable';
+import { aetherisTheme } from './aetheris';
 
 // Un objet de configuration global pour exporter nom, objet de variables, couleurs d'aperçu FAB
 export const themeConfigs = {
@@ -24,6 +25,13 @@ export const themeConfigs = {
     variables: airtableTheme,
     previewColors: { primary: '#1b61c9', secondary: '#254fad' },
   },
+  aetheris: {
+    id: 'aetheris',
+    name: 'Aetheris Voyage',
+    description: 'Cinématique spatial',
+    variables: aetherisTheme,
+    previewColors: { primary: '#ffffff', secondary: '#000000' },
+  },
 } as const;
 
 export type ThemeName = keyof typeof themeConfigs;
@@ -32,4 +40,5 @@ export const themes = {
   default: themeConfigs.default.variables,
   airbnb: themeConfigs.airbnb.variables,
   airtable: themeConfigs.airtable.variables,
+  aetheris: themeConfigs.aetheris.variables,
 };
