@@ -11,6 +11,7 @@ import { RichTextEditor } from "@/components/backoffice/cms/RichTextEditor";
 import { MediaLibrary } from "@/components/backoffice/cms/MediaLibrary";
 import { SectionsManager } from "@/components/backoffice/cms/SectionsManager";
 import { TestimonialsManager } from "@/components/backoffice/cms/TestimonialsManager";
+import { ServicesManager } from "@/components/backoffice/cms/ServicesManager";
 import { SEOSettings } from "@/components/backoffice/settings/SEOSettings";
 import { NavigationEditor } from "@/components/backoffice/settings/NavigationEditor";
 import { ProjectsManager } from "@/components/backoffice/cms/ProjectsManager";
@@ -295,7 +296,7 @@ function AnalyticsContent({ period, setPeriod }: { period: "today" | "7days" | "
 }
 
 function CmsView() {
-  const [activeSubTab, setActiveSubTab] = useState<"sections" | "testimonials" | "media">("sections");
+  const [activeSubTab, setActiveSubTab] = useState<"sections" | "services" | "testimonials" | "media">("sections");
 
   return (
     <div className="space-y-6">
@@ -307,7 +308,7 @@ function CmsView() {
       </div>
 
       <div className="flex gap-2 border-b border-[#e6dfd8] pb-2 overflow-x-auto scrollbar-hide">
-        {(["sections", "testimonials", "media"] as const).map((tab) => (
+        {(["sections", "services", "testimonials", "media"] as const).map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveSubTab(tab)}
@@ -317,7 +318,7 @@ function CmsView() {
                 : "bg-white text-[#6c6a64] border border-[#e6dfd8] hover:bg-[#faf9f5]"
             }`}
           >
-            {tab === "sections" ? "Sections" : tab === "testimonials" ? "Témoignages" : "Médiathèque"}
+            {tab === "sections" ? "Sections" : tab === "services" ? "Services" : tab === "testimonials" ? "Témoignages" : "Médiathèque"}
           </button>
         ))}
       </div>
@@ -328,6 +329,16 @@ function CmsView() {
             <h3 className="text-[#141413] font-serif font-normal text-lg mb-4">Sections du site</h3>
             <p className="text-[#6c6a64] text-sm mb-6">Activez/désactivez, réordonnez et modifiez le contenu des sections.</p>
             <SectionsManager />
+          </Card>
+        </div>
+      )}
+
+      {activeSubTab === "services" && (
+        <div className="space-y-4">
+          <Card className="bg-white border-[#e6dfd8] p-6">
+            <h3 className="text-[#141413] font-serif font-normal text-lg mb-4">Services</h3>
+            <p className="text-[#6c6a64] text-sm mb-6">Gérez les services proposés (icône, titres, descriptions, compétences).</p>
+            <ServicesManager />
           </Card>
         </div>
       )}
