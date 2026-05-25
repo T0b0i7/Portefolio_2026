@@ -30,7 +30,7 @@ export function ThemeSwitcher() {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border-cream hover:bg-warm-sand/30 transition-all text-xs font-medium text-olive-gray capitalize"
+        className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border-cream hover:bg-warm-sand/30 transition-all text-xs font-medium text-charcoal-warm capitalize"
         aria-label="Sélectionner un thème"
       >
         <Palette className="w-3.5 h-3.5" />

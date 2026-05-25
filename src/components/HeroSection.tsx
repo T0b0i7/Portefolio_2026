@@ -94,9 +94,9 @@ export function HeroSection() {
             </div>
 
             {/* Floating Badge repositionné */}
-            <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 md:bottom-6 md:right-6 bg-ivory p-3 sm:p-4 md:p-5 rounded-2xl border border-border-cream shadow-whisper max-w-[160px] z-20">
-              <div className="text-terracotta font-serif text-xl sm:text-2xl md:text-3xl font-medium mb-1">5+</div>
-              <div className="text-xs font-sans text-charcoal-warm leading-tight uppercase tracking-wider font-medium">
+            <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 md:bottom-6 md:right-6 bg-near-black p-3 sm:p-4 md:p-5 rounded-2xl border border-white/10 shadow-whisper max-w-[160px] z-20">
+              <div className="text-ivory font-serif text-xl sm:text-2xl md:text-3xl font-medium mb-1">5+</div>
+              <div className="text-xs font-sans text-ivory/80 leading-tight uppercase tracking-wider font-medium">
                 {lang("Années d'expérience en dev", "Years of dev experience")}
               </div>
             </div>

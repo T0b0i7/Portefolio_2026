@@ -238,15 +238,15 @@ export function AnimatedHeroSection() {
 
             {/* Badge */}
             <motion.div
-              className="absolute bottom-2 right-2 md:bottom-6 md:right-6 bg-ivory p-5 rounded-2xl border border-border-cream shadow-whisper max-w-[180px] z-20"
+              className="absolute bottom-2 right-2 md:bottom-6 md:right-6 bg-near-black p-5 rounded-2xl border border-white/10 shadow-whisper max-w-[180px] z-20"
               variants={badgeFloat}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
               whileHover={{ scale: 1.06, rotate: 2 }}
             >
-              <div className="text-terracotta font-serif text-2xl md:text-3xl font-medium mb-1">5+</div>
-              <div className="text-xs font-sans text-charcoal-warm leading-tight uppercase tracking-wider font-medium">
+              <div className="text-ivory font-serif text-2xl md:text-3xl font-medium mb-1">5+</div>
+              <div className="text-xs font-sans text-ivory/80 leading-tight uppercase tracking-wider font-medium">
                 {lang("Années d'expérience en dev", "Years of dev experience")}
               </div>
             </motion.div>
