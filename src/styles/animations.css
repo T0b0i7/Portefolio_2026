@@ -229,3 +229,12 @@
 .walking-letter:nth-child(18) { animation-delay: 1.7s; }
 .walking-letter:nth-child(19) { animation-delay: 1.8s; }
 .walking-letter:nth-child(20) { animation-delay: 1.9s; }
+@media (prefers-reduced-motion: reduce) {
+  .project-shimmer,
+  .project-float,
+  .walking-letter,
+  .float-animation,
+  .animate-scan-line {
+    animation: none;
+  }
+}

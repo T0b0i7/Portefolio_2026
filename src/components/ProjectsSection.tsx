@@ -385,7 +385,7 @@ export function ProjectsSection() {
         </div>
 
         {!loading && (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 min-h-[600px]">
+        <div className="grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8 min-h-[600px]">
           <AnimatePresence mode="wait">
             {currentProjects.map((project, index) => (
               <motion.div 
@@ -521,7 +521,7 @@ export function ProjectsSection() {
           <DialogContent className="max-w-5xl bg-ivory border-border-cream rounded-[40px] p-0 overflow-hidden shadow-2xl">
             {selectedProject && (
               <div className="grid md:grid-cols-2 h-full max-h-[90vh] overflow-y-auto md:overflow-hidden">
-                <div className="relative h-[400px] md:h-auto bg-warm-sand/20">
+                <div className="relative h-[250px] sm:h-[350px] md:h-auto bg-warm-sand/20">
                     {/* Gallery / Main Image */}
                     {selectedProject.gallery_urls && selectedProject.gallery_urls.length > 0 ? (
                         <div className="h-full relative flex flex-col">

@@ -284,11 +284,13 @@ export function TestimonialsSection() {
                   setDirection(idx > activeIndex ? 1 : -1);
                   setActiveIndex(idx);
                 }}
-                className={cn(
+                className="flex items-center justify-center p-2 -m-2"
+              >
+                <div className={cn(
                   "h-2 transition-all duration-700 rounded-full",
                   activeIndex === idx ? "w-16 bg-near-black" : "w-4 bg-near-black/10 hover:bg-near-black/30"
-                )}
-              />
+                )} />
+              </button>
             ))}
           </div>
         </div>

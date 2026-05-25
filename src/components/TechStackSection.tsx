@@ -134,7 +134,7 @@ const Key = ({ tech, isMatch, activeKey, setActiveKey }: {
               className={`w-full h-full object-contain transition-all duration-200 ${isTooltipVisible ? 'scale-110' : ''} ${tech.icon.startsWith('/') && !isMatch ? 'grayscale opacity-50' : ''}`}
             />
           </div>
-          <span className={`text-[6px] sm:text-[7px] md:text-[8px] font-sans font-bold uppercase tracking-wider transition-colors truncate w-full px-1 text-center ${isTooltipVisible ? 'text-terracotta' : 'text-stone-gray'}`}>
+          <span className={`text-[8px] md:text-[8px] font-sans font-bold uppercase tracking-wider transition-colors truncate w-full px-1 text-center ${isTooltipVisible ? 'text-terracotta' : 'text-stone-gray'}`}>
             {tech.displayName}
           </span>
         </div>

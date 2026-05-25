@@ -185,7 +185,7 @@ export function AnimatedHeroSection() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-stone-gray hover:text-terracotta transition-colors"
+                  className="text-stone-gray hover:text-terracotta transition-colors p-2 -m-2"
                   aria-label={`${social.label} (nouvelle fenêtre / new window)`}
                   initial={{ opacity: 0, y: 15 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -223,7 +223,7 @@ export function AnimatedHeroSection() {
             />
 
             <motion.div
-              className="relative h-[380px] w-[380px] md:h-[440px] md:w-[440px] lg:h-[500px] lg:w-[500px] rounded-[32px] overflow-hidden border border-border-cream shadow-whisper z-10"
+              className="relative w-full max-w-[280px] sm:max-w-[380px] md:max-w-[440px] lg:max-w-[500px] aspect-square rounded-[32px] overflow-hidden border border-border-cream shadow-whisper z-10"
               whileHover={{ scale: 1.02 }}
               transition={{ type: "spring", stiffness: 200, damping: 20 }}
             >

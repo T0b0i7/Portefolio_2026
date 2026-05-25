@@ -614,13 +614,13 @@ const ProjectModal = ({
                         <>
                           <button
                             onClick={prevImage}
-                            className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-near-black/60 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-terracotta transition-colors"
+                            className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-near-black/60 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-terracotta transition-colors"
                           >
                             <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
                           </button>
                           <button
                             onClick={nextImage}
-                            className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-near-black/60 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-terracotta transition-colors"
+                            className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-near-black/60 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-terracotta transition-colors"
                           >
                             <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
                           </button>
@@ -834,7 +834,7 @@ export function FeaturedProjects() {
                 x: { type: "spring", stiffness: 300, damping: 30 },
                 opacity: { duration: 0.25 },
               }}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
+              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
             >
               {currentProjects.map((project, index) => (
                 <ProjectCard

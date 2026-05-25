@@ -132,7 +132,7 @@ export function ServicesSection() {
           {/* Action Card */}
           <motion.div
             variants={fadeUp}
-            className="p-12 md:p-16 rounded-[40px] bg-terracotta/5 border border-terracotta/10 flex flex-col md:flex-row items-center justify-between gap-12"
+            className="p-8 md:p-16 rounded-[40px] bg-terracotta/5 border border-terracotta/10 flex flex-col md:flex-row items-center justify-between gap-12"
           >
             <div className="max-w-xl text-center md:text-left">
               <h3 className="text-3xl md:text-5xl font-serif font-medium mb-6 text-white">

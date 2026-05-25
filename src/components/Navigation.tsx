@@ -119,9 +119,9 @@ export function Navigation() {
           
           <button
             onClick={toggleLanguage}
-            className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border-cream hover:bg-warm-sand/30 transition-all text-xs font-medium text-charcoal-warm"
+            className="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border-cream hover:bg-warm-sand/30 transition-all text-xs font-medium text-charcoal-warm min-h-[44px]"
           >
-            <Globe className="w-3.5 h-3.5" />
+            <Globe className="w-4 h-4" />
             <span className="uppercase">{lang("EN", "FR")}</span>
           </button>
 

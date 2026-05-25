@@ -129,10 +129,10 @@ export function AetherisHero() {
 
           <motion.div
             {...fadeUp(1.3)}
-            className="flex items-stretch gap-4 mt-8"
+            className="flex flex-col sm:flex-row items-stretch gap-4 mt-8 w-full px-4"
           >
             <div
-              className="p-5 w-[220px] rounded-[1.25rem]"
+              className="p-5 w-full sm:w-[220px] rounded-[1.25rem]"
               style={{
                 background: 'rgba(255,255,255,0.01)',
                 backdropFilter: 'blur(4px)',
@@ -151,7 +151,7 @@ export function AetherisHero() {
               </p>
             </div>
             <div
-              className="p-5 w-[220px] rounded-[1.25rem]"
+              className="p-5 w-full sm:w-[220px] rounded-[1.25rem]"
               style={{
                 background: 'rgba(255,255,255,0.01)',
                 backdropFilter: 'blur(4px)',
@@ -189,7 +189,7 @@ export function AetherisHero() {
             Collaborating with top aerospace pioneers globally
           </div>
           <div
-            className="flex items-center gap-6 md:gap-10 text-2xl md:text-3xl text-white tracking-tight"
+            className="flex items-center flex-wrap justify-center gap-4 md:gap-10 text-lg md:text-2xl lg:text-3xl text-white tracking-tight"
             style={{ fontFamily: "'Instrument Serif', serif", fontStyle: 'italic' }}
           >
             <span>Aeon</span>

@@ -179,7 +179,7 @@ export function SkillsOrb() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-50px" }}
-        className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4 mb-8"
+        className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-4 mb-8"
       >
         {paginatedSkills.map((skill, index) => {
           const category = categories[skill.category as keyof typeof categories];

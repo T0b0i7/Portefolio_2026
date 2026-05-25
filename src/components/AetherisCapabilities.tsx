@@ -66,7 +66,7 @@ export function AetherisCapabilities() {
             initial={{ filter: 'blur(10px)', opacity: 0, y: 20 }}
             animate={{ filter: 'blur(0px)', opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut', delay: 0.3 }}
-            className="text-white text-6xl md:text-7xl lg:text-[6rem] leading-[0.9] tracking-[-3px]"
+            className="text-white text-4xl sm:text-5xl md:text-7xl lg:text-[6rem] leading-[0.9] tracking-[-3px]"
             style={{ fontFamily: "'Instrument Serif', serif", fontStyle: 'italic' }}
           >
             Production
@@ -83,7 +83,7 @@ export function AetherisCapabilities() {
               animate={{ filter: 'blur(0px)', opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: 'easeOut', delay: 0.4 + idx * 0.15 }}
             >
-              <GlassBox className="rounded-[1.25rem] p-6 min-h-[360px] flex flex-col">
+              <GlassBox className="rounded-[1.25rem] p-6 min-h-[300px] md:min-h-[360px] flex flex-col">
                 <div className="flex items-start justify-between gap-4">
                   <div
                     className="w-11 h-11 rounded-[0.75rem] flex items-center justify-center"
