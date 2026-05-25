@@ -9,6 +9,8 @@ import { GeoMap } from "@/components/backoffice/dashboard/GeoMap";
 import { ExportButton } from "@/components/backoffice/common/ExportButton";
 import { RichTextEditor } from "@/components/backoffice/cms/RichTextEditor";
 import { MediaLibrary } from "@/components/backoffice/cms/MediaLibrary";
+import { SectionsManager } from "@/components/backoffice/cms/SectionsManager";
+import { TestimonialsManager } from "@/components/backoffice/cms/TestimonialsManager";
 import { SEOSettings } from "@/components/backoffice/settings/SEOSettings";
 import { NavigationEditor } from "@/components/backoffice/settings/NavigationEditor";
 import { ProjectsManager } from "@/components/backoffice/cms/ProjectsManager";
@@ -293,7 +295,7 @@ function AnalyticsContent({ period, setPeriod }: { period: "today" | "7days" | "
 }
 
 function CmsView() {
-  const [activeSubTab, setActiveSubTab] = useState<"projects" | "sections" | "media">("projects");
+  const [activeSubTab, setActiveSubTab] = useState<"sections" | "testimonials" | "media">("sections");
 
   return (
     <div className="space-y-6">
@@ -305,7 +307,7 @@ function CmsView() {
       </div>
 
       <div className="flex gap-2 border-b border-[#e6dfd8] pb-2 overflow-x-auto scrollbar-hide">
-        {(["sections", "media"] as const).map((tab) => (
+        {(["sections", "testimonials", "media"] as const).map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveSubTab(tab)}
@@ -315,7 +317,7 @@ function CmsView() {
                 : "bg-white text-[#6c6a64] border border-[#e6dfd8] hover:bg-[#faf9f5]"
             }`}
           >
-            {tab === "sections" ? "Sections du Site" : "Médiathèque"}
+            {tab === "sections" ? "Sections" : tab === "testimonials" ? "Témoignages" : "Médiathèque"}
           </button>
         ))}
       </div>
@@ -323,15 +325,14 @@ function CmsView() {
       {activeSubTab === "sections" && (
         <div className="space-y-4">
           <Card className="bg-white border-[#e6dfd8] p-6">
-            <h3 className="text-[#141413] font-serif font-normal text-lg mb-4">Structure des Sections</h3>
-            <p className="text-[#6c6a64] text-sm mb-6">Modifiez l'ordre d'apparition et le contenu texte des sections de votre page d'accueil.</p>
-            <div className="p-12 border-2 border-dashed border-[#e6dfd8] rounded-xl text-center">
-               <FileText className="w-8 h-8 mx-auto text-[#8e8b82] mb-3" />
-               <p className="text-[#8e8b82] text-sm">L'éditeur de sections sera disponible prochainement.</p>
-            </div>
+            <h3 className="text-[#141413] font-serif font-normal text-lg mb-4">Sections du site</h3>
+            <p className="text-[#6c6a64] text-sm mb-6">Activez/désactivez, réordonnez et modifiez le contenu des sections.</p>
+            <SectionsManager />
           </Card>
         </div>
       )}
+
+      {activeSubTab === "testimonials" && <TestimonialsManager />}
 
       {activeSubTab === "media" && <MediaLibrary />}
     </div>

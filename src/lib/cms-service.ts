@@ -1,4 +1,4 @@
-import type { CmsLink, CmsProject, CmsSection, SiteSetting, ThemeSetting } from "@/types/cms";
+import type { CmsLink, CmsProject, CmsSection, SiteSetting, ThemeSetting, Testimonial, ServiceItem } from "@/types/cms";
 import { supabase } from "@/integrations/supabase/client";
 
 export async function fetchProjectsFromCms(): Promise<CmsProject[]> {
@@ -73,6 +73,44 @@ export async function fetchSiteSettings(): Promise<SiteSetting[]> {
 export async function upsertSiteSetting(setting: SiteSetting) {
   if (!supabase) throw new Error("Supabase non configuré");
   const { error } = await supabase.from("site_settings").upsert(setting);
+  if (error) throw error;
+}
+
+export async function fetchTestimonials(): Promise<Testimonial[]> {
+  if (!supabase) return [];
+  const { data, error } = await supabase.from("testimonials").select("*").order("sort_order", { ascending: true });
+  if (error) throw error;
+  return (data || []) as Testimonial[];
+}
+
+export async function upsertTestimonial(testimonial: Partial<Testimonial>) {
+  if (!supabase) throw new Error("Supabase non configuré");
+  const { error } = await supabase.from("testimonials").upsert(testimonial).select().single();
+  if (error) throw error;
+}
+
+export async function deleteTestimonial(id: number) {
+  if (!supabase) throw new Error("Supabase non configuré");
+  const { error } = await supabase.from("testimonials").delete().eq("id", id);
+  if (error) throw error;
+}
+
+export async function fetchServices(): Promise<ServiceItem[]> {
+  if (!supabase) return [];
+  const { data, error } = await supabase.from("services").select("*").order("sort_order", { ascending: true });
+  if (error) throw error;
+  return (data || []) as ServiceItem[];
+}
+
+export async function upsertService(service: Partial<ServiceItem>) {
+  if (!supabase) throw new Error("Supabase non configuré");
+  const { error } = await supabase.from("services").upsert(service).select().single();
+  if (error) throw error;
+}
+
+export async function deleteService(id: number) {
+  if (!supabase) throw new Error("Supabase non configuré");
+  const { error } = await supabase.from("services").delete().eq("id", id);
   if (error) throw error;
 }
 

@@ -26,9 +26,38 @@ export type CmsSection = {
   title_en: string;
   content_fr?: string | null;
   content_en?: string | null;
+  description_fr?: string | null;
+  description_en?: string | null;
+  icon_name?: string | null;
   is_enabled: boolean;
   sort_order: number;
   status?: "draft" | "published" | "archived";
+};
+
+export type Testimonial = {
+  id: number;
+  name: string;
+  role?: string | null;
+  company?: string | null;
+  text: string;
+  rating: number;
+  avatar_url?: string | null;
+  stats?: string | null;
+  impact?: string | null;
+  sort_order: number;
+  is_active: boolean;
+};
+
+export type ServiceItem = {
+  id: number;
+  icon_name: string;
+  title_fr: string;
+  title_en: string;
+  description_fr: string;
+  description_en: string;
+  skills: string[];
+  sort_order: number;
+  is_active: boolean;
 };
 
 export type CmsLink = {
