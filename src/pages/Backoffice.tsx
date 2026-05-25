@@ -160,14 +160,23 @@ export default function BackofficePage() {
 function DashboardContent({ period, setPeriod }: { period: "today" | "7days" | "30days"; setPeriod: (p: "today" | "7days" | "30days") => void }) {
   const { overview, activeVisitors, globePoints, stats, events, loading } = useBackofficeData();
 
-  const kpis = useMemo(() => [
-    { icon: <Eye className="w-5 h-5" />, label: "Pages vues (24h)", value: overview.pageViews24h.toLocaleString(), change: 5.2, trend: "up" as const },
-    { icon: <Users className="w-5 h-5" />, label: "Visiteurs actifs", value: activeVisitors.length.toString(), change: 12, trend: "up" as const },
-    { icon: <MousePointer className="w-5 h-5" />, label: "Clics (24h)", value: overview.clicks24h.toLocaleString(), change: -2.4, trend: "down" as const },
-    { icon: <FileText className="w-5 h-5" />, label: "Sections vues", value: overview.sectionViews24h.toLocaleString(), change: 8.1, trend: "up" as const },
-    { icon: <TrendingUp className="w-5 h-5" />, label: "Taux de rebond", value: "32%", change: -5, trend: "down" as const },
-    { icon: <Target className="w-5 h-5" />, label: "Pages/session", value: stats.totalViews && stats.uniqueVisitors ? (stats.totalViews / stats.uniqueVisitors).toFixed(1) : "2.4", change: 0.2, trend: "up" as const },
-  ], [overview, activeVisitors.length, stats]);
+  const kpis = useMemo(() => {
+    const pagesPerSession = stats.totalViews && stats.uniqueVisitors
+      ? (stats.totalViews / stats.uniqueVisitors).toFixed(1)
+      : "—";
+    const durationStr = overview.avgSessionDuration > 60
+      ? `${Math.floor(overview.avgSessionDuration / 60)}m ${overview.avgSessionDuration % 60}s`
+      : `${overview.avgSessionDuration}s`;
+
+    return [
+      { icon: <Eye className="w-5 h-5" />, label: "Pages vues", value: overview.pageViews24h.toLocaleString(), change: 0, trend: "up" as const },
+      { icon: <Users className="w-5 h-5" />, label: "Visiteurs", value: activeVisitors.length.toString(), change: 0, trend: "up" as const },
+      { icon: <MousePointer className="w-5 h-5" />, label: "Clics (24h)", value: overview.clicks24h.toLocaleString(), change: 0, trend: "neutral" as const },
+      { icon: <TrendingUp className="w-5 h-5" />, label: "Durée moy.", value: durationStr, change: 0, trend: "neutral" as const },
+      { icon: <FileText className="w-5 h-5" />, label: "Taux rebond", value: `${overview.bounceRate}%`, change: 0, trend: overview.bounceRate < 50 ? "down" as const : "up" as const },
+      { icon: <Target className="w-5 h-5" />, label: "Pages/session", value: pagesPerSession, change: 0, trend: "neutral" as const },
+    ];
+  }, [overview, activeVisitors.length, stats]);
 
   const recentEvents = useMemo(() => 
     events.slice(0, 20).map(e => ({

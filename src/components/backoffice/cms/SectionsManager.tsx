@@ -4,6 +4,7 @@ import type { CmsSection } from "@/types/cms";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { RichTextEditor } from "@/components/backoffice/cms/RichTextEditor";
 import { toast } from "sonner";
 import {
   Eye,
@@ -17,19 +18,38 @@ import {
   RefreshCw,
   ChevronRight,
   ChevronDown as ChevronDownIcon,
+  Layout,
+  UserRound,
+  Cpu,
+  Globe,
+  Mail,
+  Quote,
+  Copyright,
+  Code2,
+  Palette,
+  Database,
+  Smartphone,
+  Server,
+  BarChart,
+  Shield,
 } from "lucide-react";
 
-const SECTION_ICONS: Record<string, string> = {
-  hero: "Layout",
-  about: "UserRound",
-  arsenal: "Cpu",
-  tech: "Cpu",
-  projects: "Globe",
-  services: "Mail",
-  testimonials: "Quote",
-  contact: "Mail",
-  footer: "Copyright",
-};
+const ICON_OPTIONS = [
+  { value: "Layout", label: "Layout", icon: Layout },
+  { value: "UserRound", label: "Utilisateur", icon: UserRound },
+  { value: "Cpu", label: "Tech", icon: Cpu },
+  { value: "Globe", label: "Globe", icon: Globe },
+  { value: "Mail", label: "Email", icon: Mail },
+  { value: "Quote", label: "Citation", icon: Quote },
+  { value: "Copyright", label: "Copyright", icon: Copyright },
+  { value: "Code2", label: "Code", icon: Code2 },
+  { value: "Palette", label: "Design", icon: Palette },
+  { value: "Database", label: "Database", icon: Database },
+  { value: "Smartphone", label: "Mobile", icon: Smartphone },
+  { value: "Server", label: "Serveur", icon: Server },
+  { value: "BarChart", label: "Analytics", icon: BarChart },
+  { value: "Shield", label: "Sécurité", icon: Shield },
+];
 
 export function SectionsManager() {
   const [sections, setSections] = useState<CmsSection[]>([]);
@@ -198,6 +218,35 @@ export function SectionsManager() {
 
             {isExpanded && (
               <div className="border-t border-[#e6dfd8] px-4 py-4 space-y-4">
+                <div>
+                  <label className="text-xs font-bold text-[#6c6a64] uppercase tracking-wider mb-2 block">
+                    Icône
+                  </label>
+                  <div className="flex flex-wrap gap-1.5">
+                    {ICON_OPTIONS.map((opt) => {
+                      const Icon = opt.icon;
+                      const currentIcon = edit.icon_name || section.icon_name || "Layout";
+                      return (
+                        <button
+                          key={opt.value}
+                          onClick={() => setEdits(prev => ({
+                            ...prev,
+                            [section.id]: { ...prev[section.id], icon_name: opt.value }
+                          }))}
+                          className={`p-2 rounded-lg border text-[#6c6a64] ${
+                            currentIcon === opt.value
+                              ? "border-[#cc785c] bg-[#cc785c]/10 text-[#cc785c]"
+                              : "border-[#e6dfd8] hover:bg-[#faf9f5]"
+                          }`}
+                          title={opt.label}
+                        >
+                          <Icon className="w-4 h-4" />
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="text-xs font-bold text-[#6c6a64] uppercase tracking-wider mb-1 block">
@@ -225,7 +274,7 @@ export function SectionsManager() {
                       className="border-[#e6dfd8] text-sm"
                     />
                   </div>
-                  <div className="md:col-span-2">
+                  <div>
                     <label className="text-xs font-bold text-[#6c6a64] uppercase tracking-wider mb-1 block">
                       Description (FR)
                     </label>
@@ -238,7 +287,7 @@ export function SectionsManager() {
                       className="border-[#e6dfd8] text-sm"
                     />
                   </div>
-                  <div className="md:col-span-2">
+                  <div>
                     <label className="text-xs font-bold text-[#6c6a64] uppercase tracking-wider mb-1 block">
                       Description (EN)
                     </label>
@@ -249,6 +298,32 @@ export function SectionsManager() {
                         [section.id]: { ...prev[section.id], description_en: e.target.value }
                       }))}
                       className="border-[#e6dfd8] text-sm"
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="text-xs font-bold text-[#6c6a64] uppercase tracking-wider mb-2 block">
+                      Contenu (FR)
+                    </label>
+                    <RichTextEditor
+                      value={edit.content_fr ?? section.content_fr ?? ""}
+                      onChange={(val) => setEdits(prev => ({
+                        ...prev,
+                        [section.id]: { ...prev[section.id], content_fr: val }
+                      }))}
+                      placeholder="Contenu en français..."
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="text-xs font-bold text-[#6c6a64] uppercase tracking-wider mb-2 block">
+                      Contenu (EN)
+                    </label>
+                    <RichTextEditor
+                      value={edit.content_en ?? section.content_en ?? ""}
+                      onChange={(val) => setEdits(prev => ({
+                        ...prev,
+                        [section.id]: { ...prev[section.id], content_en: val }
+                      }))}
+                      placeholder="Content in English..."
                     />
                   </div>
                 </div>

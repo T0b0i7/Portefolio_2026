@@ -6,6 +6,8 @@ interface Overview {
   pageViews24h: number;
   clicks24h: number;
   sectionViews24h: number;
+  avgSessionDuration: number;
+  bounceRate: number;
 }
 
 interface LiveEvent {
@@ -31,6 +33,7 @@ interface VisitorData {
   pagesVisited: number;
   clicksCount: number;
   sectionsViewed: number;
+  startedAt: string;
 }
 
 interface Stats {
@@ -121,7 +124,7 @@ export function BackofficeProvider({ children, period }: BackofficeProviderProps
           .gte("started_at", startDate.toISOString()),
         supabase
           .from("page_views")
-          .select("id", { count: "exact" })
+          .select("occurred_at", { count: "exact" })
           .gte("occurred_at", startDate.toISOString()),
         supabase
           .from("click_events")
@@ -148,11 +151,30 @@ export function BackofficeProvider({ children, period }: BackofficeProviderProps
           .limit(30),
       ]);
 
+      const durations = visitorData
+        .map(v => new Date(v.lastSeenAt).getTime() - new Date(v.startedAt).getTime())
+        .filter(d => d > 0 && d < 3600000);
+      const avgDuration = durations.length > 0
+        ? Math.round(durations.reduce((a, b) => a + b, 0) / durations.length / 1000)
+        : 0;
+
+      let bounceCount = 0;
+      (sessions || []).forEach((s: Record<string, unknown>) => {
+        const lastSeen = new Date(s.last_seen_at as string).getTime();
+        const started = new Date(s.started_at as string).getTime();
+        if (lastSeen - started < 15000) bounceCount++;
+      });
+      const bounceRate = (sessions?.length || 0) > 0
+        ? Math.round((bounceCount / (sessions?.length || 1)) * 100)
+        : 0;
+
       setOverview({
         activeVisitors: sessionsCount || 0,
         pageViews24h: pageViewsCount || 0,
         clicks24h: clicksCount || 0,
         sectionViews24h: sectionViewsCount || 0,
+        avgSessionDuration: avgDuration,
+        bounceRate,
       });
 
       const packedEvents: LiveEvent[] = [
@@ -200,6 +222,7 @@ export function BackofficeProvider({ children, period }: BackofficeProviderProps
         lat: s.lat as number | null,
         lng: s.lng as number | null,
         lastSeenAt: s.last_seen_at as string,
+        startedAt: s.started_at as string,
         pagesVisited: 0,
         clicksCount: 0,
         sectionsViewed: 0,
