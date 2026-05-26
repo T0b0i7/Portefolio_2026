@@ -1,380 +1,579 @@
-# 🎨 Portfolio.OS 2026
+# Portfolio.OS 2026 — Site Vitrine
 
-> Portfolio professionnel haute performance - Présentation de projets innovants en Web, Mobile, Design et IA
+> Portfolio professionnel nouvelle génération — Développement Web & Mobile, Design UI/UX, IA & Automation
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/YOUR_NETLIFY_ID/deploy-status)](https://portefolio-os.netlify.app/)
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript)](https://www.typescriptlang.org/)
-[![React](https://img.shields.io/badge/React-18.x-61DAFB?logo=react)](https://react.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.x-06B6D4?logo=tailwindcss)](https://tailwindcss.com/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Vite](https://img.shields.io/badge/Vite-5-646CFF?logo=vite)](https://vitejs.dev/)
+[![Supabase](https://img.shields.io/badge/Supabase-2.x-3ECF8E?logo=supabase)](https://supabase.com/)
+[![Framer Motion](https://img.shields.io/badge/Framer_Motion-12-0055FF?logo=framer)](https://framer.com/motion/)
+[![License](https://img.shields.io/badge/Licence-MIT-green.svg)](LICENSE)
 
-## 🚀 Démo Live
+---
 
-**▶️ [Visiter le portfolio en production](https://portefolio-os.netlify.app/)**
+## Demo Live
 
-## 📋 Table des matières
+**▶️ [portefolio-os.netlify.app](https://portefolio-os.netlify.app/)**
 
-- [À propos](#-à-propos)
-- [Features](#-features)
-- [Stack Technique](#-stack-technique)
-- [Installation](#-installation)
-- [Configuration](#-configuration)
-- [Scripts Disponibles](#-scripts-disponibles)
-- [Architecture](#-architecture)
-- [Déploiement](#-déploiement)
-- [Contribution](#-contribution)
-- [Licence](#-licence)
+---
 
-## 📝 À propos
+## Table des matieres
 
-**Portfolio.OS** est une plateforme de présentation professionnelle personnalisée, conçue pour mettre en avant des projets innovants dans les domaines du développement web, mobile, design graphique et intelligence artificielle.
+1. [Presentation generale](#-presentation-generale)
+2. [Pages & Routes](#-pages--routes)
+3. [Sections du portfolio](#-sections-du-portfolio)
+4. [Fonctionnalites](#-fonctionnalites)
+5. [Systeme de themes](#-systeme-de-themes)
+6. [Stack technique](#-stack-technique)
+7. [Architecture du projet](#-architecture-du-projet)
+8. [Backoffice & CMS](#-backoffice--cms)
+9. [Analytics & Tracking](#-analytics--tracking)
+10. [Installation](#-installation)
+11. [Configuration](#-configuration)
+12. [Scripts disponibles](#-scripts-disponibles)
+13. [Deploiement](#-deploiement)
+14. [Auteur](#-auteur)
 
-Le portfolio offre une expérience utilisateur immersive avec:
-- 🎬 **Animations élégantes** et fluides
-- 🌙 **Thème sombre optimisé** pour la readability
-- 📱 **Design responsive** (mobile-first)
-- ⚡ **Performance exceptionnelle** (Lighthouse 95+)
-- 🔍 **SEO-friendly** avec métadonnées dynamiques
-- 🌐 **Support multilingue** (FR/EN)
-- 📊 **Analytics intégré** avec Supabase
+---
 
-## ✨ Features
+## Presentation generale
 
-### 🎯 Sections Principales
+**Portfolio.OS** est un site vitrine professionnel de nouvelle generation, concu pour presenter un ensemble de competences et realisations dans les domaines du **developpement web full-stack**, du **design UI/UX**, du **mobile**, de l'**intelligence artificielle** et de l'**automatisation**.
 
-| Section | Description |
-|---------|-------------|
-| **Hero** | Accroche captivante avec CTA prominent |
-| **Projets** | Galerie filtrable des projets (Web, Mobile, Design, IA) |
-| **Études de Cas** | Détail profond du projet vedette (AfriEnhance AI) |
-| **Expériences** | Timeline interactive des postes professionnels |
-| **Compétences** | Orbes visuels animés des technologies |
-| **Services** | Propositions de valeur et domaines d'expertise |
-| **FAQ** | Réponses aux questions fréquentes |
-| **Contact** | Formulaire intelligent avec EmailJS |
+Le site se distingue par son approche **modulaire et themisable** : il embarque 4 themes visuels complets (Default, Airbnb, Airtable, Aetheris) qui transforment integralement l'apparence du portfolio.
 
-### 🎨 Composants Personnalisés
+### Technologies principales
 
-- **FeaturedProject**: Avant/après interactif avec slider
-- **ProjectsSection**: Grille dynamique avec filtres
-- **ExperienceTimeline**: Chronologie animée
-- **SkillsOrb**: Visualisation 3D des technologies
-- **ThemeSelector**: Toggle clair/sombre
-- **TrackingConsentBanner**: Consentement RGPD
-- **WhatsAppFloatButton**: Support WhatsApp flottant
+| Technologie | Utilisation |
+|---|---|
+| **React 19** | Framework UI |
+| **TypeScript** | Typage statique |
+| **Vite 5** | Build tool & HMR |
+| **Tailwind CSS 3** | Styling utilitaire |
+| **Framer Motion 12** | Animations fluides |
+| **react-router-dom 6** | Routage client-side |
+| **Supabase** | Backend, BDD, Auth, CMS |
+| **TanStack React Query** | Data fetching & cache |
+| **Radix UI / shadcn/ui** | Composants headless accessibles |
+| **Three.js / React Three Fiber** | Visualisations 3D |
+| **Recharts** | Graphiques analytics |
+| **react-simple-maps / d3-geo** | Cartographie interactive |
+| **Lucide React** | Icones |
+| **Embla Carousel** | Carousel haute perf |
+| **Zod + react-hook-form** | Validation formulaires |
+| **Sonner** | Notifications toast |
+| **Netlify** | Hebergement & deploiement |
 
-### 🔐 Sécurité & Conformité
+---
 
-- ✅ RGPD compliant (consentement tracking)
-- 🔐 Clés API sécurisées (variables d'environnement)
-- 📧 Formulaires validés côté client & serveur
-- 🛡️ Protection contre XSS & injection
+## Pages & Routes
 
-## 🛠️ Stack Technique
+Le site utilise un routage client-side avec `react-router-dom` v6 et des transitions de page animees via Framer Motion (`AnimatePresence`).
 
-### Frontend
-```
-React 18              → Librairie UI moderne
-TypeScript           → Typage statique robuste
-Tailwind CSS 3       → Styling utilitaire performant
-Vite                 → Build tool ultrarapide (HMR instantané)
-Framer Motion        → Animations déclaratives
-Embla Carousel       → Carousel haute performance
-Radix UI             → Composants headless accessibles
-```
+| Route | Page | Description |
+|---|---|---|
+| `/` | `Index.tsx` | **Page principale** — portfolio en single-page scrollable avec 8 sections |
+| `/admin` | `Admin.tsx` | **Panneau d'administration** — analytics + gestion CMS (protege par mot de passe) |
+| `/backoffice` | `Backoffice.tsx` | **Backoffice complet** — dashboard, analytics, CMS, projets, settings, tracking en temps reel |
+| `*` | `NotFound.tsx` | **Page 404** — message bilingue (FR/EN) |
 
-### Backend & Services
-```
-Supabase             → PostgreSQL + Auth + Real-time
-EmailJS              → Envoi d'emails côté client
-Google Gemini 2.5    → IA multimodal (projets)
-TanStack React Query → Data fetching & caching
-```
+### Transitions de pages
 
-### Devtools
-```
-TypeScript Compiler  → Vérification de types
-ESLint              → Linting & code quality
-PostCSS             → Nesting & autoprefixing CSS
-Bun                 → Gestionnaire de packages (optionnel)
-```
+Chaque navigation declenche une animation de transition avec opacite, decalage vertical et flou, rendant la navigation fluide et immersive.
 
-## 📦 Installation
+---
 
-### Prérequis
-- **Node.js** 18.x ou supérieur
-- **npm** 9.x+ ou **bun** 1.x+
-- **Git**
+## Sections du portfolio
 
-### Étapes
+La page d'accueil (`/`) est une single-page application scrollable. Voici le detail de chaque section :
 
-```bash
-# 1️⃣ Cloner le repository
-git clone https://github.com/T0b0i7/Portefolio_2026.git
-cd Portefolio_2026
+### 1. Accueil — Hero Section (`AnimatedHeroSection`)
 
-# 2️⃣ Installer les dépendances
-npm install
-# OU avec bun
-bun install
+- **Badge** : "Available for hire" / "Disponible"
+- **Titre anime** : animation mot-par-mot avec effet de fondu
+- **Sous-titre** : "Full-Stack Developer & UI/UX Designer"
+- **CTAs** :
+  - "Explore my work" → ancre vers `#projects`
+  - "Get in touch" → ancre vers `#contact`
+- **Liens sociaux** : GitHub, LinkedIn, Facebook (animations hover)
+- **Carousel d'images** : photos de profil en rotation automatique
+- **Badge d'experience** : "5+ Years of dev experience"
+- **Orbes flottants** : elements decoratifs en arriere-plan
 
-# 3️⃣ Créer le fichier .env.local
-cp .env.example .env.local
+### 2. A propos — About Section (`AboutSection`)
 
-# 4️⃣ Remplir les variables d'environnement
-# (voir section Configuration ci-dessous)
+- **Badge** : "Philosophy"
+- **Citation** : Harold Abelson sur la programmation
+- **Proposition de valeur** : presentation des competences et de l'approche
+- **Questions audience** : 4 questions-interpellations sur l'automatisation, la presence digitale, etc.
+- **CTA** : "Start the conversation"
+- **Elements decoratifs** : avatars flottants avec icones (Sparkles, Users, Zap)
 
-# 5️⃣ Démarrer le serveur local
-npm run dev
-```
+### 3. Arsenal — Tech Stack (`TechStackSection`)
 
-**L'application sera accessible à:** `http://localhost:5173`
+- **Badge** : "Technical Expertise"
+- **Titre** : "My Arsenal"
+- **Barre de recherche** : filtre dynamique des technologies
+- **Grille interactive 3D** : 37 technologies presentees comme un clavier avec 5 rangees
+  - Rangees : Python / JS TS React Next.js / Node.js Django Docker Linux / et plus
+  - Barre espace avec "Full-Stack Expertise"
+- **Effets** : perspective 3D au survol, animation de pression au clic, tooltips au survol
+- **Icones** : SimpleIcons CDN pour chaque technologie
+- **Technologies couvertes** : Python, JavaScript, TypeScript, React, Next.js, Node.js, Django, Docker, Linux, Git, Tailwind CSS, PostgreSQL, Supabase, MongoDB, Redis, GraphQL, REST APIs, Three.js, Framer Motion, Figma, Adobe XD, Photoshop, Illustrator, After Effects, Premiere Pro, Blender, Unity, C++, C#, Flutter, Kotlin, Swift, AWS, GCP, Firebase, Nginx, CI/CD
 
-## ⚙️ Configuration
+### 4. Projets phares — Featured Projects (`FeaturedProjects`)
 
-### Variables d'Environnement
 
-Créer un fichier `.env.local` à la racine du projet:
+- **Grille paginee** : 3 projets par page
+- **Projets presentes** : AfriEnhance AI, Portfolio.OS, SIAB Automation, CREACOM, Afrimemorie, Communio, Imona, IPPh
+- **Carte projet** : image miniature, badge categorie, titre, description, tags, capacites
+- **Modal de detail** :
+  - Galerie d'images avec navigation (precedent/suivant)
+  - Technologies frontend et backend
+  - Description complete
+  - Tags et capacites
+  - Liens "Visit" et "Source"
+- **Projets prives** : affichent un badge "Private" avec acces restreint
 
-```bash
-# 🌐 Supabase Configuration
-VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_ANON_KEY=your-anon-key-here
+### 5. Projets — Projects Section (`ProjectsSection`)
 
-# 📧 EmailJS Configuration
-VITE_EMAILJS_SERVICE_ID=service_xxxxxxx
-VITE_EMAILJS_TEMPLATE_ID=template_xxxxxxx
-VITE_EMAILJS_PUBLIC_KEY=your-public-key
+- **Source de donnees** : dynamique via Supabase CMS (fallback vers donnees statiques locales)
+- **Filtres par categorie** : All, Full-Stack, Web Design, Mobile, Automation, E-commerce, Gaming, Portfolio
+- **Filtre croise par technologie** : selection multiple
+- **Recherche textuelle** : input de recherche
+- **Pagination** : numerotee + bouton "Load all"
+- **Carte projet** : image, badge categorie, titre, description, note (etoiles), tags
+- **Dialog de detail** : layout splitte avec galerie + infos projet, role, type, statut, tech stack, notes, boutons visit/message/request access
 
-# 🤖 Google Gemini AI (optionnel)
-VITE_GOOGLE_GENAI_KEY=your-google-key
+### 6. Services (`ServicesSection`)
 
-# 📊 Analytics (optionnel)
-VITE_ENABLE_ANALYTICS=true
-```
+5 cartes de services proposees :
 
-### Setup Supabase
+1. **Web & Mobile Development** : React, Next.js, Node.js, Supabase, API Design
+2. **Design & Visual Identity** : UI/UX, Figma, Brand Strategy, Prototyping
+3. **Copywriting & Storytelling** : Sales Copy, Video Scripts, Brand Voice
+4. **AI Strategy & Consulting** : AI Audit, Workflow Automation, LLM Integration
+5. **AI Content Creation** : AI Visuals, Advanced Prompting, Creative Tech
 
-1. Créer un projet sur [supabase.com](https://supabase.com)
-2. Créer les tables SQL (voir `supabase_schema.sql`)
-3. Copier les clés API
-4. Ajouter à `.env.local`
+**CTA final** : "Ready to bring your next big project to life?" → "Start a project"
 
-### Setup EmailJS
+### 7. Temoignages — Testimonials (`TestimonialsSection`)
 
-1. Visiter [emailjs.com](https://emailjs.com)
-2. Créer un nouveau service & template
-3. Copier les IDs
-4. Ajouter à `.env.local`
+- **Carousel automatique** : rotation toutes les 12 secondes
+- **3 temoignages** : Epiphane Koutangni (SIAB), Grace Branco (CREACOM), Vano Baby (Gang)
+- **Chaque slide** : citation, auteur, role, entreprise, carte d'impact avec statistiques (ex: "-30% processing time")
+- **Controles** : play/pause, navigation prev/next, barre de progression, indicateurs a points
+- **Elements decoratifs** : blobs et guillemets flottants
 
-## 📜 Scripts Disponibles
+### 8. Contact (`ContactSection`)
 
-```bash
-# 🔧 Développement
-npm run dev              # Démarrer dev server avec HMR
+- **Layout splitte** :
+  - **Gauche** : informations de contact (email, telephone, localisation), liens sociaux
+  - **Droite** : formulaire de contact
+- **Champs** : nom, email, sujet, message + champ honeypot cache (anti-spam)
+- **Validation** : temps reel avec messages d'erreur
+- **Rate limiting** : 45 secondes entre deux envois
+- **Compteur de caracteres** : max 2000
+- **Notifications** : toasts de succes/erreur via `sonner`
+- **Backend** : mock (precedemment Formspree, desormais mailto)
 
-# 🔨 Production
-npm run build            # Build optimisé pour production
-npm run build:dev        # Build en mode développement
+### 9. Navigation rapide (Quick Navigation Dots)
 
-# 👀 Preview
-npm run preview          # Prévisualiser le build local
+Barre fixe sur le cote droit avec des points cliquables pour chaque section : Accueil, A propos, Arsenal, Projects, Services, Temoignages, Contact.
 
-# ✨ Code Quality
-npm run lint             # Vérifier avec ESLint
+### 10. Bouton Scroll to Top
 
-# 🖼️ Images
-npm run optimize-images  # Optimiser images PNG/JPG → WebP
-```
+Apparait apres 600px de scroll, animation spring fluide.
 
-## 🏗️ Architecture
+---
 
-```
-Portefolio_2026/
-├── src/
-│   ├── pages/
-│   │   ├── Index.tsx           # Page principale du portfolio
-│   │   └── NotFound.tsx        # Page 404
-│   │
-│   ├── components/
-│   │   ├── HeroSection.tsx     # Section accroche
-│   │   ├── ProjectsSection.tsx # Galerie projets
-│   │   ├── FeaturedProject.tsx # Étude de cas (AfriEnhance AI)
-│   │   ├── ExperienceTimeline.tsx
-│   │   ├── SkillsOrb.tsx
-│   │   ├── ServicesSection.tsx
-│   │   ├── ContactSection.tsx
-│   │   ├── FAQ Section.tsx
-│   │   ├── ui/                 # Radix UI composants headless
-│   │   └── ...
-│   │
-│   ├── contexts/
-│   │   ├── ThemeContext.tsx    # Gestion du thème (light/dark)
-│   │   └── LanguageContext.tsx # Localisation (FR/EN)
-│   │
-│   ├── hooks/
-│   │   ├── use-toast.ts        # Notifications toast
-│   │   ├── use-mobile.ts       # Détection mobile
-│   │   ├── useTracking.ts      # Analytics
-│   │   └── useTechNews.ts      # Actualités tech
-│   │
-│   ├── services/
-│   │   ├── projectService.ts   # Requêtes Supabase pour projets
-│   │   └── experienceService.ts
-│   │
-│   ├── lib/
-│   │   ├── supabase.ts         # Configuration Supabase client
-│   │   ├── emailjs-config.ts   # Configuration EmailJS
-│   │   ├── contact-utils.ts
-│   │   └── utils.ts            # Utilitaires généraux
-│   │
-│   ├── data/
-│   │   ├── projectsData.ts     # Données statiques (fallback)
-│   │   └── experienceData.ts
-│   │
-│   ├── types/
-│   │   └── project.ts          # Types TypeScript
-│   │
-│   ├── styles/
-│   │   ├── animations.css      # Animations custom
-│   │   ├── index.css           # Global styles
-│   │   └── App.css
-│   │
-│   ├── App.tsx                 # Composant racine
-│   └── main.tsx                # Point d'entrée
-│
-├── public/
-│   ├── design/                 # Images & captures projets
-│   │   ├── AfriEnhance AI/
-│   │   ├── DK/
-│   │   └── optimized/         # Images WebP optimisées
-│   └── _redirects             # Netlify redirects
-│
-├── scripts/
-│   ├── optimize-images.js     # Script optimisation
-│   └── supabase-seed.js
-│
-├── vite.config.ts             # Configuration Vite
-├── tailwind.config.ts         # Configuration Tailwind
-├── tsconfig.json              # Configuration TypeScript
-├── postcss.config.js          # Configuration PostCSS
-├── eslint.config.js           # Configuration ESLint
-├── netlify.toml               # Configuration Netlify
-└── supabase_schema.sql        # Schéma BD
-```
+## Fonctionnalites
 
-## 🚀 Déploiement
+### Design & Theming
+- **4 themes complets** interchangeables (voir section themes ci-dessous)
+- **Mode sombre** via classe CSS `dark`
+- **Design responsive** : mobile-first, adaptatif
+- **Animations riches** : framer-motion partout (page transitions, scroll-reveal, word-by-word, spring physics)
+- **Effets 3D** : perspective tilt sur la grille tech, orbes flottants
 
-### Netlify (Recommandé)
+### Multilingue (FR/EN)
+- **`LanguageContext`** : fournit une fonction `lang(fr, en)` utilisee dans tous les composants
+- **Toggle** : bouton dans la navigation pour basculer Francais/Anglais
+- **Traductions** : champs de formulaire, erreurs, sections, contenu statique, SEO
 
-```bash
-# Option 1: Via CLI
-netlify deploy --prod
+### Backoffice & CMS
+- Acces securise par mot de passe (raccourci `Ctrl+M`)
+- **Dashboard** : KPIs, trafic, referents, carte geographique, flux d'activite
+- **Analytics** : graphiques, export de donnees
+- **CMS** : gestion des sections, services, temoignages, medias
+- **Gestion de projets** : CRUD complet
+- **Settings** : SEO, theme, navigation, contact
+- **Live tracking** : evenements en temps reel
+- **Roles** : acces admin restreint
 
-# Option 2: Connexion Git (Auto-deploy depuis GitHub)
-# 1. Connecter repo à Netlify
-# 2. Build command: npm run build
-# 3. Publish directory: dist
-```
+### Analytics & Tracking
+- Moteur d'analytics custom base sur Supabase
+- **Evenements suivis** : pages vues, clics, sections vues, profondeur de scroll (25/50/75/90/100%)
+- **Sessions visiteurs** : geolocalisation (ipapi.co), navigateur, appareil
+- **Banniere de consentement** : obligatoire avant activation (RGPD compliant)
+- **Tableaux Supabase** : `visitor_sessions`, `page_views`, `click_events`, `section_events`, `scroll_events`
 
-### Vercel
+### SEO & Performance
+- **Meta-donnees** : OG tags, Twitter cards, description, keywords
+- **JSON-LD** : structured data (Person schema)
+- **Sitemap XML** et **robots.txt**
+- **Code splitting** : chunks Vite optimises (react-vendor, radix-vendor, icons-vendor, charts, animation, supabase)
+- **Images optimisees** : WebP, lazy loading
+- **Build** : esbuild minification
 
-```bash
-vercel deploy --prod
-```
+### PWA
+- **Manifest.json** : configuration progressive web app
+- **Service worker** : cache et offline (Netlify)
 
-### GitHub Pages
-
-```bash
-npm run build
-# Déployer le dossier 'dist' sur gh-pages
-```
-
-## 🎯 Optimisations Appliquées
-
-✅ **Performance**
-- Images optimisées en WebP
-- Code splitting automatique
-- Lazy loading des composants
-- Caching avec React Query
-
-✅ **SEO**
-- Métadonnées dynamiques
-- Open Graph tags
-- Sitemap généré
-- Structured data (JSON-LD)
-
-✅ **Accessibilité**
+### Accessibilite
 - ARIA labels complets
 - Contraste WCAG AA
 - Navigation au clavier
-- Radix UI accessible
+- Composants Radix UI accessibles
+- Respect de `prefers-reduced-motion`
 
-## 📊 Métriques
+### Securite
+- Protection anti-spam (honeypot)
+- Rate limiting formulaire (45s)
+- Validation cote client (Zod) et serveur
+- Variables d'environnement pour les cles API
+- Sessions password-protected pour l'admin
 
-| Métrique | Score |
-|----------|-------|
-| Lighthouse Performance | 95+ |
-| Lighthouse Accessibility | 95+ |
-| Lighthouse Best Practices | 95+ |
-| Lighthouse SEO | 100 |
-| PageSpeed Insights | 90+ |
+---
 
-## 🤝 Contribution
+## Systeme de themes
 
-Les contributions sont les bienvenues! Pour contribuer:
+Le portfolio embarque un systeme de theming avance via `ThemeContext` qui injecte dynamiquement des variables CSS personnalisees.
 
-```bash
-# 1. Fork le repository
-# 2. Créer une branche feature
-git checkout -b feature/amazing-feature
+| Theme | Style | Palette |
+|---|---|---|
+| **Default** | Design epure, chaleureux | Terracotta, Warm Sand, Olive Gray, Parchment, Ivory |
+| **Airbnb** | Inspire d'Airbnb, arrondi, dynamique | Rose/Rouge, coins arrondis, typographie moderne |
+| **Airtable** | Inspire d'Airtable, precis, professionnel | Bleu, grille precise, propreté |
+| **Aetheris** | Theme "Voyage", luxe, sombre & or | Noir/Blanc/Or, glassmorphism, typographie elegante |
 
-# 3. Commit les changements
-git commit -m 'Add amazing feature'
+Le `ThemeSwitcher` (dropdown dans la navigation) et le `ThemeSwitcherFAB` (bouton flottant) permettent de basculer entre les themes en un clic.
 
-# 4. Push vers la branche
-git push origin feature/amazing-feature
+---
 
-# 5. Ouvrir une Pull Request
+## Architecture du projet
+
+```
+Portefolio_2026/
+│
+├── index.html                       # Entree HTML (lang=fr, SEO, JSON-LD)
+├── package.json                     # Dependances & scripts
+├── vite.config.ts                   # Configuration Vite (alias @/, code splitting)
+├── tailwind.config.ts               # Configuration Tailwind (couleurs, fonts, animations)
+├── tsconfig.json / tsconfig.*.json  # Configuration TypeScript
+├── components.json                  # Configuration shadcn/ui
+├── netlify.toml                     # Deploiement Netlify
+├── eslint.config.js                 # ESLint flat config
+├── .stylelintrc.json                # Stylelint
+├── .env.example / .env.local        # Variables d'environnement
+│
+├── public/
+│   ├── manifest.json                # PWA manifest
+│   ├── robots.txt / sitemap.xml     # SEO
+│   ├── _redirects                   # Netlify redirects
+│   ├── profil.png / profil1.png     # Photos de profil
+│   └── design/                      # ~70 images projets (Tech, Portfolio.Os, AfriEnhance AI, Imona, IPPh...)
+│
+├── src/
+│   ├── main.tsx                     # Point d'entree
+│   ├── App.tsx                      # Composant racine (ThemeProvider + LanguageProvider + Router)
+│   ├── App.css / index.css          # Styles globaux + variables CSS + Tailwind
+│   │
+│   ├── pages/                       # Pages
+│   │   ├── Index.tsx                # Page principale (8 sections)
+│   │   ├── Admin.tsx                # Panneau admin
+│   │   ├── Backoffice.tsx           # Backoffice complet
+│   │   └── NotFound.tsx             # Page 404
+│   │
+│   ├── components/                  # Composants UI
+│   │   ├── AnimatedHeroSection.tsx   # Hero anime (mot-par-mot, carousel, orbes)
+│   │   ├── AboutSection.tsx         # Section philosophie
+│   │   ├── Navigation.tsx           # Barre de navigation (scroll, mobile, themes, langue)
+│   │   ├── Footer.tsx               # Pied de page 4 colonnes
+│   │   ├── HeroSection.tsx          # Hero legacy
+│   │   ├── TechStackSection.tsx     # Grille clavier 3D (37 technos)
+│   │   ├── FeaturedProjects.tsx     # Projets phares pagines
+│   │   ├── ProjectsSection.tsx      # Galerie complete avec filtres
+│   │   ├── ServicesSection.tsx      # 5 cartes services
+│   │   ├── TestimonialsSection.tsx  # Carousel temoignages
+│   │   ├── ContactSection.tsx       # Formulaire de contact
+│   │   ├── ExperienceTimeline.tsx   # Timeline experiences
+│   │   ├── ThemeSwitcher.tsx        # Dropdown themes
+│   │   ├── ThemeSwitcherFAB.tsx     # Bouton flottant themes
+│   │   ├── AutoImageCarousel.tsx    # Carousel images automatique
+│   │   ├── MotionLayout.tsx         # Layout 3D parallax (souris)
+│   │   ├── DesignGallery.tsx        # Galerie design
+│   │   ├── SkillsOrb.tsx            # Orbe 3D competences
+│   │   ├── TechBadge.tsx            # Badge technologie
+│   │   ├── ProjectRating.tsx        # Rating etoiles
+│   │   ├── BlurText.tsx            # Texte avec animation de flou
+│   │   ├── FadingVideo.tsx          # Video avec fondu
+│   │   ├── TrackingConsentBanner.tsx # Banniere consentement RGPD
+│   │   ├── WhatsAppFloatButton.tsx  # Bouton WhatsApp flottant
+│   │   ├── ErrorBoundary.tsx        # Gestion erreurs React
+│   │   ├── AetherisCapabilities.tsx # Capacites theme Aetheris
+│   │   ├── AetherisHero.tsx         # Hero theme Aetheris
+│   │   ├── AetherisLayout.tsx       # Layout theme Aetheris
+│   │   ├── AILab.tsx                # Section AI Lab
+│   │   ├── EnigmaSection.tsx        # Section enigme
+│   │   ├── EvolutionSection.tsx     # Timeline evolution
+│   │   ├── FAQSection.tsx           # FAQ accordeon
+│   │   ├── NavLink.tsx             # Lien navigation
+│   │   │
+│   │   ├── ui/                      # 50+ composants shadcn/ui
+│   │   │   ├── button.tsx, card.tsx, dialog.tsx, input.tsx,
+│   │   │   ├── accordion.tsx, alert.tsx, avatar.tsx, badge.tsx,
+│   │   │   ├── carousel.tsx, chart.tsx, checkbox.tsx,
+│   │   │   ├── dropdown-menu.tsx, form.tsx, hover-card.tsx,
+│   │   │   ├── navigation-menu.tsx, pagination.tsx, popover.tsx,
+│   │   │   ├── select.tsx, sheet.tsx, sidebar.tsx, skeleton.tsx,
+│   │   │   ├── table.tsx, tabs.tsx, textarea.tsx, toast.tsx,
+│   │   │   ├── toggle.tsx, tooltip.tsx, scroll-area.tsx, etc.
+│   │   │   └── ScrollAnimation.tsx, AlternativeBackground.tsx
+│   │   │
+│   │   ├── admin/                   # Composants admin panel
+│   │   │   ├── AnalyticsDashboard.tsx
+│   │   │   ├── CmsManager.tsx
+│   │   │   ├── ExportPanel.tsx, HeatmapSections.tsx
+│   │   │   ├── LiveGlobe.tsx, RichTextEditor.tsx
+│   │   │   ├── VisitorDetailPanel.tsx, VisitsChart.tsx
+│   │   │
+│   │   └── backoffice/              # Composants backoffice
+│   │       ├── BackofficeProvider.tsx
+│   │       ├── layout/Header.tsx, Sidebar.tsx, BackofficeLayout.tsx
+│   │       ├── dashboard/KPICards.tsx, TrafficChart.tsx,
+│   │       │              ActivityFeed.tsx, GeoMap.tsx
+│   │       ├── cms/MediaLibrary.tsx, ProjectsManager.tsx,
+│   │       │      RichTextEditor.tsx, SectionsManager.tsx,
+│   │       │      ServicesManager.tsx, TestimonialsManager.tsx
+│   │       ├── common/ExportButton.tsx
+│   │       └── settings/SEOSettings.tsx, NavigationEditor.tsx
+│   │
+│   ├── context/
+│   │   └── ThemeContext.tsx         # Gestion des 4 themes
+│   ├── contexts/
+│   │   └── LanguageContext.tsx      # Gestion FR/EN
+│   │
+│   ├── hooks/                       # Hooks custom
+│   │   ├── use-mobile.tsx           # Detection mobile
+│   │   ├── use-toast.ts            # Notifications
+│   │   ├── use-tracking-consent.ts  # Consentement tracking
+│   │   ├── use-optimized-images.ts  # Optimisation images
+│   │   ├── useCmsProjects.ts       # Fetch projets CMS
+│   │   ├── useGlobalClickTracking.ts
+│   │   ├── useLiveAnalytics.ts     # Analytics temps reel
+│   │   ├── usePageTracking.ts      # Tracking pages vues
+│   │   ├── useScrollDepthTracking.ts
+│   │   ├── useSectionTracking.ts   # Tracking sections
+│   │   ├── useTechNews.ts          # Fil actualites tech
+│   │   ├── useTracking.ts          # Utilitaires tracking
+│   │   └── useVisitorTracking.ts   # Sessions visiteurs
+│   │
+│   ├── data/
+│   │   ├── experienceData.ts       # Donnees experiences (fallback)
+│   │   └── projectsData.ts         # Donnees projets (24+ projets)
+│   │
+│   ├── services/
+│   │   ├── experienceService.ts    # Service API experiences
+│   │   └── projectService.ts       # Service API projets
+│   │
+│   ├── lib/
+│   │   ├── utils.ts                # cn() (clsx + tailwind-merge)
+│   │   ├── cms-service.ts          # CRUD Supabase (projets, sections, liens, temoignages, services, settings)
+│   │   ├── contact-utils.ts        # Integration Formspree
+│   │   ├── emailjs-config.ts       # EmailJS (stub, utilise mailto)
+│   │   ├── exportUtils.ts          # Export donnees
+│   │   └── tracker.ts              # Moteur analytics (page_views, clicks, sections, scrolls)
+│   │
+│   ├── types/
+│   │   ├── cms.ts                  # Types CMS
+│   │   ├── project.ts              # Type Projet
+│   │   └── backoffice.ts           # Types Backoffice
+│   │
+│   ├── themes/                     # Registre des themes
+│   │   ├── index.ts                # Export tous les themes
+│   │   ├── airbnb.ts               # Theme Airbnb (rose/rouge)
+│   │   ├── airtable.ts             # Theme Airtable (bleu)
+│   │   └── aetheris.ts             # Theme Aetheris (noir/or)
+│   │
+│   ├── integrations/supabase/
+│   │   └── client.ts               # Client Supabase
+│   │
+│   └── styles/
+│       └── animations.css          # Animations CSS custom
+│
+├── supabase/
+│   ├── migrations/                 # Migrations SQL (7 fichiers : backoffice, admin, analytics, etc.)
+│   ├── functions/                  # Edge Functions
+│   └── tests/rls_smoke_tests.sql   # Tests RLS
+│
+└── scripts/
+    ├── optimize-images.js          # Optimisation PNG/JPG → WebP
+    └── generate-supabase-project-seed.js
 ```
 
-### Guidelines
+## Backoffice & CMS
 
-- Respecter le code style (ESLint)
-- Ajouter des types TypeScript
-- Documenter les features
-- Tester les changements
+Le backoffice est accessible via `/backoffice` ou le raccourci clavier `Ctrl+M`.
 
-## 📚 Ressources
+### Tabs du Backoffice
 
-- [Documentation React](https://react.dev)
-- [Documentation Tailwind CSS](https://tailwindcss.com)
-- [Documentation Vite](https://vitejs.dev)
-- [Radix UI Docs](https://radix-ui.com)
-- [Supabase Docs](https://supabase.com/docs)
-- [Framer Motion Docs](https://www.framer.com/motion/)
+| Tab | Contenu |
+|---|---|
+| **Dashboard** | KPIs (visiteurs, pages vues, taux rebond, duree session), graphique trafic, referents top, carte geographique, flux activite |
+| **Analytics** | Graphiques detailles, export CSV/JSON, heatmap sections |
+| **CMS** | Gestion sections (hero, about, services, etc.), gestion services, gestion temoignages, bibliotheque medias |
+| **Projects** | CRUD complet des projets, upload images, statut (publie/prive/brouillon) |
+| **Settings** | SEO (titre, description, mots-cles), theme (couleurs, polices), navigation (ordre, visibilite), contact (email, telephone, adresse) |
+| **Tracking** | Flux evenements en temps reel, sessions visiteurs, geo-data |
 
-## 📄 Licence
+### Base de donnees Supabase
 
-Ce projet est sous licence **MIT** - voir le fichier [LICENSE](LICENSE) pour plus de détails.
+Tables principales :
+- `cms_projects` : projets du portfolio
+- `cms_sections` : sections personnalisables
+- `cms_testimonials` : temoignages
+- `cms_services` : services
+- `cms_links` : liens navigation
+- `cms_site_settings` : parametres generaux
+- `cms_theme_settings` : parametres theme
+- `visitor_sessions` : sessions visiteurs
+- `page_views` : vues de pages
+- `click_events` : evenements clics
+- `section_events` : evenements sections
+- `scroll_events` : evenements scroll
 
-## 👨‍💻 Auteur
+---
 
-**Tobi** - Développeur Full-Stack | Designer | IA Enthusiast
+## Analytics & Tracking
 
-- 🌐 [Portfolio](https://portefolio-os.netlify.app/)
-- 💼 [LinkedIn](https://linkedin.com/in/tobias)
-- 🐙 [GitHub](https://github.com/T0b0i7)
-- 📧 [Email](mailto:contact@example.com)
+Le moteur d'analytics custom (`src/lib/tracker.ts`) envoie les donnees vers Supabase.
+
+### Types d'evenements suivis
+
+- **Page views** : chaque navigation de page
+- **Clicks** : clics sur boutons, liens, elements interactifs
+- **Sections** : entree/sortie des sections au scroll (Intersection Observer)
+- **Scroll depth** : profondeurs 25%, 50%, 75%, 90%, 100%
+
+### Integration visiteurs
+
+- **Geolocalisation** : via ipapi.co
+- **User-Agent** : detection navigateur, appareil, OS
+- **Session** : duree, pages visitees, evenements
+- **Consentement** : banniere RGPD avant activation
+
+### Visualisation
+
+- Dashboard temps reel dans le backoffice
+- Graphiques d'evolution (Recharts)
+- Carte du monde (react-simple-maps)
+- Heatmap des sections les plus vues
+
+---
+
+## Installation
+
+### Prerequis
+
+- **Node.js** 18.x ou superieur
+- **npm** 9.x+ (ou **bun** 1.x+)
+
+### Etapes
+
+```bash
+# 1. Cloner le depot
+git clone https://github.com/T0b0i7/Portefolio_2026.git
+cd Portefolio_2026
+
+# 2. Installer les dependances
+npm install
+
+# 3. Creer le fichier .env.local
+cp .env.example .env.local
+
+# 4. Demarrer le serveur de developpement
+npm run dev
+```
+
+L'application sera accessible sur **http://localhost:5173**.
+
+---
+
+## Configuration
+
+### Variables d'environnement
+
+```env
+# Supabase
+VITE_SUPABASE_URL=https://votre-projet.supabase.co
+VITE_SUPABASE_ANON_KEY=votre-cle-anonyme
+
+# Analytics (optionnel)
+VITE_ENABLE_ANALYTICS=true
+
+# Contact
+VITE_CONTACT_EMAIL=votre@email.com
+```
+
+---
+
+## Scripts disponibles
+
+```bash
+npm run dev                # Demarrer en developpement (HMR)
+npm run build              # Build de production
+npm run preview            # Previsualiser le build
+npm run lint               # Verifier le code (ESLint)
+npm run optimize-images    # Optimiser les images (PNG/JPG → WebP)
+```
+
+---
+
+## Deploiement
+
+### Netlify (recommande)
+
+```bash
+# Via CLI
+netlify deploy --prod
+
+# Ou connexion Git : build npm run build, publish dist/
+```
+
+Configuration dans `netlify.toml` :
+- Build command : `npm run build`
+- Publish directory : `dist`
+- Node version : 18
+
+---
+
+## Auteur
+
+**Tobi** — Developpeur Full-Stack | Designer UI/UX | IA Enthusiast
+
+- Portfolio : https://portefolio-os.netlify.app/
+- GitHub : https://github.com/T0b0i7
+- LinkedIn : https://linkedin.com/in/tobias
 
 ---
 
 <div align="center">
 
-**Fait avec ❤️ en 2026**
+**Construit avec React 19, TypeScript, Tailwind CSS, Vite, Supabase & Framer Motion**
 
-![React Badge](https://img.shields.io/badge/Made%20with-React-61DAFB?logo=react&logoColor=white)
-![TypeScript Badge](https://img.shields.io/badge/Powered%20by-TypeScript-3178C6?logo=typescript&logoColor=white)
-![Tailwind CSS Badge](https://img.shields.io/badge/Styled%20with-Tailwind-06B6D4?logo=tailwindcss&logoColor=white)
+© 2026 — Tous droits reserves
 
 </div>
